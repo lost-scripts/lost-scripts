@@ -1,7 +1,7 @@
 ### Hi there 👋
 
-- 🔭 I’m currently working developing Moho® scripts
-- 🌱 I’m currently learning Lua & Git/GitHub...
+- 🔭 I’m currently working on developing Moho® scripts
+- 🌱 I’m currently learning (or trying) Lua & Git/GitHub...
 
 <!--
 **lost-scripts/lost-scripts** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
