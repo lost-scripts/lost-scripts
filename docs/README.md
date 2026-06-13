@@ -1,102 +1,51 @@
-<!--{{% adjust-paths %}}-->
-<table id='top' width='100%' border='0'>
-    <tr>
-        <td align='center' valign='middle' width='96'>
-            <picture>
-                <source media='(prefers-color-scheme: dark)' srcset='assets/icon_dark.png'>
-                <source media='(prefers-color-scheme: light)' srcset='assets/icon_light.png'>
-                <img src='assets/icon.png' width='48' alt='Icon' title='Shapes: Persistent shape palette plus helpers for better Moho&reg; vector/s management.' class='colorize'>
-            </picture>
-        </td>
-        <td align='right' valign='middle' width='916' nowrap>
-            <a href='https://github.com/lost-scripts/ls_shapes/releases/latest/download/ls_shapes.zip' title='Download latest version...'><img src='https://img.shields.io/github/downloads/lost-scripts/ls_shapes/total?logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjZWVlIiBkPSJNMjg4IDMyYTMyIDMyIDAgMSAwLTY0IDB2MjQzbC03My03NGEzMiAzMiAwIDAgMC00NiA0NmwxMjggMTI4YzEzIDEyIDMzIDEyIDQ2IDBsMTI4LTEyOGEzMiAzMiAwIDAgMC00Ni00NmwtNzMgNzRWMzJ6TTY0IDM1MmMtMzUgMC02NCAyOS02NCA2NHYzMmMwIDM1IDI5IDY0IDY0IDY0aDM4NGMzNSAwIDY0LTI5IDY0LTY0di0zMmMwLTM1LTI5LTY0LTY0LTY0SDM0N2wtNDYgNDVhNjQgNjQgMCAwIDEtOTAgMGwtNDUtNDVINjR6bTM2OCA1NmEyNCAyNCAwIDEgMSAwIDQ4IDI0IDI0IDAgMSAxIDAtNDh6Ii8+PC9zdmc+&color=blue&label=Download' alt='Download'></a> 
-            <a href='https://github.com/lost-scripts/ls_shapes/releases/latest' title='Go to release in GitHub...'><img src='https://img.shields.io/github/v/release/lost-scripts/ls_shapes?logo=github&color=yellow&label=Release' alt='Release'></a> 
-            <a href='https://moho.lostmarble.com/' title='Go to Moho® homepage...'><img src='https://img.shields.io/badge/For-Moho_Moho®_14.3+_Pro-orange' alt='Moho'></a> 
-        </td>
-    </tr>
+<!-- mIxEd style head (quite simple with modes and full width in GitHub) [![h-icon]](#!) --> 
+<table id="top" width="100%" border="0"><tr><td align="center" valign="middle" width="96">
+<picture>
+	<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/RaiLopez/RaiLopez/refs/heads/main/docs/assets/icon_dark.png">
+	<source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/RaiLopez/RaiLopez/refs/heads/main/docs/assets/icon_light.png">
+	<img src="https://raw.githubusercontent.com/RaiLopez/RaiLopez/refs/heads/main/docs/assets/icon.png" width="48" alt="Icon" title="Lost Scripts Project">
+</picture>
+</td><td align="right" valign="middle" width="916" nowrap>
+
+[![h-shield1-i]][h-shield1-a] [![h-shield2-i]][h-shield2-a] [![h-shield3-i]][h-shield3-a]
+</td></tr></table>
+
+# Lost Scripts™
+
+Full catalog of *Lost Scripts™*. The rightmost direct download links provide you with the latest release, if any, or build. Visit their respective repos for more details...
+
+<div align='center'>
+<!-- CATALOG_START -->
+<table id='catalog' width='100%' border='0'>
+    <thead>
+        <tr>
+            <th align='center' width='96'>Icon</th><th align='center' width='120'>Name</th><th align='center' width='1920'>Description</th><th align='center' title='Direct Download Links'>📦</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td valign='middle' align='center'><a href='https://github.com/lost-scripts/ls/'><picture><source media='(prefers-color-scheme: dark)' srcset='https://raw.githubusercontent.com/lost-scripts/lost-scripts/refs/heads/main/docs/ls/assets/icon_dark.png'><source media='(prefers-color-scheme: light)' srcset='https://raw.githubusercontent.com/lost-scripts/lost-scripts/refs/heads/main/docs/ls/assets/icon_light.png'><img src='https://raw.githubusercontent.com/lost-scripts/lost-scripts/refs/heads/main/docs/ls/assets/icon.png' width='48' alt='Icon' class='colorize'></picture></a></td>
+            <td valign='middle' align='center'><a href='https://github.com/lost-scripts/ls/'><strong><em>LS&nbsp;<sup>Core</sup></em></strong></a></td>
+            <td valign='middle'><strong><em><sup>Essential shared resources and core modules required for the <a href='https://lost-scripts.github.io/' title='Go to Lost Scripts&trade; website...'>Lost Scripts</a>&trade; project to work with <a href='https://moho.lostmarble.com/' title='Go to Moho&reg; homepage...'>MOHO</a> Animation Software.</sup></em></strong><br><sub>𝓲 </sub><em><sub title='Build: 20240717-0348'>v0.0.0</sub> <sub> For Moho </sub></em></td>
+            <td valign='middle' align='center'><a href='https://github.com/lost-scripts/ls/archive/refs/heads/main.zip' title='Download: ls.zip'><img src='https://img.shields.io/badge/-%20-blue?style=flat&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjZWVlIiBkPSJNMjg4IDMyYTMyIDMyIDAgMSAwLTY0IDB2MjQzbC03My03NGEzMiAzMiAwIDAgMC00NiA0NmwxMjggMTI4YzEzIDEyIDMzIDEyIDQ2IDBsMTI4LTEyOGEzMiAzMiAwIDAgMC00Ni00NmwtNzMgNzRWMzJ6TTY0IDM1MmMtMzUgMC02NCAyOS02NCA2NHYzMmMwIDM1IDI5IDY0IDY0IDY0aDM4NGMzNSAwIDY0LTI5IDY0LTY0di0zMmMwLTM1LTI5LTY0LTY0LTY0SDM0N2wtNDYgNDVhNjQgNjQgMCAwIDEtOTAgMGwtNDUtNDVINjR6bTM2OCA1NmEyNCAyNCAwIDEgMSAwIDQ4IDI0IDI0IDAgMSAxIDAtNDh6Ii8+PC9zdmc+&logoColor=white' alt='Download'></a></td>
+        </tr>
+        <tr>
+            <td valign='middle' align='center'><a href='https://github.com/lost-scripts/ls_shapes/'><picture><source media='(prefers-color-scheme: dark)' srcset='https://raw.githubusercontent.com/lost-scripts/lost-scripts/refs/heads/main/docs/ls_shapes/assets/icon_dark.png'><source media='(prefers-color-scheme: light)' srcset='https://raw.githubusercontent.com/lost-scripts/lost-scripts/refs/heads/main/docs/ls_shapes/assets/icon_light.png'><img src='https://raw.githubusercontent.com/lost-scripts/lost-scripts/refs/heads/main/docs/ls_shapes/assets/icon.png' width='48' alt='Icon' class='colorize'></picture></a></td>
+            <td valign='middle' align='center'><a href='https://github.com/lost-scripts/ls_shapes/' style='text-decoration: none'><strong><sup>Shapes</sup></strong></a></td>
+            <td valign='middle'><sup>Persistent shape palette plus helpers for better Moho&reg; vector/s management.</sup><br><sub>𝓲 </sub><em><sub title='Build: 20260509-0217'>v0.4.2</sub> <strong><sub><ins>BETA</ins></sub></strong><sub> For Moho Moho® 14.3+ Pro</sub></em></td>
+            <td valign='middle' align='center'><a href='https://github.com/lost-scripts/ls_shapes/releases/latest/download/ls_shapes.zip' title='Download: ls_shapes.zip'><img src='https://img.shields.io/badge/-%20-blue?style=flat&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjZWVlIiBkPSJNMjg4IDMyYTMyIDMyIDAgMSAwLTY0IDB2MjQzbC03My03NGEzMiAzMiAwIDAgMC00NiA0NmwxMjggMTI4YzEzIDEyIDMzIDEyIDQ2IDBsMTI4LTEyOGEzMiAzMiAwIDAgMC00Ni00NmwtNzMgNzRWMzJ6TTY0IDM1MmMtMzUgMC02NCAyOS02NCA2NHYzMmMwIDM1IDI5IDY0IDY0IDY0aDM4NGMzNSAwIDY0LTI5IDY0LTY0di0zMmMwLTM1LTI5LTY0LTY0LTY0SDM0N2wtNDYgNDVhNjQgNjQgMCAwIDEtOTAgMGwtNDUtNDVINjR6bTM2OCA1NmEyNCAyNCAwIDEgMSAwIDQ4IDI0IDI0IDAgMSAxIDAtNDh6Ii8+PC9zdmc+&logoColor=white' alt='Download'></a></td>
+        </tr>
+    </tbody>
 </table>
-<!--{{% /adjust-paths %}}-->
- 
-# LS Shapes Window
+<p align='right'><sub>𝓲 <em>Generated by <strong>Lost Builder®</strong><sup> v1.9.6</sup> @ <code>20260613</code></em></sub></p>
+<!-- CATALOG_END -->
+</div>
 
-Persistent shape palette plus helpers for better management of Moho® vectors in general and *Liquid Shapes* in particular. This script provides a visual and user-friendly interface for performing complex shape operations effortlessly.
+## ⚙ Installation
 
-<br>
+Download the file either using the provided links or from the script repository, **unzip** it, and proceed with the installation method of your choice...
 
-## Gallery
-
-<details align="center" width="100%" class="gallery-holder" style="cursor: pointer; user-select: none;">
-<summary title="Click here to expand/collapse image gallery"><strong>UI</strong> <sub><sup>(Expand/Collapse)</sup></sub><br><br>
-
-[![UI](assets/image_gallery.png "UI")](#! "UI")
-</summary><br>
-
-<table align="center" border="0" class="gallery"><tr>
-<td width="178" valign="top"><!-- width="1024px" for full width container-->
-
-![SHAPE Mode](assets/image_gallery_mode_1.png "SHAPE Mode for shape management")
-</td><td width="178" valign="top">
-
-![STYLE Mode](assets/image_gallery_mode_2.png "STYLE Mode for style management")
-</td><td width="178" valign="top">
-
-![STYLE Mode](assets/image_gallery_mode_3.png "GROUP Mode for point group management")
-</td><td width="178" valign="top">
-
-![TWEAK Menu](assets/image_gallery_tweak_menu.png "TWEAK Menu for shape tweaking &amp; utils")
-</td><td width="264" valign="top">
-
-![LIVE Swatches](assets/image_gallery_view_swatches.gif "Live/Scrollable (plus customizable) Swatches")
-</td><td width="178" valign="top">
-
-![COMPACT Mode](assets/image_gallery_window_compact.png "Or just keep it compact...")
-</td>
-</tr></table>
-</details>
-<!--
-<details align="center" width="100%" class="gallery-holder" style="cursor:pointer; user-select: none;">
-	<summary title="Click the arrow to expand/collapse image gallery">
-		<a inert href="#!"><img align="center" height="96px" src="assets/image_gallery.png" onerror="this.onerror=null; this.src=this.getAttribute('src').split('/').pop();" alt="Script UI" style="vertical-align: middle;"></a>&ensp;&ensp;
-	</summary>
-	<br>
-	<table align="center" border="0" class="gallery">
-		<tr>
-			<td nowrap data-comment="Use width='1024px' for full width container">
-				<img src="assets/image_gallery_1.png" onerror="this.onerror=null; this.src=this.getAttribute('src').split('/').pop();" title="SHAPE Mode for shape management" height="512px" align="top">&ensp;
-				<img src="assets/image_gallery_2.png" onerror="this.onerror=null; this.src=this.getAttribute('src').split('/').pop();" title="STYLE Mode for style management" height="512px" align="top">&ensp;
-				<img src="assets/image_gallery_3.png" onerror="this.onerror=null; this.src=this.getAttribute('src').split('/').pop();" title="GROUP Mode for point group management" height="512px" align="top">&ensp;
-				<img src="assets/image_gallery_4.png" onerror="this.onerror=null; this.src=this.getAttribute('src').split('/').pop();" title="TWEAK Menu for shape tweaking &amp; utils" height="512px" align="top">&ensp;
-				<img src="assets/image_gallery_5.gif" onerror="this.onerror=null; this.src=this.getAttribute('src').split('/').pop();" title="Live/Scrollable (plus customizable) Swatches" height="512px" align="top">&ensp;
-				<img src="assets/image_gallery_6.png" onerror="this.onerror=null; this.src=this.getAttribute('src').split('/').pop();" title="Or just keep it compact..." align="top">
-				<br>
-			</td>
-		</tr>
-	</table>
-</details>
--->
-<br>
-
-## Features
-
-- Visualize layers' shape relationships at a glance.
-- Take the most of *Liquid Shapes* thanks to improved management.
-- Rename, reorder, hide/show, etc. one or several shapes with ease.
-- New ways of shape creation independently of selected tool.
-- Shape selection helpers: Select all, Inverse, Similar, Identical...
-- Improved *Style* management, picking and modification.
-- Improved *Point Group* management, reordering and modification.
-- Many interactive "live" Swatches (and you can easily make your own).
-- Recoloring features plus other helpers.
-- Several window display modes to better suit your needs.
-- And... much more!
-
-<br>
-
-## Download & Install
-
-[**Download**][h-shield1-a] the file, **unzip** it, and proceed with the installation method of your choice...
-
-| MANUAL (RECOMMENDED)                                                             | ASSISTED BY MOHO®                                                                |
+| MANUAL                                                                           | ASSISTED                                                                         |
 | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | 1. You'll get some of these folders:  `Menu / ScriptResources / Tool / Utility`  | 1. In Moho®, go to "Scripts > Install Script…" to open the installation wizard*  |
 | 2. Place'em all into the *Scripts* folder of your [Custom Content Folder][3-1a]  | 2. Click *Select A Script Folder*, browse to the unzipped folder & **select it** |
@@ -104,54 +53,33 @@ Persistent shape palette plus helpers for better management of Moho® vectors in
 
 And that's all! The script should appear in *Tools* palette and/or under *Scripts* menu.
 
-> ⚠ **WARNING:** Please, make sure you have uninstalled every Lost Script on your system before removing any shared resource or they may start throwing errors or stop working. For uninstalling a script, just remove any file and folder matching its name and restart Moho® or Reload Tools And Brushes if necessary.
+> ⚠ **WARNING:** Please, make sure you have uninstalled every *Lost Script* on your system before removing any shared resource or they may start throwing errors or stop working. For uninstalling a script, just remove any file and folder matching its name and restart Moho® or *Reload Tools And Brushes* if necessary.
 
 <br>
 
-## Usage
+## 🤝 Collab & Support
 
-1. **Opening**: Open *Shapes Window* from Moho's *Tools* palette or via its entry in the *Scripts* menu.
-2. **Operating**: Now you can have it permanently open to perform various shape operations.
-3. **Customizing**: Unfold Window's main menu: 🔽 (at top left of the window) to access different settings & actions.
-4. **Tooltips**: If *Beginners Mode* is checked, holding the cursor over the different elements will give a hint of their functionality...
+Suggestions and bugs can be reported in the [<i>Issues</i>](https://github.com/lost-scripts/ls/issues "Go to ''Issues'' section") section (preferably) or in the corresponding topic, if any, in [<i>Scripting</i>](https://www.lostmarble.com/forum/viewforum.php?f=12 "Go to Lost Marble Forum's ''Scripting'' section") section of the [<i>Lost Marble Forum</i>](https://www.lostmarble.com/forum "Go to the ''Lost Marble Forum''").
 
 <br>
 
-## Collab & Support
+## 🔗 Other...
 
-Suggestions and bugs can be reported in the [<i>Issues</i>](https://github.com/lost-scripts/ls_shapes/issues "Go to ''Issues'' section") section (preferably) or in the corresponding topic, if any, in [<i>Scripting</i>](https://www.lostmarble.com/forum/viewforum.php?f=12 "Go to Lost Marble Forum's ''Scripting'' section") section of the [<i>Lost Marble Forum</i>](https://www.lostmarble.com/forum "Go to the ''Lost Marble Forum''").
+- <a href="https://lost-scripts.github.io/scripts/ls" data-alt-href="https://github.com/lost-scripts/ls" data-alt-textContent="LS repository" data-alt-title="Go to the LS repository...">LS webpage</a>
 
-<br>
+[h-icon]: https://raw.githubusercontent.com/RaiLopez/RaiLopez/refs/heads/main/docs/assets/icon.webp "Icon"
 
-## Acknowledgments
+[h-shield1-i]: https://img.shields.io/github/downloads/lost-scripts/ls/total?logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjZWVlIiBkPSJNMjg4IDMyYTMyIDMyIDAgMSAwLTY0IDB2MjQzbC03My03NGEzMiAzMiAwIDAgMC00NiA0NmwxMjggMTI4YzEzIDEyIDMzIDEyIDQ2IDBsMTI4LTEyOGEzMiAzMiAwIDAgMC00Ni00NmwtNzMgNzRWMzJ6TTY0IDM1MmMtMzUgMC02NCAyOS02NCA2NHYzMmMwIDM1IDI5IDY0IDY0IDY0aDM4NGMzNSAwIDY0LTI5IDY0LTY0di0zMmMwLTM1LTI5LTY0LTY0LTY0SDM0N2wtNDYgNDVhNjQgNjQgMCAwIDEtOTAgMGwtNDUtNDVINjR6bTM2OCA1NmEyNCAyNCAwIDEgMSAwIDQ4IDI0IDI0IDAgMSAxIDAtNDh6Ii8+PC9zdmc+&color=blue&label=Download
+[h-shield1-a]: https://github.com/lost-scripts/ls/releases/latest/download/ls.zip "Download latest version... (Currently unavailable)"
 
-My sincere thanks to...
+[h-shield2-i]: https://img.shields.io/github/release/lost-scripts/ls?logo=github&color=yellow&label=Release
+[h-shield2-a]: https://github.com/lost-scripts/ls/releases/latest "Go to release in GitHub... (Currently unavailable)"
 
-- **Stanislav Zuliy** (Stan), for all his contributions & generosity.
-- **Lukas Krepel**, for paving the *modeless* way 🙂
-- **Mike Kelley**, for allowing me use the guts of his great *Adjust Colors* script.
-- **Wes** (synthsin75), **Paul** (hayasidist) & **Sam** (SimplSam), for their support at the [LM forums](https://www.lostmarble.com/forum).
-- **Copilot** & **ChatGPT**, for... erm... Why not? 🤷‍♂️
-
-And, of course, to **Lost Marble** and the talented Moho® team for all the hard work and for making this all possible (again).
-
-<br>
-
-## Other...
-
-- <a href="https://lost-scripts.github.io/scripts/ls_shapes" data-alt-href="https://github.com/lost-scripts/ls_shapes" data-alt-textContent="Shapes window repository" data-alt-title="Go to the Shapes Window repository...">Shapes Window webpage</a>
-- [Lost Marble Forum topic](https://www.lostmarble.com/forum/viewtopic.php?t=36508 "Go to the Lost Marble Forum topic...")
-
----
-
-[h-shield1-i]: https://img.shields.io/github/downloads/lost-scripts/ls_shapes/total?logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjZWVlIiBkPSJNMjg4IDMyYTMyIDMyIDAgMSAwLTY0IDB2MjQzbC03My03NGEzMiAzMiAwIDAgMC00NiA0NmwxMjggMTI4YzEzIDEyIDMzIDEyIDQ2IDBsMTI4LTEyOGEzMiAzMiAwIDAgMC00Ni00NmwtNzMgNzRWMzJ6TTY0IDM1MmMtMzUgMC02NCAyOS02NCA2NHYzMmMwIDM1IDI5IDY0IDY0IDY0aDM4NGMzNSAwIDY0LTI5IDY0LTY0di0zMmMwLTM1LTI5LTY0LTY0LTY0SDM0N2wtNDYgNDVhNjQgNjQgMCAwIDEtOTAgMGwtNDUtNDVINjR6bTM2OCA1NmEyNCAyNCAwIDEgMSAwIDQ4IDI0IDI0IDAgMSAxIDAtNDh6Ii8+PC9zdmc+&color=blue
-[h-shield1-a]: https://github.com/lost-scripts/ls_shapes/releases/latest/download/ls_shapes.zip "Download latest version..."
-
-[h-shield2-i]: https://img.shields.io/github/release/lost-scripts/ls_shapes?logo=github
-[h-shield2-a]: https://github.com/lost-scripts/ls_shapes/releases/latest "Go to release in GitHub..."
-
-[h-shield3-i]: https://img.shields.io/badge/for-Moho_Pro_14.3+_(Win)-orange
+[h-shield3-i]: https://img.shields.io/badge/For-Moho_14.4+_Pro-orange
 [h-shield3-a]: https://moho.lostmarble.com/ "Go to Moho® website..."
 
 [3-1a]: https://manual.lostmarble.com/app/page/1bmBks7y8KPdbPd-ll9kQGPdZJfDf3Rq67BCp8F5Y-FI?p=1UxA8Gi5DttJku9AmFlSpO0gJw4U9flX3
 [3-2a]: https://manual.lostmarble.com/app/page/1IOuEOfMa7kUwqYPi2ABDhwoWE_KXB1OBCC5ib__iyIE?p=1UxA8Gi5DttJku9AmFlSpO0gJw4U9flX3
+
+<!--?logo=github-->
+<!--?logo=moodle-->

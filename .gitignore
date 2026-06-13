@@ -1,0 +1,86 @@
+###########
+# GENERAL #
+###########
+
+# Ignore infrastructure/internal folders starting with . (excluding . and ..)
+.[!.]*/
+__*
+
+
+#########
+# PATHS #
+#########
+
+
+
+###########
+# FOLDERS #
+###########
+
+# Suffix-based folders (case-insensitive): E.g. "my_folder.old", ...
+*.[Oo][Ff][Ff]/
+*.[Oo][Ll][Dd]/
+*.[Tt][Mm][Pp]/
+*.[Tt][Rr][Aa][Ss][Hh]/
+*.[WwRr][Ii][Pp]/
+
+!.github/
+!.vscode/
+
+
+##############
+# FILE TYPES #
+##############
+
+*.dia~
+*.log
+*.bak
+*.cache
+
+
+#########
+# FILES #
+#########
+
+# Suffix-based files (case-insensitive): E.g. "my_file.old", "my_file.old.lua", ...
+*.[Oo][Ff][Ff]
+*.[Oo][Ff][Ff].*
+*.[Oo][Ll][Dd]
+*.[Oo][Ll][Dd].*
+*.[Tt][Mm][Pp]
+*.[Tt][Mm][Pp].*
+*.[Tt][Rr][Aa][Ss][Hh]
+*.[Tt][Rr][Aa][Ss][Hh].*
+*.[WwRr][Ii][Pp]
+*.[WwRr][Ii][Pp].*
+
+# Named files (case-insensitive): INFO, NOTES, TODO, TEMP, TMP
+[._][Ii][Nn][Ff][Oo].*
+[._][Nn][Oo][Tt][Ee][Ss].*
+[._][Tt][Oo][Dd][Oo].*
+[._][Tt][Ee][Mm][Pp].*
+[._][Tt][Mm][Pp].*
+
+# Other...
+.*gitbash.lnk
+[Dd]esktop.ini
+[Ff]older.[jg]*[gf]
+[Ll][Oo][Gg].txt
+docs/.config
+READONLY!.*
+
+#########
+# PACKS #
+#########
+
+**/ls_dummy.*
+**/ls_dummy/**
+**/ls_dummy@*
+
+
+#########
+# NOTES #
+#########
+
+# CONVENTION: Preceded by `__` means UNTRACKABLE and by `_` untrackable unless unlisted or explicitly added (IDEA: Preceded by `.` means IGNORED and, except for "private" and by `_` means INCLUDED?)
+# OTHER: Never use inline comments here! Again...

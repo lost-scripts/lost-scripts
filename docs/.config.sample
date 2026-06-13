@@ -1,0 +1,30 @@
+# ⚙ BUILDER CONFIGURATION (Uncomment and fill in as needed)
+
+#declare -- BUILD_CORE="ls"
+#declare -a BUILD_COPY=( "Menu" "Modules" "ScriptResources" "Tool" "Utility" "LICENSE" )
+#declare -a BUILD_SYNC=( "Menu" "Modules" "ScriptResources" "Tool" "Utility" )
+#declare -A BUILD_VARS=( [DEP]="ScriptDeps" [VER]="ScriptVersion" [BLD]="ScriptBuild" [STG]="ScriptStage" [TAR]="ScriptTarget" [DSC]="ScriptDesc" )
+#declare -A BUILD_FORGE=( [BASE]="github.com" [BRAW]="raw.githubusercontent.com" [USER]="YourUser" [PREF]="git@github-youralias" ) # Or e.g. BUILD_FORGE[USER]="YourUser"; BUILD_FORGE[ETC]="?" for individual fields
+#declare -- BUILD_DISTDIR="docs/.dist" # E.g. "docs/.dist", '${res_path}/docs/.dist', '${TARGET_DIR}/docs/.dist'
+#declare -- BUILD_PUBLISH=false
+#declare -- BUILD_MOHOCCF="../../YourCustomContentFolder"
+#declare -- BUILD_WEBPATH=""
+#declare -- BUILD_WEBFILE="index"
+#declare -- BUILD_WEBRSCS="assets"
+#declare -- BUILD_DEBUGME=false
+#declare -a BUILD_PACKSWARN=( ".READONLY!" "⚠ This is an AUTO-GENERATED directory. Do NOT edit synced folders content manually! (Git and unsynced folders are safe to manage, but saving work here is still strongly discouraged)." ) # ( "FILENAME" "CONTENT" )
+#declare -a BUILD_ZIPIGNORE=( "README.md" "READONLY!.url" "LICENSE" "*/LOG.*" "docs" "docs/*" "*/docs/*" )
+#declare -a BUILD_CATIGNORE=( "DRAFT" "HIDDEN" "PRIVATE" "LEGACY" )
+#BUILD_IGNOREPFX+=( "_customignore" ) # Add customized ignore prefix entries (Or overwrite to start from scratch)
+#BUILD_IGNORESFX+=( ) # Add customized ignore suffix entries
+#BUILD_IGNOREFIL+=( ) # Add customized ignore file entries
+#BUILD_UNIGNORED+=( "_customunignore" ) # Add customized unignore/keep entries
+#BUILD_ASSIST=( ["ENABLE"]=true ["BLDSTAMP"]=false ["DOCSCOOK"]=true ["SYMLINKS"]=false )
+
+
+# 🔗 SYMLINK CREATION
+
+BUILD_SYMLINKS=(
+"ls_dummy.lua"
+"Modules/ls_dummy_module.lua"
+)
