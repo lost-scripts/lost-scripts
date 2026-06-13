@@ -78,13 +78,15 @@ Provides all the necessary shared/common resources and helpers that *[Moho®](ht
 
 ## *Features*
 
-More than user-facing features, *LS<sub><sup><sup> Core</sup></sup></sub>* works under the hood not only to meet the development requirements of *Lost Scripts™* like the ones just above, but also to extend (within the limits) the scripting possibilities of the program with *new* kind of functions, methods, UI widgets and more...
+More than user-facing features, *LS<sub><sup><sup> Core</sup></sup></sub>* works under the hood not only to meet the development requirements of *Lost Scripts™* like the ones just above, but also to extend (within the limits) the scripting possibilities of the program with *new* kind of functions, methods, UI widgets and more!
 
-<br>
 
-## *Installation*
 
-Starting from you have already unzipped the downloaded file, and regardless of whether it is the Core or any other script, you actually have two different installation methods...
+## *Installation* ![](assets/image_nothingtodohere.png "NOTHING TO DO HERE")
+
+~~Starting from you have already unzipped the downloaded file~~*, and regardless of whether it is the Core or any other script, you actually have two different installation methods...
+
+***No Download Available (Yet!):** Due to its initial stage, all Core dependencies are already compiled and automatically embedded inside each standalone script pack from the catalog (e.g., _ls_shapes_). Since they already contain everything you need to make them work on your system, there is no need to install anything else from here at the moment... 
 
 | MANUAL (RECOMMENDED)                                                             | ASSISTED BY MOHO®                                                                |
 | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
