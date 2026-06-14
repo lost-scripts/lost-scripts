@@ -31,7 +31,7 @@ declare -A BUILD_ASSIST=( ["ENABLE"]=true # Auto-assist different tasks (ENABLE 
 )
 
 # 🔒 CONFIGURATION CONSTANTS (Uncustomizable/Runtime variables for path resolutions, patterns, etc. )
-declare -Ar INFO=( [NAME]="Lost Builder®" [VERSION]="1.9.6" [CREATOR]="Rai López" [DESC]="Lost Scripts™ Project's Builder and Development Helper" [RUNTIME]=$(date +"%Y%m%d-%H%M"))
+declare -Ar INFO=( [NAME]="Lost Builder®" [VERSION]="1.9.7" [CREATOR]="Rai López" [DESC]="Lost Scripts™ Project's Builder and Development Helper" [RUNTIME]=$(date +"%Y%m%d-%H%M"))
 declare -r  MONODIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" # The anchor: The Monorepo root directory itself
 declare -r  FILENAME=$(basename "${BASH_SOURCE[0]}")
 declare --  CANCELLED=false; 
@@ -90,7 +90,7 @@ zipper() { # .ZIP packaging function: id ($1), source ($2), dist_path ($3), rese
 		cd "$source" || exit
 		local targets=( * ); [[ ! -e "${targets[0]}" ]] && targets=() 
 		if [[ ${#targets[@]} -gt 0 ]]; then
-			local exclude_args=(-x ".git*" "__*" "*/__*" "${BUILD_PACKSWARN[0]}" "ScriptResources/$id/Docs*" "ScriptResources/$id/docs*")
+			local exclude_args=(-x ".git*" "__*" "*/__*" "${BUILD_PACKSWARN[0]}" "ScriptResources/$id/docs*" "ScriptResources/$id/docs*")
 			for p in "${BUILD_ZIPIGNORE[@]}"; do exclude_args+=("-x" "$p"); done 
 			[ "$reset" = true ] && [ -f "$abs_zip_out" ] && rm "$abs_zip_out" 
 			zip "-rq$([ "$reset" = true ] || echo "FS")" "$abs_zip_out" "${targets[@]}" "${exclude_args[@]}" 
@@ -137,7 +137,7 @@ MONO_READ="./docs/README.md"
 URL_BASE="https://${BUILD_FORGE[BASE]}/${BUILD_FORGE[USER]}"
 URL_RAW="https://${BUILD_FORGE[BRAW]}/${BUILD_FORGE[USER]}"
 URL_RAW_CORE="${URL_RAW}/${BUILD_CORE}/main/ScriptResources/${BUILD_CORE}"
-URL_RAW_MONO="https://${BUILD_FORGE[BRAW]}/${BUILD_FORGE[USER]}/${MONOREPO}/refs/heads/main"
+URL_RAW_MONO="https://${BUILD_FORGE[BRAW]}/${BUILD_FORGE[USER]}/${MONOREPO}/main"
 MD_CATALOG=""; MD_CATASTART='<!-- CATALOG_START -->'; MD_CATAEND='<!-- CATALOG_END -->'; MD_CATADATA=$(mktemp)
 MD_STARRED=""; MD_STARSTART="<!-- STARRED_START -->"; MD_STAREND="<!-- STARRED_END -->"; MD_STARDATA=""
 IGNORE=( "${BUILD_IGNOREPFX[@]}" "${BUILD_IGNORESFX[@]}" "${BUILD_IGNOREFIL[@]}" )
@@ -351,7 +351,7 @@ for script_id in $PACKS; do
 
 	if [[ -z "$v_dsc" ]]; then # Description fallback
 		if [[ "$script_id" == "$BUILD_CORE" ]]; then
-			v_dsc="Essential shared resources and core modules required for the <a href='https://lost-scripts.github.io/' title='Go to Lost Scripts&trade; website...'>Lost Scripts</a>&trade; project to work with <a href='https://moho.lostmarble.com/' title='Go to Moho&reg; homepage...'>MOHO</a> Animation Software."
+			v_dsc="Essential shared resources and core modules required for the <a href='https://lost-scripts.github.io/' title='Go to Lost Scripts&trade; website...'>Lost Scripts</a>&trade; project to work with <a href='https://moho.lostmarble.com/' title='Go to Moho&reg; homepage...'>MOHO</a> Animation Software (NOT YET AVAILABLE)."
 		else
 			v_dsc="Lost Script <em>$v_name</em> for <a href='https://moho.lostmarble.com/' title='Go to Moho&reg; homepage...'>MOHO</a> Animation Software."
 		fi
@@ -373,14 +373,14 @@ for script_id in $PACKS; do
 
 	# --- 🖼️ 2.3b INTELLIGENT ICON LOGIC (Hybrid GitHub/HUGO Support)
 	ASSETS_DIR="$DOCSDIR/$BUILD_WEBRSCS"
-	ICON_MAIN="${URL_RAW_MONO}/docs/$BUILD_WEBRSCS/icon_unk.png"
-	ICON_DARK="${URL_RAW_MONO}/docs/$BUILD_WEBRSCS/icon_unk_dark.png"
-	ICON_LIGHT="${URL_RAW_MONO}/docs/$BUILD_WEBRSCS/icon_unk_light.png"
+	ICON_MAIN="${URL_RAW_MONO}/ScriptResources/${script_id}/docs/$BUILD_WEBRSCS/icon_unk.png"
+	ICON_DARK="${URL_RAW_MONO}/ScriptResources/${script_id}/docs/$BUILD_WEBRSCS/icon_unk_dark.png"
+	ICON_LIGHT="${URL_RAW_MONO}/ScriptResources/${script_id}/docs/$BUILD_WEBRSCS/icon_unk_light.png"
 	ICON_DL="https://img.shields.io/badge/-%20-blue?style=flat&logo=data:image/svg%2bxml;base64,${ICON_DL_B64}&logoColor=white"
 	if [ -f "$ASSETS_DIR/icon.png" ]; then # Check for the presence of package-specific icons
-		ICON_MAIN="${URL_RAW_MONO}/docs/${script_id}/$BUILD_WEBRSCS/icon.png" # The default icon will always be the original Moho icon
-		[ -f "$ASSETS_DIR/icon_dark.png" ] && ICON_DARK="${URL_RAW_MONO}/docs/${script_id}/$BUILD_WEBRSCS/icon_dark.png" || ICON_DARK="$ICON_MAIN" # Look for an optimized version for DARK, or fallback to the original
-		[ -f "$ASSETS_DIR/icon_light.png" ] && ICON_LIGHT="${URL_RAW_MONO}/docs/${script_id}/$BUILD_WEBRSCS/icon_light.png" || ICON_LIGHT="$ICON_MAIN" # Look for an optimized version for LIGHT, or fallback to the original
+		ICON_MAIN="${URL_RAW_MONO}/ScriptResources/${script_id}/docs/$BUILD_WEBRSCS/icon.png" # The default icon will always be the original Moho icon
+		[ -f "$ASSETS_DIR/icon_dark.png" ] && ICON_DARK="${URL_RAW_MONO}/ScriptResources/${script_id}/docs/$BUILD_WEBRSCS/icon_dark.png" || ICON_DARK="$ICON_MAIN" # Look for an optimized version for DARK, or fallback to the original
+		[ -f "$ASSETS_DIR/icon_light.png" ] && ICON_LIGHT="${URL_RAW_MONO}/ScriptResources/${script_id}/docs/$BUILD_WEBRSCS/icon_light.png" || ICON_LIGHT="$ICON_MAIN" # Look for an optimized version for LIGHT, or fallback to the original
 	fi
 	PICTURE_TAG="<picture><source media='(prefers-color-scheme: dark)' srcset='${ICON_DARK}'><source media='(prefers-color-scheme: light)' srcset='${ICON_LIGHT}'><img src='${ICON_MAIN}' width='48' alt='Icon' class='colorize'></picture>"
 
