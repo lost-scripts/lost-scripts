@@ -17,7 +17,7 @@ declare -- BUILD_WEBPATH="../.github.io/content/scripts" # Static Site Proyect c
 declare -- BUILD_WEBFILE="index" # Default filename expected by the Static Site Generator (E.g., index.md)
 declare -- BUILD_WEBRSCS="assets" # Default directory for web resources
 declare -- BUILD_DEBUGME=false # Or, alternatively, just run by: 'bash -x ./BUILDER.sh'
-declare -a BUILD_PACKSWARN=( "READONLY!" "lost-scripts.github.io/other/read-only-repository" "79" "AUTO-GENERATED directory. Do NOT edit synced folders content manually! (Git/Unsynced folders are safe, but saving work here is still discouraged)." ) # Read-only admonition ("FILENAME" "URL" "ICON" "DESC" "NOTE")
+declare -a BUILD_PACKSWARN=( "READONLY!" "lost-scripts.github.io/other/read-only-repository" "79" "AUTO-GENERATED directory. Do NOT edit synced folders content manually! (Git/Unsynced folders are safe, but saving work here is still discouraged)." ) # Read-only admonition ("FILENAME" "URL" "INDEX" "DESC" "NOTE")
 declare -a BUILD_ZIPIGNORE=( "README.md" "READONLY!.url" "LICENSE" "*/LOG.*" "docs" "docs/*" ) # Files that won't be added to the .zip archive
 declare -a BUILD_CATIGNORE=( "DRAFT" "HIDDEN" "PRIVATE" "LEGACY" ) # Script packs filter for the catalog (In base of ScriptStage variable)
 declare -a BUILD_IGNOREPFX=( "__*" ".[!.]*/" ) # Ignore prefix entries (e.g., __wtvr, .arc, .priv)
@@ -31,7 +31,7 @@ declare -A BUILD_ASSIST=( ["ENABLE"]=true # Auto-assist different tasks (ENABLE 
 )
 
 # 🔒 CONFIGURATION CONSTANTS (Uncustomizable/Runtime variables for path resolutions, patterns, etc. )
-declare -Ar INFO=( [NAME]="Lost Builder®" [VERSION]="1.9.71" [CREATOR]="Rai López" [DESC]="Lost Scripts™ Project's Builder and Development Helper" [RUNTIME]=$(date +"%Y%m%d-%H%M"))
+declare -Ar INFO=( [NAME]="Lost Builder®" [VERSION]="1.9.72" [CREATOR]="Rai López" [DESC]="Lost Scripts™ Project's Builder and Development Helper" [RUNTIME]=$(date +"%Y%m%d-%H%M"))
 declare -r  MONODIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" # The anchor: The Monorepo root directory itself
 declare -r  FILENAME=$(basename "${BASH_SOURCE[0]}")
 declare --  CANCELLED=false; 
@@ -374,16 +374,20 @@ for script_id in $PACKS; do
 		fi
 	done
 
-	# --- 🖼️ 2.3b INTELLIGENT ICON LOGIC (Hybrid GitHub/HUGO Support)
+	# --- 🖼️ 2.3b INTELLIGENT MAIN-ICON LOGIC (Hybrid GitHub/HUGO Support)
 	ASSETS_DIR="$DOCSDIR/$BUILD_WEBRSCS"
-	ICON_MAIN="$ICON_UNK_B64"; ICON_DARK="$ICON_UNKD_B64"; ICON_LIGHT="$ICON_UNKL_B64"
+	ICON="$ICON_UNK_B64"; ICON_DARK="$ICON_UNKD_B64"; ICON_LIGHT="$ICON_UNKL_B64"
+	ICON_H="$ICON_UNK_B64"; ICON_H_DARK="$ICON_UNKD_B64"; ICON_H_LIGHT="$ICON_UNKL_B64"
 	ICON_DL="https://img.shields.io/badge/-%20-blue?style=flat&logo=${ICON_DL_B64}&logoColor=white"
 	if [ -f "$ASSETS_DIR/icon.png" ]; then # Check for the presence of package-specific icons
-		ICON_MAIN="${URL_RAW_MONO}/ScriptResources/${script_id}/docs/$BUILD_WEBRSCS/icon.png" # The default icon will always be the original Moho icon
-		[ -f "$ASSETS_DIR/icon_dark.png" ] && ICON_DARK="${URL_RAW_MONO}/ScriptResources/${script_id}/docs/$BUILD_WEBRSCS/icon_dark.png" || ICON_DARK="$ICON_MAIN" # Look for an optimized version for DARK, or fallback to the original
-		[ -f "$ASSETS_DIR/icon_light.png" ] && ICON_LIGHT="${URL_RAW_MONO}/ScriptResources/${script_id}/docs/$BUILD_WEBRSCS/icon_light.png" || ICON_LIGHT="$ICON_MAIN" # Look for an optimized version for LIGHT, or fallback to the original
+		ICON="${URL_RAW_MONO}/ScriptResources/${script_id}/docs/$BUILD_WEBRSCS/icon.png" # The default icon (normally the original Moho icon)
+		[ -f "$ASSETS_DIR/icon_dark.png" ] && ICON_DARK="${URL_RAW_MONO}/ScriptResources/${script_id}/docs/$BUILD_WEBRSCS/icon_dark.png" || ICON_DARK="$ICON" # Look REMOTELY for a dark version or fallback to the original/default (for catalog & starred list)
+		[ -f "$ASSETS_DIR/icon_light.png" ] && ICON_LIGHT="${URL_RAW_MONO}/ScriptResources/${script_id}/docs/$BUILD_WEBRSCS/icon_light.png" || ICON_LIGHT="$ICON" # Look REMOTELY for a light version or fallback to the original/default (for catalog & starred list)
+		ICON_H="${BUILD_WEBRSCS}/icon.png" # The default icon for pack's README header
+		[ -f "$ASSETS_DIR/icon_dark.png" ] && ICON_H_DARK="${BUILD_WEBRSCS}/icon_dark.png" || ICON_H_DARK="$ICON_H" # Look LOCALLY for a dark version or fallback to the original/default (for pack's README)
+		[ -f "$ASSETS_DIR/icon_light.png" ] && ICON_H_LIGHT="${BUILD_WEBRSCS}/icon_light.png" || ICON_H_LIGHT="$ICON_H" # Look LOCALLY for a light version or fallback to the original/default (for pack's README)
 	fi
-	PICTURE_TAG="<picture><source media='(prefers-color-scheme: dark)' srcset='${ICON_DARK}'><source media='(prefers-color-scheme: light)' srcset='${ICON_LIGHT}'><img src='${ICON_MAIN}' width='48' alt='Icon' class='colorize'></picture>"
+	PICTURE_TAG="<picture><source media='(prefers-color-scheme: dark)' srcset='${ICON_DARK}'><source media='(prefers-color-scheme: light)' srcset='${ICON_LIGHT}'><img src='${ICON}' width='48' alt='Icon' class='colorize'></picture>"
 
 	# --- 🔗 2.3c UNIVERSAL DOWNLOAD URL
 	if git -C "$TARGET_DIR" remote get-url origin >/dev/null 2>&1; then # REMOTE SCENARIO: If there are version tags > latest Release, otherwise > GitHub's auto-generated ZIP
@@ -441,9 +445,9 @@ for script_id in $PACKS; do
 			    <tr>
 			        <td align='center' valign='middle' width='96'>
 			            <picture>
-			                <source media='(prefers-color-scheme: dark)' srcset='${ICON_DARK}'>
-			                <source media='(prefers-color-scheme: light)' srcset='${ICON_LIGHT}'>
-			                <img src='${ICON_MAIN}' width='48' alt='Icon' title='${v_name}: ${v_dsc_plain}' class='colorize'>
+			                <source media='(prefers-color-scheme: dark)' srcset='${ICON_H_DARK}'>
+			                <source media='(prefers-color-scheme: light)' srcset='${ICON_H_LIGHT}'>
+			                <img src='${ICON_H}' width='48' alt='Icon' title='${v_name}: ${v_dsc_plain}' class='colorize'>
 			            </picture>
 			        </td>
 			        <td align='right' valign='middle' width='916' nowrap>
@@ -532,7 +536,7 @@ for script_id in $PACKS; do
 		ST_GIT="https://github.com/${BUILD_FORGE[USER]}/${script_id}"
 		
 		if [[ -n "$v_zip_url" ]]; then # Download shield: We use v_zip_url, which is already calculated in Customs (2.4c)
-			ST_DLS_IMG="<img src='https://img.shields.io/badge/-%20-blue?style=flat&logo=${ICON_DL_B64}' alt='Download' title='Download: ${script_id}.zip' width='144'>"
+			ST_DLS_IMG="<img src='https://img.shields.io/badge/-%20-blue?style=flat&logo=${ICON_DL_B64}' alt='Download' title='Download: ${script_id}.zip' width='96'>"
 			ST_LNK="$v_zip_url"
 		else
 			ST_DLS_IMG="<img src='https://img.shields.io/badge/Soon…-inactive.svg' alt='Download' title='Download: Unavailable' width='160'>"
@@ -543,7 +547,7 @@ for script_id in $PACKS; do
 		<table width='100%' border='3' class='card'><tr>
 		    <td align='center' width='96'><a href='${ST_GIT}'>${PICTURE_TAG}</a></td>
 		    <td width='724'><div><a href='${ST_GIT}'><strong>${v_name}</strong></a><br>${v_dsc:-$v_dsc_plain}</div></td>
-		    <td align='center' width='144'><a href='${ST_LNK}'>${ST_DLS_IMG}</a></td>
+		    <td align='center' width='96'><a href='${ST_LNK}'>${ST_DLS_IMG}</a></td>
 		</tr></table>
 		EOF
 		)
