@@ -5,7 +5,7 @@ Params:
   Author: Rai López
   Version: 0.0.1
   Build: 20250114-0005
-  Flags: [UPD!] # NEW! UPD! WIP! TODO BETA ALPHA
+  Flags: [WIP!] # NEW! UPD! WIP! TODO BETA ALPHA
   Starred: [ls_shapes] # The chosen ones for glory
 Tags: [utils, deps]
 Date: 2023-10-17T4:24:43

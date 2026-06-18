@@ -31,14 +31,17 @@ declare -A BUILD_ASSIST=( ["ENABLE"]=true # Auto-assist different tasks (ENABLE 
 )
 
 # 🔒 CONFIGURATION CONSTANTS (Uncustomizable/Runtime variables for path resolutions, patterns, etc. )
-declare -Ar INFO=( [NAME]="Lost Builder®" [VERSION]="1.9.7" [CREATOR]="Rai López" [DESC]="Lost Scripts™ Project's Builder and Development Helper" [RUNTIME]=$(date +"%Y%m%d-%H%M"))
+declare -Ar INFO=( [NAME]="Lost Builder®" [VERSION]="1.9.71" [CREATOR]="Rai López" [DESC]="Lost Scripts™ Project's Builder and Development Helper" [RUNTIME]=$(date +"%Y%m%d-%H%M"))
 declare -r  MONODIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" # The anchor: The Monorepo root directory itself
 declare -r  FILENAME=$(basename "${BASH_SOURCE[0]}")
 declare --  CANCELLED=false; 
 declare -A  VAREXS=( [S]='s/.*=[[:space:]]*\(['"'"'"]\)\(.*\)\1\( --.*\)*$/\2/p' [A]='s/[^=]*=[[:space:]]*//; s/[^"'\'']*["'\'']\([^"'\'']*\)["'\'']/\1 /g' ) # Script header variable extractors
 declare -A  REPORT=( [DUR]=0 [TOT]=0 [LOC]=0 [PUB]=0 [ISS]=0)
 declare --  T_r='\e[31m'; T_R='\e[1;31m'; T_g='\e[32m'; T_y='\e[33m'; T_b='\e[34m'; T_B='\e[1;34m'; T_p='\e[35m'; T_c='\e[36m'; T_w='\e[37m'; T_d='\e[2m'; T_D='\e[1;2m'; T_i='\e[3m'; T_I='\e[3m\e[1m'; T_S='\e[1m'; T_u='\e[4m'; T_U='\e[1;4m'; T__='\e[9m'; T_F='\e['; T_N='\e[0m' # Text styling colors and formats
-declare --  ICON_DL_B64="PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjZWVlIiBkPSJNMjg4IDMyYTMyIDMyIDAgMSAwLTY0IDB2MjQzbC03My03NGEzMiAzMiAwIDAgMC00NiA0NmwxMjggMTI4YzEzIDEyIDMzIDEyIDQ2IDBsMTI4LTEyOGEzMiAzMiAwIDAgMC00Ni00NmwtNzMgNzRWMzJ6TTY0IDM1MmMtMzUgMC02NCAyOS02NCA2NHYzMmMwIDM1IDI5IDY0IDY0IDY0aDM4NGMzNSAwIDY0LTI5IDY0LTY0di0zMmMwLTM1LTI5LTY0LTY0LTY0SDM0N2wtNDYgNDVhNjQgNjQgMCAwIDEtOTAgMGwtNDUtNDVINjR6bTM2OCA1NmEyNCAyNCAwIDEgMSAwIDQ4IDI0IDI0IDAgMSAxIDAtNDh6Ii8+PC9zdmc+"
+declare --  ICON_DL_B64="data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjZWVlIiBkPSJNMjg4IDMyaC02NHYyMTRsLTc3LTc4LTQ1IDQ1IDE1NCAxNTUgMTU0LTE1NS00NS00NS03NyA3OHpNNjQgMzUyYTY0IDY0IDAgMCAwLTY0IDY0djMyYTY0IDY0IDAgMCAwIDY0IDY0aDM4NGE2NCA2NCAwIDAgMCA2NC02NHYtMzJhNjQgNjQgMCAwIDAtNjQtNjRIMzQ3bC00NiA0NWE2NCA2NCAwIDAgMS05MCAwbC00NS00NXptMzY4IDU2YTI0IDI0IDAgMSAxIDAgNDggMjQgMjQgMCAxIDEgMC00OHoiLz48L3N2Zz4="
+declare --  ICON_UNK_B64="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAoAgMAAADF6ZHiAAAACVBMVEVHcEz///8AAADmzmMiAAAAAXRSTlMAQObYZgAAAEVJREFUeJyt0LsNACAIBFAaG6azcT8bmpvST7TCKzBcxUuABER+UtpJdTCzXXvwmbv2BQUIINrzMMmwuqKg92Ruox+NZwDVTTRPxcljzgAAAABJRU5ErkJggg==" # Fallback icon (under 200 bytes each)
+declare --  ICON_UNKD_B64="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAoAgMAAADF6ZHiAAAACVBMVEVHcEybm5v///+t47mlAAAAAXRSTlMAQObYZgAAAEVJREFUeJyt0LsNACAIBFAaG6azcT8bmpvST7TCKzBcxUuABER+UtpJdTCzXXvwmbv2BQUIINrzMMmwuqKg92Ruox+NZwDVTTRPxcljzgAAAABJRU5ErkJggg==" # Fallback icon (dark)
+declare --  ICON_UNKL_B64="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAoAgMAAADF6ZHiAAAACVBMVEVHcExkZGQAAABd+PUGAAAAAXRSTlMAQObYZgAAAEVJREFUeJyt0LsNACAIBFAaG6azcT8bmpvST7TCKzBcxUuABER+UtpJdTCzXXvwmbv2BQUIINrzMMmwuqKg92Ruox+NZwDVTTRPxcljzgAAAABJRU5ErkJggg==" # Fallback icon (light)
 
 # 🐞 DEBUGGER (⚠ Slow!): Log the entire process with timestamps in a namesake file
 if [ "$BUILD_DEBUGME" = true ]; then
@@ -300,7 +303,7 @@ for script_id in $PACKS; do
 
 	# --- ♌ 2.1c SCRIPT RESOURCES PATH RESOLUTION
 	res_path=$(find ./ScriptResources -maxdepth 1 -type d -name "$script_id" -print -quit) # Use -maxdepth 2 or a customizable variable if nested folders are needed
-	DOCSDIR=$(find "$res_path" -maxdepth 1 -type d -iname "*docs*" -print -quit 2> /dev/null) || DOCSDIR="" # Only assign DOCSDIR if a _docs or docs folder exists in resources, otherwise reset to empty
+	DOCSDIR=$(find "$res_path" -maxdepth 1 -type d -iname "*docs*" -print -quit 2> /dev/null) || DOCSDIR="" # Only assign DOCSDIR if a docs folder exists in resources, otherwise reset to empty
 
 	# --- 🔙 2.1d SAFETY MARK (Ensure security mark on ALL packs if defined!)
 	if [[ -f "$TARGET_DIR/${BUILD_PACKSWARN[0]}.url" ]]; then :; else
@@ -373,10 +376,8 @@ for script_id in $PACKS; do
 
 	# --- 🖼️ 2.3b INTELLIGENT ICON LOGIC (Hybrid GitHub/HUGO Support)
 	ASSETS_DIR="$DOCSDIR/$BUILD_WEBRSCS"
-	ICON_MAIN="${URL_RAW_MONO}/ScriptResources/${script_id}/docs/$BUILD_WEBRSCS/icon_unk.png"
-	ICON_DARK="${URL_RAW_MONO}/ScriptResources/${script_id}/docs/$BUILD_WEBRSCS/icon_unk_dark.png"
-	ICON_LIGHT="${URL_RAW_MONO}/ScriptResources/${script_id}/docs/$BUILD_WEBRSCS/icon_unk_light.png"
-	ICON_DL="https://img.shields.io/badge/-%20-blue?style=flat&logo=data:image/svg%2bxml;base64,${ICON_DL_B64}&logoColor=white"
+	ICON_MAIN="$ICON_UNK_B64"; ICON_DARK="$ICON_UNKD_B64"; ICON_LIGHT="$ICON_UNKL_B64"
+	ICON_DL="https://img.shields.io/badge/-%20-blue?style=flat&logo=${ICON_DL_B64}&logoColor=white"
 	if [ -f "$ASSETS_DIR/icon.png" ]; then # Check for the presence of package-specific icons
 		ICON_MAIN="${URL_RAW_MONO}/ScriptResources/${script_id}/docs/$BUILD_WEBRSCS/icon.png" # The default icon will always be the original Moho icon
 		[ -f "$ASSETS_DIR/icon_dark.png" ] && ICON_DARK="${URL_RAW_MONO}/ScriptResources/${script_id}/docs/$BUILD_WEBRSCS/icon_dark.png" || ICON_DARK="$ICON_MAIN" # Look for an optimized version for DARK, or fallback to the original
@@ -431,7 +432,7 @@ for script_id in $PACKS; do
 
 		if grep -q "$H_START" "$WRITEME_TMP" && grep -q "$H_END" "$WRITEME_TMP"; then # Assets & Shields definitions and in-markers inject (Bulletproof generation)
 			SAFE_TAR="${v_tar// /_}"
-			DL_SHI="https://img.shields.io/github/downloads/${BUILD_FORGE[USER]}/${script_id}/total?logo=data:image/svg%2bxml;base64,${ICON_DL_B64}&color=blue&label=Download"
+			DL_SHI="https://img.shields.io/github/downloads/${BUILD_FORGE[USER]}/${script_id}/total?logo=${ICON_DL_B64}&color=blue&label=Download"
 			RE_SHI="https://img.shields.io/github/v/release/${BUILD_FORGE[USER]}/${script_id}?logo=github&color=yellow&label=Release"
 			TA_SHI="https://img.shields.io/badge/For-Moho_${SAFE_TAR}-orange"
 
@@ -440,9 +441,9 @@ for script_id in $PACKS; do
 			    <tr>
 			        <td align='center' valign='middle' width='96'>
 			            <picture>
-			                <source media='(prefers-color-scheme: dark)' srcset='${BUILD_WEBRSCS}/icon_dark.png'>
-			                <source media='(prefers-color-scheme: light)' srcset='${BUILD_WEBRSCS}/icon_light.png'>
-			                <img src='${BUILD_WEBRSCS}/icon.png' width='48' alt='Icon' title='${v_name}: ${v_dsc_plain}' class='colorize'>
+			                <source media='(prefers-color-scheme: dark)' srcset='${ICON_DARK}'>
+			                <source media='(prefers-color-scheme: light)' srcset='${ICON_LIGHT}'>
+			                <img src='${ICON_MAIN}' width='48' alt='Icon' title='${v_name}: ${v_dsc_plain}' class='colorize'>
 			            </picture>
 			        </td>
 			        <td align='right' valign='middle' width='916' nowrap>
@@ -531,7 +532,7 @@ for script_id in $PACKS; do
 		ST_GIT="https://github.com/${BUILD_FORGE[USER]}/${script_id}"
 		
 		if [[ -n "$v_zip_url" ]]; then # Download shield: We use v_zip_url, which is already calculated in Customs (2.4c)
-			ST_DLS_IMG="<img src='https://img.shields.io/github/downloads/${BUILD_FORGE[USER]}/${script_id}/total?logo=data:image/svg%2bxml;base64,${ICON_DL_B64}&color=blue&label=' alt='Download' title='Download: ${script_id}.zip' width='160'>"
+			ST_DLS_IMG="<img src='https://img.shields.io/badge/-%20-blue?style=flat&logo=${ICON_DL_B64}' alt='Download' title='Download: ${script_id}.zip' width='144'>"
 			ST_LNK="$v_zip_url"
 		else
 			ST_DLS_IMG="<img src='https://img.shields.io/badge/Soon…-inactive.svg' alt='Download' title='Download: Unavailable' width='160'>"
@@ -542,7 +543,7 @@ for script_id in $PACKS; do
 		<table width='100%' border='3' class='card'><tr>
 		    <td align='center' width='96'><a href='${ST_GIT}'>${PICTURE_TAG}</a></td>
 		    <td width='724'><div><a href='${ST_GIT}'><strong>${v_name}</strong></a><br>${v_dsc:-$v_dsc_plain}</div></td>
-		    <td align='center' width='192'><a href='${ST_LNK}'>${ST_DLS_IMG}</a></td>
+		    <td align='center' width='144'><a href='${ST_LNK}'>${ST_DLS_IMG}</a></td>
 		</tr></table>
 		EOF
 		)
@@ -655,7 +656,7 @@ if [ -s "$MD_CATADATA" ]; then # Start reordering and processing collected data
 	<table id='catalog' width='100%' border='0'>
 	    <thead>
 	        <tr>
-	            <th align='center' width='96'>Icon</th><th align='center' width='120'>Name</th><th align='center' width='1920'>Description</th><th align='center' title='Direct Download Links'>📦</th>
+	            <th align='center' width='96'>Icon</th><th align='center' width='120'>Name</th><th align='center' width='1920'>Description</th><th align='center' width='144' title='Direct Download Links'>📦</th>
 	        </tr>
 	    </thead>
 	    <tbody>
