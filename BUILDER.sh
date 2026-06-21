@@ -31,7 +31,7 @@ declare -A BUILD_ASSIST=( ["ENABLE"]=true # Auto-assist different tasks (ENABLE 
 )
 
 # 🔒 CONFIGURATION CONSTANTS (Uncustomizable/Runtime variables for path resolutions, patterns, etc. )
-declare -Ar INFO=( [NAME]="Lost Builder®" [VERSION]="1.9.72" [CREATOR]="Rai López" [DESC]="Lost Scripts™ Project's Builder and Development Helper" [RUNTIME]=$(date +"%Y%m%d-%H%M"))
+declare -Ar INFO=( [NAME]="Lost Builder®" [VERSION]="1.9.73" [CREATOR]="Rai López" [DESC]="Lost Scripts™ Project's Builder and Development Helper" [RUNTIME]=$(date +"%Y%m%d-%H%M"))
 declare -r  MONODIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" # The anchor: The Monorepo root directory itself
 declare -r  FILENAME=$(basename "${BASH_SOURCE[0]}")
 declare --  CANCELLED=false; 
@@ -264,25 +264,25 @@ for script_id in $PACKS; do
 			fi
 		fi
 
-		# --- 🔽 2.1a MOVE NORMAL PACKS COMPONENT FILES: Match the script base name (excluding ScriptResources to handle that separately) with any extension or High-DPI suffix while strictly avoiding shared global directories
-		find "$CORE_DEST" -type f -not -path "*/ScriptResources/*" -not -path "*/Utility/*" -not -path "*/Modules/*" \( -name "${script_id}.*" -o -name "${script_id}@*" \) | while read -r file; do
+		# --- 🔽 2.1a MOVE NORMAL PACK COMPONENT FILES: Match the script base name (excluding ScriptResources to handle that separately) with any extension or High-DPI suffix while strictly avoiding shared global directories
+		find "$CORE_DEST" -type f -not -path "*/ScriptResources/*" -not -path "*/Utility/*" -not -path "*/Modules/*" \( -name "${script_id}.*" -o -name "${script_id}@*" \) | while read -r file; do # TBC: `-name "${script_id}[_][A-Z][A-Z].*"` (for supporting standard locale suffixes e.g., _ES.txt)
 			rel_path=$(dirname "${file#$CORE_DEST/}")
 			mkdir -p "$TARGET_DIR/$rel_path"
 			mv "$file" "$TARGET_DIR/$rel_path/"
 
 			# 🖇 SYMLINKER INTEGRATION: "Free" per-file processing
 			if [ "$link_this_pack" = true ] && [[ -n "$MOHO_TARGET_DIR" ]]; then
-				b_name=$(basename "$file"); dst_file="$MOHO_TARGET_DIR/$rel_path/$b_name"; final_src="$TARGET_DIR/$rel_path/$b_name"
+				b_name=$(basename "$file"); dst_file="$MOHO_TARGET_DIR/$rel_path/$b_name"; mono_src="$MONODIR/${file#$CORE_DEST/}"
 
 				if [[ ! -e "$dst_file" || -L "$dst_file" ]]; then # SAFETY CHECK: Only proceed if target does not exist OR is strictly a symlink
-					rm -f "$dst_file"; mkdir -p "$(dirname "$dst_file")"; ln -s "$(realpath --relative-to="$(dirname "$dst_file")" "$final_src")" "$dst_file"
+					rm -f "$dst_file"; mkdir -p "$(dirname "$dst_file")"; ln -s "$(realpath --relative-to="$(dirname "$dst_file")" "$mono_src")" "$dst_file"
 				else
 					echo -e "    ⚠️  ${T_y}WARNING (Skipped symlink):${T_N} Real file exists at: ${T_d}Scripts/${dst_file#$MOHO_TARGET_DIR/}${T_N}"
 				fi
 			fi
 		done
 
-		# --- ⏬ 2.1b MOVE NORMAL PACKS RESOURCES
+		# --- ⏬ 2.1b MOVE NORMAL PACK RESOURCES
 		if [ -d "$CORE_DEST/ScriptResources/$script_id" ]; then
 			mkdir -p "$TARGET_DIR/ScriptResources"
 			rm -rf "$TARGET_DIR/ScriptResources/$script_id"
@@ -290,10 +290,10 @@ for script_id in $PACKS; do
 
 			# 🖇 SYMLINKER INTEGRATION: "Free" folder resource linking
 			if [ "$link_this_pack" = true ] && [[ -n "$MOHO_TARGET_DIR" ]]; then
-				dst_res="$MOHO_TARGET_DIR/ScriptResources/$script_id"; final_res="$TARGET_DIR/ScriptResources/$script_id"
-				
+				dst_res="$MOHO_TARGET_DIR/ScriptResources/$script_id"; mono_res="$MONODIR/ScriptResources/$script_id"
+
 				if [[ ! -e "$dst_res" || -L "$dst_res" ]]; then # SAFETY CHECK: Protect real resource folders
-					rm -rf "$dst_res"; mkdir -p "$MOHO_TARGET_DIR/ScriptResources"; ln -s "$(realpath --relative-to="$MOHO_TARGET_DIR/ScriptResources" "$final_res")" "$dst_res"
+					rm -rf "$dst_res"; mkdir -p "$MOHO_TARGET_DIR/ScriptResources"; ln -s "$(realpath --relative-to="$MOHO_TARGET_DIR/ScriptResources" "$mono_res")" "$dst_res"
 				else
 					echo -e "    ⚠️  ${T_y}WARNING (Skipped symlink):${T_N} Real dir. exists at: ${T_d}Scripts/${dst_res#$MOHO_TARGET_DIR/}${T_N}"
 				fi
@@ -634,7 +634,7 @@ if [[ "${BUILD_ASSIST[ENABLE]}" == "true" && "${BUILD_ASSIST[SYMLINKS]}" == "tru
 		echo -e "🔗 Linking Shared Assets & Dependencies..."
 		for shared_item in "${BUILD_SYMLINKS[@]}"; do
 			[[ "$shared_item" != *"/"* ]] && continue # Skip pack identifiers to process only shared literal paths (items containing a slash)
-			src_shared="$CORE_DEST/$shared_item"; dst_shared="$MOHO_TARGET_DIR/$shared_item"
+			src_shared="$MONODIR/$shared_item"; dst_shared="$MOHO_TARGET_DIR/$shared_item"
 			[[ ! -e "$src_shared" ]] && continue
 			
 			if [[ ! -e "$dst_shared" || -L "$dst_shared" ]]; then # SAFETY CHECK: Protect real shared files or directories
@@ -648,7 +648,7 @@ if [[ "${BUILD_ASSIST[ENABLE]}" == "true" && "${BUILD_ASSIST[SYMLINKS]}" == "tru
 	fi
 fi
 
-# 3. 📖 CATALOG GENERATION (RAM optimized)
+# 4. 📖 CATALOG GENERATION (RAM optimized)
 echo "--- 📝 Updating Monorepo's Catalog..."
 
 if [ -s "$MD_CATADATA" ]; then # Start reordering and processing collected data
@@ -698,7 +698,7 @@ if [ -s "$MD_CATADATA" ]; then # Start reordering and processing collected data
 	MD_CATALOG="${MD_CATALOG}"$'\n'"<p align='right'><sub>𝓲 <em>Generated by <strong>${INFO[NAME]}</strong><sup> v${INFO[VERSION]}</sup> @ <code>$(date +'%Y%m%d')</code></em></sub></p>"
 fi
 
-# 3c. Surgical Injection (With original, trusted, clean SED version)
+# 4c. Surgical Injection (With original, trusted, clean SED version)
 if grep -q "$MD_CATASTART" "$MONO_READ" && grep -q "$MD_CATAEND" "$MONO_READ"; then # Both markers are present
 	sed -i "\|$MD_CATASTART|,\|$MD_CATAEND|{ \|$MD_CATASTART|b; \|$MD_CATAEND|b; d; }" "$MONO_READ" # First, we delete ONLY what is strictly BETWEEN the markers
 	echo "$MD_CATALOG" | sed -i "\|$MD_CATASTART|r /dev/stdin" "$MONO_READ" # CLEAN TRANSIT TRICK: Use, since sed requires a file, /dev/stdin to inject our variable directly through an echo without creating ANY temp file!
@@ -708,7 +708,7 @@ else
   { echo -e "\n$MD_CATASTART"; echo "$MD_CATALOG"; echo -e "$MD_CATAEND\n"; } >> "$MONO_READ"
 fi
 
-# 3d. Final Cleanup and stuff...
+# 4d. Final Cleanup and stuff...
 rm -f "$MD_CATADATA"
 if [ "$CANCELLED" = true ]; then echo -e "--- 🛑 ${T_g}ABORTED (Safely):${T_N} Built, but distribution aborted. Restarting... \n"; exec bash "$0"; fi; trap - SIGINT # Cancel checkpoint 5; Customized trap disabling
 
@@ -717,7 +717,7 @@ if [ "$CANCELLED" = true ]; then echo -e "--- 🛑 ${T_g}ABORTED (Safely):${T_N}
 echo -e "--- 🚫 Multi-line comment example (This will never be run/printed!)"
 COMMENT
 
-# 4. 🔚 ENDING: RESTART/SHELL/[UPDATE]/EXIT?
+# 5. 🔚 ENDING: RESTART/SHELL/[UPDATE]/EXIT?
 echo -e "--- 🏁 ${T_B}DONE!${T_N} (Report: ⏱️  $(printf '%01d:%02d' $((SECONDS/60)) $((SECONDS%60))) | 📦 ${REPORT[TOT]} | 💻 ${REPORT[LOC]}$([ "$UPDATED_WORKSP" = true ] && echo " [$CURTIME]") | 🌐 ${REPORT[PUB]}$([ "$UPDATED_COMMIT" = true ] && echo " [$COMTIME]") | $([[ ${REPORT[ISS]} -gt 0 ]] && echo -ne "${T_R}❎${T_N}" || echo -ne "✅") ${REPORT[ISS]})"
 
 FINAL_PROMPT="--- ？ ${T_S}R${T_N}estart? (${T_S}Y${T_N}es/${T_S}S${T_N}hell"
