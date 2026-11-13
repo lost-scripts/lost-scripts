@@ -4,7 +4,7 @@
 
 ScriptName = "LS_Shapes"
 ScriptBirth = "20220918-0248"
-ScriptBuild = "20261112-2048"
+ScriptBuild = "20261113-0052"
 ScriptVersion = "0.4.2"
 ScriptStage = "BETA"
 ScriptTarget = "Moho® 14.5+ Pro"
@@ -912,9 +912,8 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 	local itemLabel = ""
 	local itemsForBusy = 64 -- Minimum items to gray-out the list while busy 
 
-	local brush = doc and moho:CurrentEditStyle() and tostring(moho:CurrentEditStyle().fBrushName:Buffer():gsub("%.[^.]+$", "")) or ""
-	local styleName = doc and moho:CurrentEditStyle() and tostring(moho:CurrentEditStyle().fName:Buffer()) or "" -- 20250730-2130: Had to also check doc existence here & below to avoid (I think new in v14.3) crashes
-	local style = doc and moho:CurrentEditStyle() -- 20231010-0554: For some reason, "styleName" must be gathered before this assignment, otherwise it won't be possible to access "style" properties afterwards!
+	local style = doc and moho:CurrentEditStyle()
+	local styleName = doc and style and style:Name() or "" -- 20250730-2130: Had to also check doc existence here & below to avoid (I think new in v14.3) crashes
 	local styleID = -1 --print(styleName .. " (" .. tostring(style) .. "): ", tostring(style.fFillCol.value.r), ", ", tostring(style.fFillCol.value.g), ", ", tostring(style.fFillCol.value.b))
 	local styleUUID = style and style.fUUID:Buffer() or "" --doc:StyleByID(i) print(iStyle.fUUID:Buffer())
 	local styleCount = doc and math.floor(doc:CountStyles()) or 0
@@ -922,12 +921,14 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 	local styleSel = doc and doc:StyleByID(styleSelID) or style
 	local styleSelUUID = LS_Shapes.mode == 2 and styleSel and styleSel.fUUID:Buffer() or ""
 	local stylesSel = styleName and styleName ~= "" and 1 or LS_Shapes:CountSelectedStyles(doc) --self.itemList and (math.floor(self.itemList:NumSelectedItems() + (self.itemList:IsItemSelected(0) == true and -1 or 0))) or 0
-	local style1Name, style2Name = (self.tempShape and self.tempShape.fInheritedStyle) and tostring(self.tempShape.fInheritedStyle.fName:Buffer()) or "", (self.tempShape and self.tempShape.fInheritedStyle2) and tostring(self.tempShape.fInheritedStyle2.fName:Buffer()) or "" -- See note 20231010-0554 above!
+
 	local style1, style2 = (styleName == "" and self.tempShape) and self.tempShape.fInheritedStyle or nil, (styleName == "" and self.tempShape) and self.tempShape.fInheritedStyle2 or nil
+	local style1Name, style2Name = style1Name and self.tempShape.fInheritedStyle:Name() or "", style2Name and self.tempShape.fInheritedStyle2:Name() or ""
 	local style1UUID, style2UUID = style1 and style1.fUUID:Buffer() or nil, style2 and style2.fUUID:Buffer() or nil
 	local style1ID, style2ID = LS_Shapes:StyleID(doc, style1), LS_Shapes:StyleID(doc, style2)
 	local styleUUIDToShow = styleName ~= "" and styleUUID or (styleSelID > - 1 and styleSelUUID or styleUUID)
 	local styleTable = {}
+	local brush = doc and style and tostring(style.fBrushName:Buffer():gsub("%.[^.]+$", "")) or ""
 	LS_Shapes:Log("START", moho) --LS_Shapes:LogTime(true)
 
 	if (style ~= nil) then
@@ -1724,8 +1725,8 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 		-- 2) Traverse styles in natural order (index goes from first style to last)
 		self.itemList:Enable(desiredCount - currentCount < itemsForBusy)
 		for i = 1, styleCount do
-			local styleName = tostring(doc:StyleByID(i - 1).fName:Buffer()) -- NOTE: The swapped order is to get around the style becoming an LM_String bug!
 			local style = doc:StyleByID(i - 1)
+			local styleName = style:Name()
 			local styleDefLine = (style.fDefineLineWidth and style.fBrushName:Buffer() ~= "" and "; ") or style.fDefineLineWidth and "· " or style.fBrushName:Buffer() ~= "" and ", " or "  " --local defWidth = style.fDefineLineWidth and "· " or "  "
 			local styleDefFillLine = (style.fDefineFillCol and style.fDefineLineCol and "◉‍ ")  or (style.fDefineFillCol and "◍‍ ") or (style.fDefineLineCol and "◎‍ ") or "○‍ " --○◌⊘⨂
 
@@ -1796,7 +1797,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 			--end
 		else -- 202401040525: Ensure <None> is selected when entering manually to STYLE Mode? (TBC/TODO)
 			for i = 0, styleCount - 1 do
-				local iStyle = doc:StyleByID(i) --print(iStyle.fName:Buffer(), ", ", tostring(iStyle.fSelected))
+				local iStyle = doc:StyleByID(i) --print(iStyle:Name(), ", ", tostring(iStyle.fSelected))
 				if iStyle.fSelected == true then --and not self.itemList:IsItemSelected(i + 1)
 					if not self.itemList:IsItemSelected(i + 1) or stylesSel ~= itemsSel then
 						self.itemList:SetSelItem(self.itemList:GetItem(i + 1), false, add) -- 20231008-0037: Changing redraw (2nd ar.) to false in a try to improve performace... (TBD) 
@@ -1805,7 +1806,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 					end
 				end
 			end
-			self.itemName:SetValue(self.itemList:SelItem() > 0 and styleSel.fName:Buffer() or "    " .. MOHO.Localize("/LS/Shapes/StyleManagement=Style Management") .. "    ")
+			self.itemName:SetValue(self.itemList:SelItem() > 0 and styleSel:Name() or "    " .. MOHO.Localize("/LS/Shapes/StyleManagement=Style Management") .. "    ")
 			if styleID and styleID >= 0 then
 				--?
 			elseif styleID < 0 then
@@ -2727,16 +2728,16 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 	local multiRgb = LM.ColorOps:RgbColor(multiValues[1], multiValues[2], multiValues[3], multiValues[4] / 100 * 255)
 	local multiHsv = LM.ColorOps:Rgb2Hsv(multiRgb)
 
-	local styleName = doc and moho:CurrentEditStyle() and tostring(moho:CurrentEditStyle().fName:Buffer()) or "" -- 20250730-2130: Had to also check doc existence here & below to avoid (I think new in v14.3) crashes
-	local style = doc and moho:CurrentEditStyle() -- 20231010-0554: For some reason, "styleName" must be gathered before this assignment, otherwise then it won't be possible to access "style" properties!
+	local style = doc and moho:CurrentEditStyle()
+	local styleName = doc and style and style:Name() or "" -- 20250730-2130: Had to also check doc existence here & below to avoid (I think new in v14.3) crashes
 	local styleID = -1
 	local styleCount = doc and math.floor(doc:CountStyles()) or 0
 	local styleSelID = LS_Shapes.mode == 2 and math.floor(self.itemList:SelItem()) - 1 or -1
 	local styleSel = doc and doc:StyleByID(styleSelID) or style
 	local stylesSel = math.floor(self.itemList:NumSelectedItems() + (self.itemList:IsItemSelected(0) == true and -1 or 0))
 
-	local style1Name, style2Name = (self.tempShape and self.tempShape.fInheritedStyle) and tostring(self.tempShape.fInheritedStyle.fName:Buffer()) or "", (self.tempShape and self.tempShape.fInheritedStyle2) and tostring(self.tempShape.fInheritedStyle2.fName:Buffer()) or "" -- See note 20231010-0554 above!
 	local style1, style2 = (styleName == "" and self.tempShape) and self.tempShape.fInheritedStyle or nil, (styleName == "" and self.tempShape) and self.tempShape.fInheritedStyle2 or nil
+	local style1Name, style2Name = style1 and self.tempShape.fInheritedStyle:Name() or "", style2 and self.tempShape.fInheritedStyle2:Name() or ""
 	local style1UUID, style2UUID = style1 and style1.fUUID:Buffer() or nil, style2 and style2.fUUID:Buffer() or nil
 	local style1ID, style2ID = LS_Shapes:StyleID(doc, style1), LS_Shapes:StyleID(doc, style2)
 
@@ -3215,7 +3216,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 					if iStyle ~= nil then
 						iStyle.fSelected = self.itemList:IsItemSelected(i + 1)
 					end
-					--print(iStyle.fName:Buffer(), ", ", tostring(iStyle.fSelected))
+					--print(iStyle:Name(), ", ", tostring(iStyle.fSelected))
 				end
 				if math.floor(self.itemList:SelItem()) - 1 ~= styleID then
 					LS_Shapes.mode = LS_Shapes:StyleLeaver(moho, mesh, 2)
@@ -3332,7 +3333,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 					end
 				end
 			elseif (style ~= nil and styleName ~= "") then -- Current Style (TAKE CARE NOT TO NAME DEFAULT NAMELESS STYLE!)
-				style.fName:Set(self.itemName:Value()) --doc:RenameStyle(styleName, self.itemName:Value(), nil) -- Doesn't seem to do anything...
+				style:SetName(self.itemName:Value()) --doc:RenameStyle(styleName, self.itemName:Value(), nil) -- Doesn't seem to do anything...
 				--[[
 				style.fName:Set(self.itemName:Value())
 				for i = 0, doc:CountStyles() - 1 do
@@ -3346,7 +3347,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 				for i = 0, doc:CountStyles() - 1 do
 					local iStyle = doc:StyleByID(i)
 					if (iStyle.fSelected) then
-						iStyle.fName:Set(self.itemName:Value())
+						iStyle:SetName(self.itemName:Value())
 						LS_Shapes:MakeStyleNameUnique(doc, i)
 					end
 				end
@@ -3577,7 +3578,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 				end --print(i, ", ", tostring(iStyle.fSelected), ", ", count)
 			end
 			--[[20240109-0420: Previous, less functional, code...
-			local style = (style and styleName ~= "") and style or styleSel --print(style.fName:Buffer())
+			local style = (style and styleName ~= "") and style or styleSel --print(style:Name())
 			local styleUUID = style.fUUID:Buffer()
 			for i = 0, styleCount - 1 do
 				local iStyle = doc:StyleByID(i)
@@ -4547,7 +4548,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 				local baseStyle = style --or self.tempShape.fMyStyle
 				local newStyle = doc:AddStyle(MOHO.Localize("/Windows/Style/Style=Style") .. " " .. math.floor(doc:CountStyles() + 1))
 				if (newStyle ~= nil) then
-					--LS_Shapes:MakeStyleNameUnique(doc, doc:CountStyles() - 1) --newStyle.fName:Set(newStyleName)
+					--LS_Shapes:MakeStyleNameUnique(doc, doc:CountStyles() - 1) --newStyle:SetName(newStyleName)
 					newStyle.fFillCol = baseStyle.fFillCol
 					newStyle.fLineCol = baseStyle.fLineCol
 					newStyle.fLineWidth = baseStyle.fLineWidth
@@ -4574,9 +4575,9 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 				if styleSel then
 					doc:AddStyle(styleSel)
 					local lastStyle = doc:CountStyles() - 1
-					local styleName = doc:StyleByID(lastStyle).fName:Buffer()
+					local styleName = doc:StyleByID(lastStyle):Name()
 					local style = doc:StyleByID(lastStyle)
-					style.fName:Set(styleName .. " " .. math.floor(doc:CountStyles() + 1))
+					style:SetName(styleName .. " " .. math.floor(doc:CountStyles() + 1))
 				end
 				--]]
 			end
@@ -6241,12 +6242,12 @@ end
 function LS_Shapes:MakeStyleNameUnique(doc, id, jump) --(MohoDoc, int, int) void
 	if (doc ~= nil and id ~= nil and doc:StyleByID(id) ~= nil) then
 		local count = 0 + (jump or 1)
-		local baseName = doc:StyleByID(id).fName:Buffer() -- Item's original name
+		local baseName = doc:StyleByID(id):Name() -- Item's original name
 		local newName = baseName -- Current name of the item, which goes updating
 		local namesake = id
 		for i = 0, doc:CountStyles() - 1 do -- Check if the name is already taken by another item and, if so, pick that item's reference ID
 			local style = doc:StyleByID(i)
-			if style.fName:Buffer() == baseName and i ~= id then
+			if style:Name() == baseName and i ~= id then
 				namesake = i
 			end
 		end
@@ -6256,7 +6257,7 @@ function LS_Shapes:MakeStyleNameUnique(doc, id, jump) --(MohoDoc, int, int) void
 				newName = baseName .. " " .. count -- We generate the new name using the original name and the counter
 			end
 		end
-		doc:StyleByID(id).fName:Set(newName) -- We assign the new name to the item using the current name
+		doc:StyleByID(id):SetName(newName) -- We assign the new name to the item using the current name
 	end
 end
 
@@ -6288,7 +6289,7 @@ end
 function LS_Shapes:StyleLeaver(moho, mesh, mode) --(moho, M_Mesh, int) int -- StyleDeactivator?
 	mesh = mesh or moho:DrawingMesh()
 	if (moho ~= nil and mesh ~= nil) then
-		local styleName = moho:CurrentEditStyle() and tostring(moho:CurrentEditStyle().fName:Buffer()) or ""
+		local styleName = moho:CurrentEditStyle() and moho:CurrentEditStyle():Name() or ""
 		if styleName ~= "" then
 			local v = LM.Vector2:new_local() v:Set(0, -100)
 			mesh:SelectNone()
@@ -6305,7 +6306,7 @@ function LS_Shapes:StyleLeaver(moho, mesh, mode) --(moho, M_Mesh, int) int -- St
 					tempShape.fSelected = true
 					--tempShape:SelectAllPoints()
 					--mesh:DeleteShape(mesh:CountShapes() - 1)
-					--curStyle = moho:CurrentEditStyle() print(curStyle.fName:Buffer())
+					--curStyle = moho:CurrentEditStyle() print(curStyle:Name())
 					--print("Before 'UpdateUI'")
 					moho:UpdateUI() --print("After 'UpdateUI'")
 					moho:DeselectShapes() --tempShape.fSelected = false
@@ -6691,9 +6692,8 @@ function LS_Shapes:BuildStyleChoiceMenu(menu, doc, baseMsg, dummyMsg, exclude) -
 	menu:AddItem(MOHO.Localize("/Windows/Style/None2=None"), 0, baseMsg) --‹› --¹ 
 	if doc ~= nil then
 		for i = 0, doc:CountStyles() - 1 do
-			local styleName = tostring(doc:StyleByID(i).fName:Buffer()) or "?"
 			local style = doc:StyleByID(i) -- NOTE: The swapped order is to get around the style becoming an LM_String bug!
-			--local styleName = tostring(style.fName:Buffer())
+			local styleName = style:Name() or "?"
 			if (i ~= exclude and styleName ~= "") then
 				if i == 0 then menu:AddItem("", 0, 0) end
 				menu:AddItem(styleName, 0, baseMsg + 1 + i)
