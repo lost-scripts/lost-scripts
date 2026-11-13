@@ -551,14 +551,14 @@ function LS_ShapesDialog:new(moho) --print("LS_ShapesDialog:new(" .. tostring(mo
 				if LS_Shapes.largeButtons then l:AddChild(LM.GUI.TextList(butW + butL, 0, 0), LM.GUI.ALIGN_FILL, 0) end
 			l:Pop() --V
 			l:PushV(LM.GUI.ALIGN_CENTER, 0)
-				d.combineIntersect = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_intersect", "⊛ " .. MOHO.Localize("/Scripts/Tool/SelectShape/Intersect=Intersect"), true, self.COMBO_INTERSECT, true) --" (⁎)"
+				d.combineIntersect = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_intersect", "⊛ " .. MOHO.Localize("/Scripts/Tool/SelectShape/Intersect=Intersect"), true, self.COMBO_INTERSECT, true) --" (⁕)"
 				d.combineIntersect.prop = {v = 14, pro = true, tooltip = false} table.insert(d.w, d.combineIntersect)
 				l:AddChild(d.combineIntersect, LM.GUI.ALIGN_FILL, 0)
 				if LS_Shapes.largeButtons then l:AddChild(LM.GUI.TextList(butW + butL, 0, 0), LM.GUI.ALIGN_FILL, 0) end
 			l:Pop() --V
-			l:AddPadding(2)
+			l:AddPadding(0)
 
-			--if LS_Shapes.largeButtons then l:AddPadding(0) end
+			--if LS_Shapes.largeButtons then l:AddPadding(0) end -- -1: Off, 0: Auto, 1: On
 			d.combineBlendBut = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_blend", MOHO.Localize("/Scripts/Tool/SelectShape/Blend=Blend:"):gsub("[^%w]$", "") .. " (<alt> " .. MOHO.Localize("/Windows/Style/Reset=Reset") .. ")", true, self.COMBO_BLEND_BUT, true) --Remove any non-alphanumeric ending character
 			d.combineBlendBut:SetAlternateMessage(self.COMBO_BLEND_BUT_ALT)
 			d.combineBlendBut.prop = {v = 14, pro = true, tooltip = false} table.insert(d.w, d.combineBlendBut)
@@ -569,20 +569,18 @@ function LS_ShapesDialog:new(moho) --print("LS_ShapesDialog:new(" .. tostring(mo
 			d.combineBlend:SetWheelInc(1.0)
 			d.combineBlend.prop = {v = 14, pro = true, tooltip = false} table.insert(d.w, d.combineBlend)
 			l:AddChild(d.combineBlend, LM.GUI.ALIGN_FILL, 0)
-			if true then l:AddPadding(0) end --not LS_Shapes.largeButtons
+			--if true then l:AddPadding(0) end --not LS_Shapes.largeButtons
 
 			l:PushV(LM.GUI.ALIGN_CENTER, 0)
-				d.topBut = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_sel_cluster_top", MOHO.Localize("/Scripts/Tool/SelectShape/SelectTopOfCluster=Select top of Liquid Shape") .. " (<alt> " .. MOHO.Localize("/Scripts/Tool/SelectShape/SelectAll=Select All") .. ")", false, self.TOP_SHAPE, true)
+				d.topBut = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_sel_cluster_top", MOHO.Localize("/Scripts/Tool/SelectShape/SelectTopShape=Select Top Shape") .. " (<alt> " .. MOHO.Localize("/Scripts/Tool/SelectShape/SelectAll=Select All") .. ")", false, self.TOP_SHAPE, true)
 				d.topBut:SetAlternateMessage(self.TOP_SHAPE_ALT)
-				--d.topBut:SetToolTip(MOHO.Localize("/Scripts/Tool/SelectShape/SelectTopOfCluster=Select top of Liquid Shape"))
 				d.topBut.prop = {v = 14, pro = true, tooltip = false} table.insert(d.w, d.topBut)
-				if true then l:AddChild(d.topBut, LM.GUI.ALIGN_FILL, 0) end --not LS_Shapes.largeButtons
+				if LS_Shapes.largeButtons < 1 then l:AddChild(d.topBut, LM.GUI.ALIGN_FILL, 0) end
 
-				d.baseBut = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_sel_cluster_bottom", MOHO.Localize("/Scripts/Tool/SelectShape/SelectBottomOfCluster=Select bottom of Liquid Shape") .. " (<alt> " .. MOHO.Localize("/Scripts/Tool/SelectShape/SelectAll=Select All") .. ")", false, self.BASE_SHAPE, true)
+				d.baseBut = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_sel_cluster_bottom", MOHO.Localize("/Scripts/Tool/SelectShape/SelectBottomShape=Select Bottom Shape") .. " (<alt> " .. MOHO.Localize("/Scripts/Tool/SelectShape/SelectAll=Select All") .. ")", false, self.BASE_SHAPE, true)
 				d.baseBut:SetAlternateMessage(self.BASE_SHAPE_ALT)
-				--d.baseBut:SetToolTip(MOHO.Localize("/Scripts/Tool/SelectShape/SelectBottomOfCluster=Select bottom of Liquid Shape"))
 				d.baseBut.prop = {v = 14, pro = true, tooltip = false} table.insert(d.w, d.baseBut)
-				if true then l:AddChild(d.baseBut, LM.GUI.ALIGN_FILL, 0) end --not LS_Shapes.largeButtons
+				if LS_Shapes.largeButtons  < 1 then l:AddChild(d.baseBut, LM.GUI.ALIGN_FILL, 0) end
 			l:Pop() --V
 			l:AddPadding(1)
 
@@ -954,7 +952,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 		if styleName == "" then
 			self.info[1] = (doc and moho:DrawingMesh()) and "" or "v" .. LS_Shapes.version .. " " .. LS_Shapes.stage .. (LS_Shapes.debugMode and " · 🐞" or "") .. " · " .. MOHO.Localize("/LS/Shapes/NotAVector=No vector...")
 			self.info[2] = (doc and moho:DrawingMesh()) and self.info.n .. math.floor(moho:CountShapes()) or nil
-			self.info[3] = nil -- NOTE: Ensure next index of a potentially nil one is also nil to prevent concat errors!
+			self.info[3] = nil; self.info[4] = nil -- NOTE: Ensure next index/es of a potentially nil one is also nil to prevent concat errors!
 		else
 			LS_Shapes.mode = 2
 			self.itemName:SetValue(styleName or "?")
@@ -1238,12 +1236,22 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 			self.lineCol:Enable(true)
 			self.lineColOverride:Enable(LS_Shapes.mode == 2 and style and styleName ~= "")
 			self.lineColOverride:SetValue(style and style.fDefineLineCol)
-			--self.widthLabel:Enable(true)
+
 			self.lineWidth:Enable(true)
 			self.lineWidthOverride:Enable(LS_Shapes.mode == 2 and style and styleName ~= "")
 			self.lineWidthOverride:SetValue(style and style.fDefineLineWidth)
 			self.capsBut:Enable(true)
 			for i, but in ipairs(self.createButtons) do but:Enable(false) end
+
+			self.multiMenu:SetChecked(self.MULTIMENU + LS_Shapes.multiMode, true)
+			self.multiMenuPopup:Enable(false)
+			self.hsvBut:Enable(false)
+			self.multi1:Enable(false)
+			self.multi2:Enable(false)
+			self.multi3:Enable(false)
+			self.multi4:Enable(false)
+			self.applyBut:Enable(false)
+
 			self.style1Menu:SetChecked(style1 and self.SELECTSTYLE1 + 1 + style1ID or self.SELECTSTYLE1, true)
 			self.style1MenuPopup:Enable(styleName == "")
 			self.style1MenuPopup:Redraw()
@@ -1251,16 +1259,6 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 			self.style2Menu:SetChecked(style2 and self.SELECTSTYLE2 + 1 + style2ID or self.SELECTSTYLE2, true)
 			self.style2MenuPopup:Enable(styleName == "")
 			self.style2MenuPopup:Redraw()
-
-			if LS_Shapes.swatch > -1 then
-				self.multiMenuPopup:Enable(false)
-				self.hsvBut:Enable(false)
-				self.multi1:Enable(false)
-				self.multi2:Enable(false)
-				self.multi3:Enable(false)
-				self.multi4:Enable(false)
-				self.applyBut:Enable(false)
-			end
 		end
 		if (LS_Shapes.showInfobar and self.infobar) then
 			self.infoText = table.concat(self.info, self.info.sep or " · "):gsub("^" .. self.info.sep .. " *", "")
@@ -1616,7 +1614,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 		for shapeIndex = shapeCount - 1, 0, -1 do
 			local shape = mesh:Shape(shapeIndex)
 			local shapeName = shape:Name()
-			local shapeCombo = (shape.fComboMode == MOHO.COMBO_ADD and "+") or (shape.fComboMode == MOHO.COMBO_SUBTRACT and "- ") or (shape.fComboMode == MOHO.COMBO_CLIP and "×") or (shape.fComboMode == MOHO.COMBO_INTERSECT and "⁎") or "  "
+			local shapeCombo = (shape.fComboMode == MOHO.COMBO_ADD and "+") or (shape.fComboMode == MOHO.COMBO_SUBTRACT and "- ") or (shape.fComboMode == MOHO.COMBO_CLIP and "×") or (shape.fComboMode == MOHO.COMBO_INTERSECT and "⁕") or "  "
 			local shapeVis = (shape.fHidden and " *" or "")
 			local shapeSt1, shapeSt2 = shape.fInheritedStyle and " ·" or "", shape.fInheritedStyle2 and " ." or ""
 			local shapeSt = (shapeSt1 ~= "" and shapeSt2 ~= "" and " :") or (shapeSt1 ~= "" and shapeSt1) or (shapeSt2 ~= "" and shapeSt2) or ""
@@ -2187,8 +2185,8 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 		self.menu1Popup:SetToolTip(LS_Shapes.beginnerMode and MOHO.Localize("/Dialogs/LayerSettings/General=General") or "")
 		--self.itemNameLabel:SetToolTip(MOHO.Localize("/Windows/Style/Name=Name"))
 		self.combineBlend:SetToolTip(LS_Shapes.beginnerMode and MOHO.Localize("/Scripts/Tool/SelectShape/Blend=Blend:"):gsub("[^%w]$", "") .. " (" .. MOHO.Localize("/Dialogs/NudgeDlog/Amount=Amount") ..")" or "") -- Remove any non-alphanumeric ending character
-		self.baseBut:SetToolTip(LS_Shapes.beginnerMode and MOHO.Localize("/Scripts/Tool/SelectShape/SelectBottomOfCluster=Select bottom of Liquid Shape") .. " (<alt> " .. MOHO.Localize("/Scripts/Tool/SelectShape/SelectAll=Select All") .. ")" or "")
-		self.topBut:SetToolTip(LS_Shapes.beginnerMode and MOHO.Localize("/Scripts/Tool/SelectShape/SelectTopOfCluster=Select top of Liquid Shape") .. " (<alt> " .. MOHO.Localize("/Scripts/Tool/SelectShape/SelectAll=Select All") .. ")" or "")
+		self.baseBut:SetToolTip(LS_Shapes.beginnerMode and MOHO.Localize("/Scripts/Tool/SelectShape/SelectBottomShape=Select Bottom Shape") .. " (<alt> " .. MOHO.Localize("/Scripts/Tool/SelectShape/SelectAll=Select All") .. ")" or "")
+		self.topBut:SetToolTip(LS_Shapes.beginnerMode and MOHO.Localize("/Scripts/Tool/SelectShape/SelectTopShape=Select Top Shape") .. " (<alt> " .. MOHO.Localize("/Scripts/Tool/SelectShape/SelectAll=Select All") .. ")" or "")
 		if LS_Shapes.advanced then
 			self.lineWidth:SetToolTip(LS_Shapes.beginnerMode and MOHO.Localize("/Dialogs/InsertText/BalloonWidth=Stroke Width") or "")
 		end
@@ -4075,10 +4073,10 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 				shape.fComboBlend:SetValue(lDrawingFrame, blend)
 			end
 		end
-		--moho.view:DrawMe()
 		MOHO.Redraw()
-		self:Update()
+		--self:Update()
 		--LM_SelectShape:UpdateWidgets(moho) -- 20231011-1933: This indeed updates Select Shapes tool toolbar's "Blend" widget, but little less!
+		lDrawing:UpdateCurFrame()
 		moho:UpdateUI() -- 20231011-1933: It only seems necessary to update Timeline and Select Shapes tool toolbar's "Blend" widget? So let's try the above...
 	elseif (msg == self.BASE_SHAPE) then
 		--LM_SelectShape:HandleMessage(moho, moho.view, LM_SelectShape.BASE_SHAPE)
