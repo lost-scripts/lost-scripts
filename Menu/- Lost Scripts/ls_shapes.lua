@@ -158,8 +158,8 @@ LS_Shapes.filename = (LS_Shapes.pathInfo.source):match("^.*[/\\](.*).lua$") or "
 LS_Shapes.basePath = (LS_Shapes.filepath:gsub("[/\\]+$", "")):match("^(.*)" .. ("[/\\][^/\\]+"):rep(2) .. "$") or LS_Shapes.filepath --(LS_Shapes.filepath:match("^(.*)" .. ("/[^/]+"):rep(2) .. "$")) -- E.g.: C:/Users/Rai/Projects/Moho Pro/Scripts
 LS_Shapes.resources = "ScriptResources/" .. LS_Shapes.filename .. "/"
 LS_Shapes.resourcesAlt = "ScriptResources/../../Support/Scripts/"
-LS_Shapes.logPath = LS_Shapes.basePath .. "/" .. LS_Shapes.resources .. "LOG.txt"
 LS_Shapes.log = nil
+LS_Shapes.logPath = LS_Shapes.basePath .. "/" .. LS_Shapes.resources .. "LOG.txt"
 LS_Shapes.web = "https://lost-scripts.github.io/"
 LS_Shapes.webpage = LS_Shapes.web .. "scripts/" .. LS_Shapes.filename
 LS_Shapes.forge = "https://github.com/"
@@ -181,6 +181,8 @@ LS_Shapes.multiMenuLast = (LS_Shapes.multiMode and LS_Shapes.multiMode < 2) and 
 LS_Shapes.multiValues = {[3] = {0, 0, 0, 1}} -- 3: Recolor
 LS_Shapes.isHelpVisible = false
 LS_Shapes.showHelp = false
+LS_Shapes.textSep = {zero = "​", thin = " ", pun = " ", en = " ", em = " "} -- Text separators/helpers (⚠ Watch out upon copy-pasting!): Zero-width (U+200B), Thin (U+2009), Punctuation (U+2008), En (U+2002), Em Space (U+2003)
+
 --LS_Shapes.DarkHighlight = "224 160 0 255" --224 160 0 255
 --LS_Shapes.FirstRun2 = 0
 --LS_Shapes.HighlightColor = "224 160 0 255" --224 160 0 255
@@ -533,32 +535,31 @@ function LS_ShapesDialog:new(moho) --print("LS_ShapesDialog:new(" .. tostring(mo
 				if LS_Shapes.largeButtons then l:AddChild(LM.GUI.TextList(butW + butL, 0, 0), LM.GUI.ALIGN_FILL, 0) end
 			l:Pop() --V
 			l:PushV(LM.GUI.ALIGN_CENTER, 0)
-				d.combineAdd = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_add", "⊕‍ " .. MOHO.Localize("/Scripts/Tool/SelectShape/Add=Add"), true, self.COMBO_ADD, true) --" (+)"
+				d.combineAdd = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_add", "⊕‍ " .. MOHO.Localize("/Scripts/Tool/SelectShape/Add=Add") .. LS_Shapes.textSep.zero, true, self.COMBO_ADD, true) --" (+)"
 				d.combineAdd.prop = {v = 14, pro = true, tooltip = false} table.insert(d.w, d.combineAdd)
 				l:AddChild(d.combineAdd, LM.GUI.ALIGN_FILL, 0)
 				if LS_Shapes.largeButtons then l:AddChild(LM.GUI.TextList(butW + butL, 0, 0), LM.GUI.ALIGN_FILL, 0) end
 			l:Pop() --V
 			l:PushV(LM.GUI.ALIGN_CENTER, 0)
-				d.combineSubtract = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_subtract", "⊖‍ " .. MOHO.Localize("/Scripts/Tool/SelectShape/Subtract=Subtract"), true, self.COMBO_SUBTRACT, true) --⊝" (-)"
+				d.combineSubtract = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_subtract", "⊖‍ " .. MOHO.Localize("/Scripts/Tool/SelectShape/Subtract=Subtract") .. LS_Shapes.textSep.zero, true, self.COMBO_SUBTRACT, true) --⊝" (-)"
 				d.combineSubtract.prop = {v = 14, pro = true, tooltip = false} table.insert(d.w, d.combineSubtract)
 				l:AddChild(d.combineSubtract, LM.GUI.ALIGN_FILL, 0)
 				if LS_Shapes.largeButtons then l:AddChild(LM.GUI.TextList(butW + butL, 0, 0), LM.GUI.ALIGN_FILL, 0) end
 			l:Pop() --V
 			l:PushV(LM.GUI.ALIGN_CENTER, 0)
-				d.combineClip = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_clip", "⊗‍ " .. MOHO.Localize("/Scripts/Tool/SelectShape/Clip=Clip"), true, self.COMBO_CLIP, true) --" (×)"
+				d.combineClip = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_clip", "⊗‍ " .. MOHO.Localize("/Scripts/Tool/SelectShape/Clip=Clip") .. LS_Shapes.textSep.zero, true, self.COMBO_CLIP, true) --" (×)"
 				d.combineClip.prop = {v = 14, pro = true, tooltip = false} table.insert(d.w, d.combineClip)
 				l:AddChild(d.combineClip, LM.GUI.ALIGN_FILL, 0)
 				if LS_Shapes.largeButtons then l:AddChild(LM.GUI.TextList(butW + butL, 0, 0), LM.GUI.ALIGN_FILL, 0) end
 			l:Pop() --V
 			l:PushV(LM.GUI.ALIGN_CENTER, 0)
-				d.combineIntersect = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_intersect", "⊛ " .. MOHO.Localize("/Scripts/Tool/SelectShape/Intersect=Intersect"), true, self.COMBO_INTERSECT, true) --" (⁕)"
+				d.combineIntersect = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_intersect", "⊛ " .. MOHO.Localize("/Scripts/Tool/SelectShape/Intersect=Intersect") .. LS_Shapes.textSep.zero, true, self.COMBO_INTERSECT, true) --" (⁕)"
 				d.combineIntersect.prop = {v = 14, pro = true, tooltip = false} table.insert(d.w, d.combineIntersect)
 				l:AddChild(d.combineIntersect, LM.GUI.ALIGN_FILL, 0)
 				if LS_Shapes.largeButtons then l:AddChild(LM.GUI.TextList(butW + butL, 0, 0), LM.GUI.ALIGN_FILL, 0) end
 			l:Pop() --V
 			l:AddPadding(0)
 
-			--if LS_Shapes.largeButtons then l:AddPadding(0) end -- -1: Off, 0: Auto, 1: On
 			d.combineBlendBut = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_blend", MOHO.Localize("/Scripts/Tool/SelectShape/Blend=Blend:"):gsub("[^%w]$", "") .. " (<alt> " .. MOHO.Localize("/Windows/Style/Reset=Reset") .. ")", true, self.COMBO_BLEND_BUT, true) --Remove any non-alphanumeric ending character
 			d.combineBlendBut:SetAlternateMessage(self.COMBO_BLEND_BUT_ALT)
 			d.combineBlendBut.prop = {v = 14, pro = true, tooltip = false} table.insert(d.w, d.combineBlendBut)
@@ -569,8 +570,8 @@ function LS_ShapesDialog:new(moho) --print("LS_ShapesDialog:new(" .. tostring(mo
 			d.combineBlend:SetWheelInc(1.0)
 			d.combineBlend.prop = {v = 14, pro = true, tooltip = false} table.insert(d.w, d.combineBlend)
 			l:AddChild(d.combineBlend, LM.GUI.ALIGN_FILL, 0)
-			--if true then l:AddPadding(0) end --not LS_Shapes.largeButtons
 
+			if LS_Shapes.largeButtons < 1 then l:AddPadding(0) end -- -1: Off, 0: Auto, 1: On
 			l:PushV(LM.GUI.ALIGN_CENTER, 0)
 				d.topBut = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_sel_cluster_top", MOHO.Localize("/Scripts/Tool/SelectShape/SelectTopShape=Select Top Shape") .. " (<alt> " .. MOHO.Localize("/Scripts/Tool/SelectShape/SelectAll=Select All") .. ")", false, self.TOP_SHAPE, true)
 				d.topBut:SetAlternateMessage(self.TOP_SHAPE_ALT)
@@ -580,7 +581,7 @@ function LS_ShapesDialog:new(moho) --print("LS_ShapesDialog:new(" .. tostring(mo
 				d.baseBut = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_sel_cluster_bottom", MOHO.Localize("/Scripts/Tool/SelectShape/SelectBottomShape=Select Bottom Shape") .. " (<alt> " .. MOHO.Localize("/Scripts/Tool/SelectShape/SelectAll=Select All") .. ")", false, self.BASE_SHAPE, true)
 				d.baseBut:SetAlternateMessage(self.BASE_SHAPE_ALT)
 				d.baseBut.prop = {v = 14, pro = true, tooltip = false} table.insert(d.w, d.baseBut)
-				if LS_Shapes.largeButtons  < 1 then l:AddChild(d.baseBut, LM.GUI.ALIGN_FILL, 0) end
+				if LS_Shapes.largeButtons < 1 then l:AddChild(d.baseBut, LM.GUI.ALIGN_FILL, 0) end
 			l:Pop() --V
 			l:AddPadding(1)
 
@@ -1629,7 +1630,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 				itemLabel = ""
 			end
 
-			itemLabel = itemLabel .. shapeName .. shapeSt .. shapeVis
+			itemLabel = itemLabel .. shapeName .. shapeSt .. shapeVis .. LS_Shapes.textSep.zero -- Concat a Zero-width​space (U+200B) corrects special chars. display
 
 			if listIndex < currentCount then -- Update item if it already exists, otherwise add it
 				if self.itemList:GetItem(listIndex) ~= itemLabel then
@@ -5261,7 +5262,7 @@ function LS_Shapes.h:new() --MARK:-NEW(H)
 			l:AddPadding(0) l:AddChild(LM.GUI.Divider(false), LM.GUI.ALIGN_FILL, -2)
 
 			l:AddPadding(d.i1_1:Height() * 3 / 2)
-			d.i2_11 = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "2.8", true, self.DLOG_UPDATE + 22, true) -- Unicode Char: Punctuation Space " " (U+2008)
+			d.i2_11 = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "2.8", true, self.DLOG_UPDATE + 22, true)
 			l:AddChild(d.i2_11, LM.GUI.ALIGN_CENTER, 0) d.w[22] = d.i2_11
 			l:AddPadding(-1)
 		l:Pop()
@@ -6687,10 +6688,10 @@ end --print(LS_Shapes:BuildLabel({"PREF", "NAME", "SUFF"}, ""))
 
 function LS_Shapes:BuildStyleChoiceMenu(menu, doc, baseMsg, dummyMsg, exclude) --(LM_Menu, MohoDoc, MSG_BASE, int, int) void
 	menu:RemoveAllItems()
-	menu:AddItem(MOHO.Localize("/Windows/Style/None2=None"), 0, baseMsg) --‹› --¹ 
+	menu:AddItem(MOHO.Localize("/Windows/Style/None2=None"), 0, baseMsg)
 	if doc ~= nil then
 		for i = 0, doc:CountStyles() - 1 do
-			local style = doc:StyleByID(i) -- NOTE: The swapped order is to get around the style becoming an LM_String bug!
+			local style = doc:StyleByID(i)
 			local styleName = style:Name() or "?"
 			if (i ~= exclude and styleName ~= "") then
 				if i == 0 then menu:AddItem("", 0, 0) end
