@@ -4,7 +4,7 @@
 
 ScriptName = "LS_Shapes"
 ScriptBirth = "20220918-0248"
-ScriptBuild = "20261114-0516"
+ScriptBuild = "20261114-2142"
 ScriptVersion = "0.4.3"
 ScriptStage = "BETA"
 ScriptTarget = "Moho® 14.5+ Pro"
@@ -240,53 +240,58 @@ LS_ShapesDialog.RESET					= MOHO.MSG_BASE + 24; LS_ShapesDialog.F.RESET = MOHO.M
 LS_ShapesDialog.RESET_ALT				= MOHO.MSG_BASE + 25; LS_ShapesDialog.F.RESET_ALT = MOHO.MSGF_PASS
 
 LS_ShapesDialog.COMBO_NORMAL			= MOHO.MSG_BASE + 26
-LS_ShapesDialog.COMBO_ADD				= MOHO.MSG_BASE + 27
-LS_ShapesDialog.COMBO_SUBTRACT			= MOHO.MSG_BASE + 28
-LS_ShapesDialog.COMBO_CLIP				= MOHO.MSG_BASE + 29
-LS_ShapesDialog.COMBO_INTERSECT			= MOHO.MSG_BASE + 30
-LS_ShapesDialog.COMBO_BLEND_BUT			= MOHO.MSG_BASE + 31
-LS_ShapesDialog.COMBO_BLEND_BUT_ALT		= MOHO.MSG_BASE + 32
-LS_ShapesDialog.COMBO_BLEND				= MOHO.MSG_BASE + 33
-LS_ShapesDialog.BASE_SHAPE				= MOHO.MSG_BASE + 34; LS_ShapesDialog.F.BASE_SHAPE = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.BASE_SHAPE_ALT			= MOHO.MSG_BASE + 35; LS_ShapesDialog.F.BASE_SHAPE_ALT = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.TOP_SHAPE				= MOHO.MSG_BASE + 36; LS_ShapesDialog.F.TOP_SHAPE = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.TOP_SHAPE_ALT			= MOHO.MSG_BASE + 37; LS_ShapesDialog.F.TOP_SHAPE_ALT = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.COMBO_NORMAL_ALT		= MOHO.MSG_BASE + 27
+LS_ShapesDialog.COMBO_ADD				= MOHO.MSG_BASE + 28
+LS_ShapesDialog.COMBO_ADD_ALT			= MOHO.MSG_BASE + 29
+LS_ShapesDialog.COMBO_SUBTRACT			= MOHO.MSG_BASE + 30
+LS_ShapesDialog.COMBO_SUBTRACT_ALT		= MOHO.MSG_BASE + 31
+LS_ShapesDialog.COMBO_CLIP				= MOHO.MSG_BASE + 32
+LS_ShapesDialog.COMBO_CLIP_ALT			= MOHO.MSG_BASE + 33
+LS_ShapesDialog.COMBO_INTERSECT			= MOHO.MSG_BASE + 34
+LS_ShapesDialog.COMBO_INTERSECT_ALT		= MOHO.MSG_BASE + 35
+LS_ShapesDialog.COMBO_BLEND_BUT			= MOHO.MSG_BASE + 36
+LS_ShapesDialog.COMBO_BLEND_BUT_ALT		= MOHO.MSG_BASE + 37
+LS_ShapesDialog.COMBO_BLEND				= MOHO.MSG_BASE + 38
+LS_ShapesDialog.BASE_SHAPE				= MOHO.MSG_BASE + 39; LS_ShapesDialog.F.BASE_SHAPE = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.BASE_SHAPE_ALT			= MOHO.MSG_BASE + 40; LS_ShapesDialog.F.BASE_SHAPE_ALT = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.TOP_SHAPE				= MOHO.MSG_BASE + 41; LS_ShapesDialog.F.TOP_SHAPE = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.TOP_SHAPE_ALT			= MOHO.MSG_BASE + 42; LS_ShapesDialog.F.TOP_SHAPE_ALT = MOHO.MSGF_NOTUNDO
 
-LS_ShapesDialog.FILL					= MOHO.MSG_BASE + 38
-LS_ShapesDialog.FILL_ALT				= MOHO.MSG_BASE + 39
-LS_ShapesDialog.FILLCOLOR				= MOHO.MSG_BASE + 40; LS_ShapesDialog.F.FILLCOLOR = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.FILLCOLOR_BEGIN			= MOHO.MSG_BASE + 41; LS_ShapesDialog.F.FILLCOLOR_BEGIN = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.FILLCOLOR_END			= MOHO.MSG_BASE + 42; LS_ShapesDialog.F.FILLCOLOR_END = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.FILLCOLOROVER			= MOHO.MSG_BASE + 43
-LS_ShapesDialog.LINE					= MOHO.MSG_BASE + 44
-LS_ShapesDialog.LINE_ALT				= MOHO.MSG_BASE + 45
-LS_ShapesDialog.LINECOLOR				= MOHO.MSG_BASE + 46; LS_ShapesDialog.F.LINECOLOR = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.LINECOLOR_BEGIN			= MOHO.MSG_BASE + 47; LS_ShapesDialog.F.LINECOLOR_BEGIN = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.LINECOLOR_END			= MOHO.MSG_BASE + 48; LS_ShapesDialog.F.LINECOLOR_END = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.LINECOLOROVER			= MOHO.MSG_BASE + 49
-LS_ShapesDialog.LINEWIDTH				= MOHO.MSG_BASE + 50
-LS_ShapesDialog.LINEWIDTHOVER			= MOHO.MSG_BASE + 51
-LS_ShapesDialog.ROUNDCAPS				= MOHO.MSG_BASE + 52; LS_ShapesDialog.F.ROUNDCAPS = MOHO.MSGF_PASS
-LS_ShapesDialog.BRUSH					= MOHO.MSG_BASE + 53
-LS_ShapesDialog.COLORSWAP				= MOHO.MSG_BASE + 54; LS_ShapesDialog.F.COLORSWAP = MOHO.MSGF_PASS
-LS_ShapesDialog.STYLESWAP				= MOHO.MSG_BASE + 55
+LS_ShapesDialog.FILL					= MOHO.MSG_BASE + 43
+LS_ShapesDialog.FILL_ALT				= MOHO.MSG_BASE + 44
+LS_ShapesDialog.FILLCOLOR				= MOHO.MSG_BASE + 45; LS_ShapesDialog.F.FILLCOLOR = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.FILLCOLOR_BEGIN			= MOHO.MSG_BASE + 46; LS_ShapesDialog.F.FILLCOLOR_BEGIN = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.FILLCOLOR_END			= MOHO.MSG_BASE + 47; LS_ShapesDialog.F.FILLCOLOR_END = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.FILLCOLOROVER			= MOHO.MSG_BASE + 48
+LS_ShapesDialog.LINE					= MOHO.MSG_BASE + 49
+LS_ShapesDialog.LINE_ALT				= MOHO.MSG_BASE + 50
+LS_ShapesDialog.LINECOLOR				= MOHO.MSG_BASE + 51; LS_ShapesDialog.F.LINECOLOR = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.LINECOLOR_BEGIN			= MOHO.MSG_BASE + 52; LS_ShapesDialog.F.LINECOLOR_BEGIN = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.LINECOLOR_END			= MOHO.MSG_BASE + 53; LS_ShapesDialog.F.LINECOLOR_END = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.LINECOLOROVER			= MOHO.MSG_BASE + 54
+LS_ShapesDialog.LINEWIDTH				= MOHO.MSG_BASE + 55
+LS_ShapesDialog.LINEWIDTHOVER			= MOHO.MSG_BASE + 56
+LS_ShapesDialog.ROUNDCAPS				= MOHO.MSG_BASE + 57; LS_ShapesDialog.F.ROUNDCAPS = MOHO.MSGF_PASS
+LS_ShapesDialog.BRUSH					= MOHO.MSG_BASE + 58
+LS_ShapesDialog.COLORSWAP				= MOHO.MSG_BASE + 59; LS_ShapesDialog.F.COLORSWAP = MOHO.MSGF_PASS
+LS_ShapesDialog.STYLESWAP				= MOHO.MSG_BASE + 60
 
-LS_ShapesDialog.FILLED					= MOHO.MSG_BASE	+ 56
-LS_ShapesDialog.FILLED_ALT				= MOHO.MSG_BASE + 57
-LS_ShapesDialog.OUTLINED				= MOHO.MSG_BASE + 58
-LS_ShapesDialog.OUTLINED_ALT			= MOHO.MSG_BASE + 59
-LS_ShapesDialog.FILLEDOUTLINED			= MOHO.MSG_BASE + 60
-LS_ShapesDialog.FILLEDOUTLINED_ALT		= MOHO.MSG_BASE + 61
+LS_ShapesDialog.FILLED					= MOHO.MSG_BASE	+ 61
+LS_ShapesDialog.FILLED_ALT				= MOHO.MSG_BASE + 62
+LS_ShapesDialog.OUTLINED				= MOHO.MSG_BASE + 63
+LS_ShapesDialog.OUTLINED_ALT			= MOHO.MSG_BASE + 64
+LS_ShapesDialog.FILLEDOUTLINED			= MOHO.MSG_BASE + 65
+LS_ShapesDialog.FILLEDOUTLINED_ALT		= MOHO.MSG_BASE + 66
 
-LS_ShapesDialog.HSV						= MOHO.MSG_BASE + 62; LS_ShapesDialog.F.HSV = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.MULTI1					= MOHO.MSG_BASE + 63
-LS_ShapesDialog.MULTI2					= MOHO.MSG_BASE + 64
-LS_ShapesDialog.MULTI3					= MOHO.MSG_BASE + 65
-LS_ShapesDialog.MULTI4					= MOHO.MSG_BASE + 66
-LS_ShapesDialog.APPLY					= MOHO.MSG_BASE + 67; LS_ShapesDialog.F.APPLY = {[3] = MOHO.MSGF_MULTIUNDO, [4] = MOHO.MSGF_MULTIUNDO}
-LS_ShapesDialog.APPLY_ALT				= MOHO.MSG_BASE + 68; LS_ShapesDialog.F.APPLY_ALT = {[3] = MOHO.MSGF_MULTIUNDO, [4] = MOHO.MSGF_MULTIUNDO}
-LS_ShapesDialog.SWATCHSLIDER			= MOHO.MSG_BASE + 69; LS_ShapesDialog.F.SWATCHSLIDER = MOHO.MSGF_NOTUNDO + MOHO.MSGF_PASS
-LS_ShapesDialog.INFO					= MOHO.MSG_BASE + 70; LS_ShapesDialog.F.INFO = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.HSV						= MOHO.MSG_BASE + 67; LS_ShapesDialog.F.HSV = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.MULTI1					= MOHO.MSG_BASE + 68
+LS_ShapesDialog.MULTI2					= MOHO.MSG_BASE + 69
+LS_ShapesDialog.MULTI3					= MOHO.MSG_BASE + 70
+LS_ShapesDialog.MULTI4					= MOHO.MSG_BASE + 71
+LS_ShapesDialog.APPLY					= MOHO.MSG_BASE + 72; LS_ShapesDialog.F.APPLY = {[3] = MOHO.MSGF_MULTIUNDO, [4] = MOHO.MSGF_MULTIUNDO}
+LS_ShapesDialog.APPLY_ALT				= MOHO.MSG_BASE + 73; LS_ShapesDialog.F.APPLY_ALT = {[3] = MOHO.MSGF_MULTIUNDO, [4] = MOHO.MSGF_MULTIUNDO}
+LS_ShapesDialog.SWATCHSLIDER			= MOHO.MSG_BASE + 74; LS_ShapesDialog.F.SWATCHSLIDER = MOHO.MSGF_NOTUNDO + MOHO.MSGF_PASS
+LS_ShapesDialog.INFO					= MOHO.MSG_BASE + 75; LS_ShapesDialog.F.INFO = MOHO.MSGF_NOTUNDO
 
 LS_ShapesDialog.DUMMY					= MOHO.MSG_BASE + 71
 LS_ShapesDialog.CHANGE					= MOHO.MSG_BASE + 72; LS_ShapesDialog.F.CHANGE = MOHO.MSGF_NOTUNDO
@@ -531,25 +536,29 @@ function LS_ShapesDialog:new(moho) --print("LS_ShapesDialog:new(" .. tostring(mo
 		l:PushH(LM.GUI.ALIGN_FILL, 2)
 			l:AddPadding(1)
 			l:PushV(LM.GUI.ALIGN_CENTER, 0)
-				d.combineNormal = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_normal", MOHO.Localize("/Scripts/Tool/SelectShape/Normal=Normal"), true, self.COMBO_NORMAL, true)
+				d.combineNormal = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_normal", MOHO.Localize("/Scripts/Tool/SelectShape/Normal=Normal") .. " (<alt> " .. MOHO.Localize("/Dialogs/TimelineSettings/Auto=Auto") .. ")", true, self.COMBO_NORMAL, true)
+				d.combineNormal:SetAlternateMessage(self.COMBO_NORMAL_ALT)
 				d.combineNormal.prop = {v = 14, pro = true, tooltip = false} table.insert(d.w, d.combineNormal)
 				l:AddChild(d.combineNormal, LM.GUI.ALIGN_FILL, 0)
 				if LS_Shapes.largeButtons then l:AddChild(LM.GUI.TextList(butW + butL, 0, 0), LM.GUI.ALIGN_FILL, 0) end
 			l:Pop() --V
 			l:PushV(LM.GUI.ALIGN_CENTER, 0)
-				d.combineAdd = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_add", "⊕‍ " .. MOHO.Localize("/Scripts/Tool/SelectShape/Add=Add") .. LS_Shapes.textSep.zero, true, self.COMBO_ADD, true) --" (+)"
+				d.combineAdd = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_add", "⊕‍ " .. MOHO.Localize("/Scripts/Tool/SelectShape/Add=Add") .. " (<alt> " .. MOHO.Localize("/Dialogs/TimelineSettings/Auto=Auto") .. ")" .. LS_Shapes.textSep.zero, true, self.COMBO_ADD, true) --" (+)"
+				d.combineAdd:SetAlternateMessage(self.COMBO_ADD_ALT)
 				d.combineAdd.prop = {v = 14, pro = true, tooltip = false} table.insert(d.w, d.combineAdd)
 				l:AddChild(d.combineAdd, LM.GUI.ALIGN_FILL, 0)
 				if LS_Shapes.largeButtons then l:AddChild(LM.GUI.TextList(butW + butL, 0, 0), LM.GUI.ALIGN_FILL, 0) end
 			l:Pop() --V
 			l:PushV(LM.GUI.ALIGN_CENTER, 0)
-				d.combineSubtract = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_subtract", "⊖‍ " .. MOHO.Localize("/Scripts/Tool/SelectShape/Subtract=Subtract") .. LS_Shapes.textSep.zero, true, self.COMBO_SUBTRACT, true) --⊝" (-)"
+				d.combineSubtract = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_subtract", "⊖‍ " .. MOHO.Localize("/Scripts/Tool/SelectShape/Subtract=Subtract") .. " (<alt> " .. MOHO.Localize("/Dialogs/TimelineSettings/Auto=Auto") .. ")" .. LS_Shapes.textSep.zero, true, self.COMBO_SUBTRACT, true) --⊝" (-)"
+				d.combineSubtract:SetAlternateMessage(self.COMBO_SUBTRACT_ALT)
 				d.combineSubtract.prop = {v = 14, pro = true, tooltip = false} table.insert(d.w, d.combineSubtract)
 				l:AddChild(d.combineSubtract, LM.GUI.ALIGN_FILL, 0)
 				if LS_Shapes.largeButtons then l:AddChild(LM.GUI.TextList(butW + butL, 0, 0), LM.GUI.ALIGN_FILL, 0) end
 			l:Pop() --V
 			l:PushV(LM.GUI.ALIGN_CENTER, 0)
-				d.combineClip = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_clip", "⊗‍ " .. MOHO.Localize("/Scripts/Tool/SelectShape/Clip=Clip") .. LS_Shapes.textSep.zero, true, self.COMBO_CLIP, true) --" (×)"
+				d.combineClip = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_clip", "⊗‍ " .. MOHO.Localize("/Scripts/Tool/SelectShape/Clip=Clip") .. " (<alt> " .. MOHO.Localize("/Dialogs/TimelineSettings/Auto=Auto") .. ")" .. LS_Shapes.textSep.zero, true, self.COMBO_CLIP, true) --" (×)"
+				d.combineClip:SetAlternateMessage(self.COMBO_CLIP_ALT)
 				d.combineClip.prop = {v = 14, pro = true, tooltip = false} table.insert(d.w, d.combineClip)
 				if MOHO.COMBO_CLIP == 4 then -- Temp constraint
 					l:AddChild(d.combineClip, LM.GUI.ALIGN_FILL, 0)
@@ -557,7 +566,8 @@ function LS_ShapesDialog:new(moho) --print("LS_ShapesDialog:new(" .. tostring(mo
 				end
 			l:Pop() --V
 			l:PushV(LM.GUI.ALIGN_CENTER, 0)
-				d.combineIntersect = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_intersect", "⊛ " .. MOHO.Localize("/Scripts/Tool/SelectShape/Intersect=Intersect") .. LS_Shapes.textSep.zero, true, self.COMBO_INTERSECT, true) --" (⁕)"
+				d.combineIntersect = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_intersect", "⊛ " .. MOHO.Localize("/Scripts/Tool/SelectShape/Intersect=Intersect") .. " (<alt> " .. MOHO.Localize("/Dialogs/TimelineSettings/Auto=Auto") .. ")" .. LS_Shapes.textSep.zero, true, self.COMBO_INTERSECT, true) --" (⁕)"
+				d.combineIntersect:SetAlternateMessage(self.COMBO_INTERSECT_ALT)
 				d.combineIntersect.prop = {v = 14, pro = true, tooltip = false} table.insert(d.w, d.combineIntersect)
 				l:AddChild(d.combineIntersect, LM.GUI.ALIGN_FILL, 0)
 				if LS_Shapes.largeButtons then l:AddChild(LM.GUI.TextList(butW + butL, 0, 0), LM.GUI.ALIGN_FILL, 0) end
@@ -1826,6 +1836,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 		self.skipBlock = false
 		self.itemName:Enable(self.itemList:SelItem() > 0)
 		self.itemVisCheck:Enable(false)
+		self.itemVisCheck:SetValue(false)
 		self.deleteBut:Enable(stylesSel > 0)
 		LS_Shapes:Log("1.4.2") --LS_Shapes:LogTime("1.4.2")
 	elseif LS_Shapes.mode == 3 then -- GROUP Mode
@@ -3979,63 +3990,80 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 		self._lastHue = nil
 		self:Update()
 		moho:UpdateUI()
-	elseif (msg == self.COMBO_NORMAL) then -- SEC. COMBO
-		for i = 0, shapeCount - 1 do
-			local shape = mesh:Shape(i)
-			if (shape.fSelected) then
-				shape.fComboMode = MOHO.COMBO_NORMAL
+	elseif (msg == self.COMBO_NORMAL or msg == self.COMBO_NORMAL_ALT) then -- SEC. COMBO
+		if msg == self.COMBO_NORMAL then
+			for i = 0, shapeCount - 1 do
+				local shape = mesh:Shape(i)
+				if (shape.fSelected) then
+					shape.fComboMode = MOHO.COMBO_NORMAL
+				end
 			end
+		elseif LM_SelectShape then
+			LM_SelectShape:SetComboMode(moho, MOHO.COMBO_NORMAL)
+		else LM.Beep()
 		end
 		--lDrawing:UpdateCurFrame(false)
 		--moho.view:DrawMe()
 		MOHO.Redraw()
 		self:Update()
 		moho:UpdateUI()
-	elseif (msg == self.COMBO_ADD) then
-		for i = 0, shapeCount - 1 do
-			local shape = mesh:Shape(i)
-			if (shape.fSelected) then
-				shape.fComboMode = MOHO.COMBO_ADD
+	elseif (msg == self.COMBO_ADD or msg == self.COMBO_ADD_ALT) then
+		if msg == self.COMBO_ADD then
+			for i = 0, shapeCount - 1 do
+				local shape = mesh:Shape(i)
+				if (shape.fSelected) then
+					shape.fComboMode = MOHO.COMBO_ADD
+				end
 			end
+		elseif LM_SelectShape then
+			LM_SelectShape:SetComboMode(moho, MOHO.COMBO_ADD)
+		else LM.Beep()
 		end
-		--lDrawing:UpdateCurFrame(false)
-		--moho.view:DrawMe()
 		MOHO.Redraw()
 		self:Update()
 		moho:UpdateUI()
-	elseif (msg == self.COMBO_SUBTRACT) then
-		for i = 0, shapeCount - 1 do
-			local shape = mesh:Shape(i)
-			if (shape.fSelected) then
-				shape.fComboMode = MOHO.COMBO_SUBTRACT
+	elseif (msg == self.COMBO_SUBTRACT or msg == self.COMBO_SUBTRACT_ALT) then
+		if msg == self.COMBO_SUBTRACT then
+			for i = 0, shapeCount - 1 do
+				local shape = mesh:Shape(i)
+				if (shape.fSelected) then
+					shape.fComboMode = MOHO.COMBO_SUBTRACT
+				end
 			end
+		elseif LM_SelectShape then
+			LM_SelectShape:SetComboMode(moho, MOHO.COMBO_SUBTRACT)
+		else LM.Beep()
 		end
-		--lDrawing:UpdateCurFrame(false)
-		--moho.view:DrawMe()
 		MOHO.Redraw()
 		self:Update()
 		moho:UpdateUI()
-	elseif (msg == self.COMBO_CLIP) then
-		for i = 0, shapeCount - 1 do
-			local shape = mesh:Shape(i)
-			if (shape.fSelected) then
-				shape.fComboMode = MOHO.COMBO_CLIP
+	elseif (msg == self.COMBO_CLIP or msg == self.COMBO_CLIP_ALT) then
+		if msg == self.COMBO_CLIP then
+			for i = 0, shapeCount - 1 do
+				local shape = mesh:Shape(i)
+				if (shape.fSelected) then
+					shape.fComboMode = MOHO.COMBO_CLIP
+				end
 			end
+		elseif LM_SelectShape then
+			LM_SelectShape:SetComboMode(moho, MOHO.COMBO_CLIP)
+		else LM.Beep()
 		end
-		--lDrawing:UpdateCurFrame(false)
-		--moho.view:DrawMe()
 		MOHO.Redraw()
 		self:Update()
 		moho:UpdateUI()
-	elseif (msg == self.COMBO_INTERSECT) then
-		for i = 0, shapeCount - 1 do
-			local shape = mesh:Shape(i)
-			if (shape.fSelected) then
-				shape.fComboMode = MOHO.COMBO_INTERSECT
+	elseif (msg == self.COMBO_INTERSECT or msg == self.COMBO_INTERSECT_ALT) then
+		if msg == self.COMBO_INTERSECT then
+			for i = 0, shapeCount - 1 do
+				local shape = mesh:Shape(i)
+				if (shape.fSelected) then
+					shape.fComboMode = MOHO.COMBO_INTERSECT
+				end
 			end
+		elseif LM_SelectShape then
+			LM_SelectShape:SetComboMode(moho, MOHO.COMBO_INTERSECT)
+		else LM.Beep()
 		end
-		--lDrawing:UpdateCurFrame(false)
-		--moho.view:DrawMe()
 		MOHO.Redraw()
 		self:Update()
 		moho:UpdateUI()
