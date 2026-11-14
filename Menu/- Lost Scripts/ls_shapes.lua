@@ -4,8 +4,8 @@
 
 ScriptName = "LS_Shapes"
 ScriptBirth = "20220918-0248"
-ScriptBuild = "20261113-0052"
-ScriptVersion = "0.4.2"
+ScriptBuild = "20261114-0446"
+ScriptVersion = "0.4.3"
 ScriptStage = "BETA"
 ScriptTarget = "Moho® 14.5+ Pro"
 ScriptType = "Window"
@@ -29,7 +29,7 @@ function LS_Shapes:Version()
 end
 
 function LS_Shapes:Description()
-	return MOHO.Localize("/LS/Shapes/Description=A persistent shape palette plus helpers for better management of Moho® vectors in general and the AMAZING new \"Liquid Shapes\" in particular.")
+	return MOHO.Localize("/LS/Shapes/Description=Persistent shape palette plus helpers for better management of Moho® vectors in general and \"Liquid Shapes\" in particular.")
 end
 
 function LS_Shapes:Creator()
@@ -193,6 +193,8 @@ LS_Shapes.textSep = {zero = "​", thin = " ", pun = " ", en = " ", em = "
 -- **************************************************
 -- Shapes Dialog
 -- **************************************************
+
+MOHO.COMBO_CLIP = MOHO.COMBO_CLIP or 3 -- Just in case? See also "Temp constraint" bellow
 
 MOHO.LS_UI_REF_EW = 16  -- 16/23 (normal/large emoji length)
 MOHO.LS_UI_REF_TH = 22  -- 22px: text height at 100%
@@ -549,8 +551,10 @@ function LS_ShapesDialog:new(moho) --print("LS_ShapesDialog:new(" .. tostring(mo
 			l:PushV(LM.GUI.ALIGN_CENTER, 0)
 				d.combineClip = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_clip", "⊗‍ " .. MOHO.Localize("/Scripts/Tool/SelectShape/Clip=Clip") .. LS_Shapes.textSep.zero, true, self.COMBO_CLIP, true) --" (×)"
 				d.combineClip.prop = {v = 14, pro = true, tooltip = false} table.insert(d.w, d.combineClip)
-				l:AddChild(d.combineClip, LM.GUI.ALIGN_FILL, 0)
-				if LS_Shapes.largeButtons then l:AddChild(LM.GUI.TextList(butW + butL, 0, 0), LM.GUI.ALIGN_FILL, 0) end
+				if MOHO.COMBO_CLIP == 4 then -- Temp constraint
+					l:AddChild(d.combineClip, LM.GUI.ALIGN_FILL, 0)
+					if LS_Shapes.largeButtons then l:AddChild(LM.GUI.TextList(butW + butL, 0, 0), LM.GUI.ALIGN_FILL, 0) end
+				end
 			l:Pop() --V
 			l:PushV(LM.GUI.ALIGN_CENTER, 0)
 				d.combineIntersect = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_combine_intersect", "⊛ " .. MOHO.Localize("/Scripts/Tool/SelectShape/Intersect=Intersect") .. LS_Shapes.textSep.zero, true, self.COMBO_INTERSECT, true) --" (⁕)"
@@ -1355,6 +1359,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 			end
 		end
 	elseif LS_Shapes.mode == 3 then
+		--moho:DeselectShapes() -- 20261114-0325 (TODO): Study what could be the best way to preserve point-based selection in Group mode?
 		if LS_Shapes.advanced then
 			self.fillCheck:Enable(false)
 			self.fillCol:Enable(false)
@@ -1463,6 +1468,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 			self.lineCol:Enable(shape.fHasOutline)
 			self.lineColOverride:Enable(style1 and style1.fDefineLineCol or style2 and style2.fDefineLineCol)
 			self.lineColOverride:SetValue(shape.fMyStyle.fDefineLineCol)
+			self.lineWidth:Enable(shape.fHasOutline)
 			self.lineWidthOverride:Enable(style1 and style1.fDefineLineWidth or style2 and style2.fDefineLineWidth)
 			self.lineWidthOverride:SetValue(shape.fMyStyle.fDefineLineWidth)
 			self.style1Menu:SetChecked(style1 and self.SELECTSTYLE1 + 1 + style1ID or self.SELECTSTYLE1, true) self.style1MenuPopup:Redraw()
@@ -1479,6 +1485,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 			end
 			self.brushBut:SetValue(brushButVal)
 			self.brushBut:Enable(brushButVal)
+			self.brushMenuPopup:Enable(shape.fHasOutline)
 		end
 		self.info[1] = ""
 		self.info[2] = shapeLUID > -1 and self.info.id .. shapeLUID or self.info.id .. "?"
@@ -1516,16 +1523,18 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 		if LS_Shapes.advanced then
 			self.fillCheck:SetValue(true)
 			self.fillCheck:Enable(false)
-			self.fillCol:Enable(LS_Shapes.mode < 3 and true)
+			self.fillCol:Enable(LS_Shapes.mode < 3)
 			self.fillColOverride:Enable(styleName ~= "" or (style1 and style1.fDefineFillCol or style2 and style2.fDefineFillCol))
 			self.fillColOverride:SetValue(style and style.fDefineFillCol)
 			self.lineCheck:SetValue(true)
 			self.lineCheck:Enable(false)
-			self.lineCol:Enable(LS_Shapes.mode < 3 and true)
+			self.lineCol:Enable(LS_Shapes.mode < 3)
 			self.lineColOverride:Enable(styleName ~= "" or (style1 and style1.fDefineLineCol or style2 and style2.fDefineLineCol))
 			self.lineColOverride:SetValue(style and style.fDefineLineCol)
+			self.lineWidth:Enable(LS_Shapes.mode < 3)
 			self.lineWidthOverride:Enable(styleName ~= "" or (style1 and style1.fDefineLineWidth or style2 and style2.fDefineLineWidth))
 			self.lineWidthOverride:SetValue(style and style.fDefineLineWidth)
+			self.brushMenuPopup:Enable(LS_Shapes.mode < 3)
 			self.style1Menu:SetChecked(style1 and self.SELECTSTYLE1 + 1 + style1ID or self.SELECTSTYLE1, true) self.style1MenuPopup:Redraw()
 			self.style2Menu:SetChecked(style2 and self.SELECTSTYLE2 + 1 + style2ID or self.SELECTSTYLE2, true) self.style2MenuPopup:Redraw()
 		end
@@ -1817,6 +1826,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 		end
 		self.skipBlock = false
 		self.itemName:Enable(self.itemList:SelItem() > 0)
+		self.itemVisCheck:Enable(false)
 		self.deleteBut:Enable(stylesSel > 0)
 		LS_Shapes:Log("1.4.2") --LS_Shapes:LogTime("1.4.2")
 	elseif LS_Shapes.mode == 3 then -- GROUP Mode
@@ -1962,7 +1972,6 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 
 		self.swapColBut:Enable(LS_Shapes.mode ~= 3)
 		self.brushBut:SetToolTip(MOHO.Localize("/Dialogs/BrushPicker/Brush=Brush") .. ": " .. (brush ~= "" and brush or MOHO.Localize("/Dialogs/BrushPicker/None=None") .. (LS_Shapes.beginnerMode and " (" .. MOHO.Localize("/LS/Shapes/PickBelow=Pick Below") .. ")" or "")))
-		self.brushMenuPopup:Enable(LS_Shapes.mode < 3)
 		self.brushMenuPopup:SetCursor(LS_Shapes.beginnerMode and LM.GUI.Cursor(LS_Shapes.resources .. "ls_shape_brush_cursortip", 0, 0) or nil)
 		self.swatchMenuPopup:Enable(LS_Shapes.mode < 3)
 		self.style1MenuPopup:Enable(styleName == "" and LS_Shapes.mode ~= 3) self.style1MenuPopup:Redraw()
