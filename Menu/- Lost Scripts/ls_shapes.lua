@@ -4,7 +4,7 @@
 
 ScriptName = "LS_Shapes"
 ScriptBirth = "20220918-0248"
-ScriptBuild = "20261114-0446"
+ScriptBuild = "20261114-0516"
 ScriptVersion = "0.4.3"
 ScriptStage = "BETA"
 ScriptTarget = "Moho® 14.5+ Pro"
@@ -314,7 +314,7 @@ end--]]
 --print(LS_ShapesDialog.MSG_TEST)
 --print(LS_ShapesDialog.MSG_TESTPLUS.undoable) --print(tostring(LS_ShapesDialog.MSG_TEST("undoable")))--]]
 
-function LS_ShapesDialog:new(moho) --print("LS_ShapesDialog:new(" .. tostring(moho) .. "): ", " 🕗: " .. os.clock()) -- NOTE: This print makes the dialog get closed upon closing the LCW! --MARK:-NEW(D)
+function LS_ShapesDialog:new(moho) --print("LS_ShapesDialog:new(" .. tostring(moho) .. "): ", " 🕗: " .. os.clock()) -- NOTE: This print makes the dialog get closed upon closing the LCW! -- SEC: NEW(D)
 	local d = LM.GUI.SimpleDialog(MOHO.Localize("/LS/Shapes/Shapes=Shapes"), LS_ShapesDialog)
 	local l = d:GetLayout()
 	local doc = moho.document
@@ -890,7 +890,7 @@ end
 	-- This only run once upon opening the dialog even if its modeless, so using "Update()" function bellow for al purposes instead. 🤔 Not sure if at some point it may have some use...
 --end
 
-function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(moho) .. "): ", " 🕗: " .. os.clock()) --MARK:-UP(D)
+function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(moho) .. "): ", " 🕗: " .. os.clock()) -- SEC: UP(D)
 	--local caller = debug.getinfo(5) and debug.getinfo(5).name or "NULL" --0: getinfo, 1: Update, 2: func, 3: NULL/NULL, 4: NULL/UpdateUI, 5: NULL/NULL
 	local helper = MOHO.ScriptInterfaceHelper:new_local()
 	local moho = helper:MohoObject()
@@ -1171,8 +1171,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 
 	--self.menu1Popup:Enable(self.menu1Popup and self.menu1:CountItems() > 0 or false)
 	--self.menu2Popup:Enable(self.menu2Popup and self.menu2:CountItems() > 0 or false)
-	--MARK:NO LAYER
-	if (mesh == nil) or ((lDrawing and lDrawing:IsCurver()) or (lDrawing:IsWarpLayer() and (lDrawing:ContinuousTriangulation() or LS_Shapes.ignoreNonRegular))) then -- Disable everything irrelevant if no valid/drawing layer is active ("Ignore Non-Regular" makes e.g. non-continuously-triangulated layers be also ignored)
+	if (mesh == nil) or ((lDrawing and lDrawing:IsCurver()) or (lDrawing:IsWarpLayer() and (lDrawing:ContinuousTriangulation() or LS_Shapes.ignoreNonRegular))) then -- Disable everything irrelevant if no valid/drawing layer is active ("Ignore Non-Regular" makes e.g. non-continuously-triangulated layers be also ignored) -- SEC. NO LAYER
 		--l:Enable(false) -- Used classic enable/disable method due to this causes unwanted blinking at frame change and so...
 		self.menu1Popup:Enable(true)
 		self.modeBut:Enable(false)
@@ -1399,7 +1398,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 	local shapesSel = math.floor(moho:CountSelectedShapes(true)) -- Use this instead LM_SelectShape:CountSelectedShapes??
 	local shapeTable = {}
 
-	if (shape ~= nil) then -- Shape/s selected... MARK: SHAPE
+	if (shape ~= nil) then -- Shape/s selected... -- SEC. SHAPE
 		LS_Shapes.mode = 1
 		style1, style2 = shape.fInheritedStyle, shape.fInheritedStyle2
 		style1UUID, style2UUID = style1 and style1.fUUID:Buffer() or nil, style2 and style2.fUUID:Buffer() or nil
@@ -1496,7 +1495,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 			--self:UpdateBrush(moho, shape) -- It seems LM_MeshPreview widget doesn't display brushes. Oh, well...
 		end
 		--]]
-	else -- No shape selected... MARK: NO SHAPE
+	else -- No shape selected... -- SEC. NO SHAPE
 		LS_Shapes.mode = (LS_Shapes.mode == 2 or LS_Shapes.mode == 3) and LS_Shapes.mode or 0
 		if (pro) then
 			self.combineNormal:Enable(false)
@@ -1597,7 +1596,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 	end
 
 	LS_Shapes:Log("1.4") --LS_Shapes:LogTime(1.4) --[Start of item update block]--
-	if LS_Shapes.mode < 2 then -- Shape Modes... --MARK: CURSTATE
+	if LS_Shapes.mode < 2 then -- Shape Modes... -- SEC. CURSTATE
 		---[[Performance Overhaul 
 		self.skipBlock = true --local t1a = os.clock() -- Skip unnecessay HandleMessage parts during the whole refresh
 		local currentCount, desiredCount = itemCount, shapeCount + 1 -- +1 for index 0 being always reserved to <None>
@@ -2032,7 +2031,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 				end
 			end
 		end
-		--LS_Shapes.multiMode -> 0: Fill, 1: Stroke, 2: FX, 3: Recolor --MARK:M. MENU
+		--LS_Shapes.multiMode -> 0: Fill, 1: Stroke, 2: FX, 3: Recolor --SEC. M. MENU
 		--LS_Shapes.multiMode = (LS_Shapes.multiMode > 1 and shape and shape:HasPositionDependentStyles()) and 0 or LS_Shapes.multiMode
 		self.multiMenuPopup:Enable(LS_Shapes.mode < 3)
 		self.multiMenu:SetEnabled(self.MULTIMENU + 2, shapeHandles) -- FX
@@ -2214,7 +2213,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 			v:SetCursor(LM.GUI.Cursor("ScriptResources/disabled_cursor", 0, 0))
 		end
 	end
-	LS_Shapes:Log("1.7") --LS_Shapes:LogTime(1.7) --MARK: OLDSTATE
+	LS_Shapes:Log("1.7") --LS_Shapes:LogTime(1.7) -- SEC. OLDSTATE
 
 	local shape = shape or self.tempShape
 	if (shape ~= nil) then -- 20240123-0135: Addded the self.shape ~= nil part. TBO...
@@ -2320,7 +2319,7 @@ function LS_ShapesDialog:DrawItem(mesh, t, sharp) --(M_Mesh, tbl, bool/float) vo
 	end
 end
 
-function LS_ShapesDialog:UpdateItem(moho, item, fill) --(MohoDoc, M_Shape/M_Style, bool void) --print("LS_ShapesDialog:UpdateItem: " .. os.clock()) --MARK:-UPITEM()
+function LS_ShapesDialog:UpdateItem(moho, item, fill) --(MohoDoc, M_Shape/M_Style, bool void) --print("LS_ShapesDialog:UpdateItem: " .. os.clock()) -- SEC: UPITEM()
 	local doc = moho and moho.document or nil
 	local lMesh = doc and moho:DrawingMesh()
 	local pMesh = self.itemPreview:Mesh()
@@ -2713,7 +2712,7 @@ function LS_ShapesDialog:UpdateColor(moho) --print("LS_ShapesDialog:UpdateColor:
 end
 --]]
 
-function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessage(" .. math.floor(msg) .. "): " .. LS_ShapesDialog:WhatMsg(msg), " 🕗: " .. os.clock()) --MARK:-HM(D)
+function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessage(" .. math.floor(msg) .. "): " .. LS_ShapesDialog:WhatMsg(msg), " 🕗: " .. os.clock()) -- SEC. HM(D)
 	if self.skipAll == true then
 		return
 	end
@@ -2925,7 +2924,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 		end
 		helper:delete()
 		return
-	elseif (msg >= self.SELECTSWATCH and msg <= self.SELECTSWATCH + self:CountRealItems(self.swatchMenu, self.SELECTSWATCH) - 1) then --MARK: SS MENU
+	elseif (msg >= self.SELECTSWATCH and msg <= self.SELECTSWATCH + self:CountRealItems(self.swatchMenu, self.SELECTSWATCH) - 1) then -- SEC. SS MENU
 		local reopen = false
 		if (msg == self.SELECTSWATCH) then --print("None") -- None
 			reopen = LS_Shapes.swatch ~= -1
@@ -3132,7 +3131,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 		doc:SetDirty()
 	end
 
-	if (msg == self.CHANGE) then --MARK: CHANGE
+	if (msg == self.CHANGE) then -- SEC. CHANGE
 		if (doc == nil and mesh == nil) then
 			self:Update()
 			helper:delete()
@@ -3330,7 +3329,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 			LS_Shapes.mode = LS_Shapes.mode ~= 3 and 3 or 0
 		end
 		self:Update()
-	elseif (msg == self.NAME) then --MARK: PROPS.
+	elseif (msg == self.NAME) then -- SEC. PROPS.
 		if LS_Shapes.mode < 3 then -- SHAPE/STYLE modes
 			if (shapeID and shapeID >= 0) then
 				for i = 0, mesh:CountShapes() - 1 do
@@ -3479,7 +3478,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 			--self:Update()
 			moho:UpdateUI()
 		end
-	elseif (msg == self.SELECTALL or msg == self.SELECTALL_ALT) then -- NOTE: What if click once selected all, another click deselected all and holding <alt> selected similar? --MARK: SELECT
+	elseif (msg == self.SELECTALL or msg == self.SELECTALL_ALT) then -- NOTE: What if click once selected all, another click deselected all and holding <alt> selected similar? -- SEC. SELECT
 		if LS_Shapes.mode < 2 then
 			if (mesh == nil or msg == self.SELECTALL and shapeCount == shapesSel) then -- If SHAPE Modes
 				LM.Beep()
@@ -3744,7 +3743,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 		LM_SelectShape:MergeShapes(moho, moho.view)
 		MOHO.Redraw()
 		self:Update()
-	elseif (msg == self.DELETE) or (msg == self.DELETE_ALT) then --MARK: EDIT
+	elseif (msg == self.DELETE) or (msg == self.DELETE_ALT) then -- SEC. EDIT
 		if (doc ~= nil) then
 			local redraw
 			local i = 0
@@ -3980,7 +3979,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 		self._lastHue = nil
 		self:Update()
 		moho:UpdateUI()
-	elseif (msg == self.COMBO_NORMAL) then --MARK: COMBO
+	elseif (msg == self.COMBO_NORMAL) then -- SEC. COMBO
 		for i = 0, shapeCount - 1 do
 			local shape = mesh:Shape(i)
 			if (shape.fSelected) then
@@ -4127,7 +4126,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 		end
 		MOHO.Redraw()
 		self:Update()
-	elseif (msg == self.FILL) then --MARK: FILL MOD.
+	elseif (msg == self.FILL) then -- SEC. FILL MOD.
 		---[=[LM_SelectShape:HandleMessage(moho, moho.view, LM_SelectShape.FILL)
 		if (mesh ~= nil and shape ~= nil) then
 			if (shape.fFillAllowed) then
@@ -4258,7 +4257,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 		end
 		MOHO.Redraw()
 		moho:UpdateUI()
-	elseif (msg == self.LINE) then --MARK: LINE MOD.
+	elseif (msg == self.LINE) then -- SEC. LINE MOD.
 		if (mesh ~= nil and shape ~= nil) then
 			shape.fHasOutline = self.lineCheck:Value()
 			if (shape:IsInCluster() and shape.fComboMode ~= MOHO.COMBO_CLIP and shape.fComboMode ~= MOHO.COMBO_INTERSECT) then
@@ -4494,7 +4493,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 			end
 		end
 		moho:UpdateUI()
-	elseif (msg >= self.FILLED and msg <= self.FILLEDOUTLINED_ALT) then --MARK: CREATE
+	elseif (msg >= self.FILLED and msg <= self.FILLEDOUTLINED_ALT) then -- SEC. CREATE
 		local m = msg - self.FILLED
 		local creationMode = LM_CreateShape.creationMode
 		if (mesh ~= nil and LS_Shapes.mode < 2) then -- Shape Creation
@@ -4636,7 +4635,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 			LS_Shapes.multiValues[LS_Shapes.multiMode][3] = LS_Shapes.multiValues[LS_Shapes.multiMode][3] * factor 
 		end
 		self:Update()
-	elseif (msg >= self.MULTI1 and msg < self.APPLY) then --MARK: M. CTRLS
+	elseif (msg >= self.MULTI1 and msg < self.APPLY) then -- SEC. M. CTRLS
 		local dragBut = LS_Shapes:GetDraggingButton(self.multi1, self.multi2, self.multi3, self.multi4)
 
 		if LS_Shapes.multiMode < 2 then -- Fill/Stroke
@@ -4928,7 +4927,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 			LM.Beep()
 		end
 		self.infoBut:SetValue(false)
-	elseif (msg >= self.MULTIMENU and msg < self.SELECTSTYLE1) then --MARK: M. MENU
+	elseif (msg >= self.MULTIMENU and msg < self.SELECTSTYLE1) then -- SEC. M. MENU
 		local multiMenuBak = LS_Shapes.multiMode
 
 		if (msg >= self.MULTIMENU and msg <= self.MULTIMENU + 3) then -- Menu Modes
@@ -5045,7 +5044,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 		end
 		self._lastHue = nil
 		self:Update()
-	elseif (msg >= self.SELECTSTYLE1 and msg < self.SELECTSTYLE2) then --MARK: ITEM SEL.
+	elseif (msg >= self.SELECTSTYLE1 and msg < self.SELECTSTYLE2) then -- SEC. ITEM SEL.
 		local style1Sel = (doc and doc:StyleByID(msg - self.SELECTSTYLE1 - 1)) and (doc and doc:StyleByID(msg - self.SELECTSTYLE1 - 1).fUUID) or LM.String:new_local("")
 		if (shape ~= nil) then
 			for i = 0, shapeCount - 1 do
@@ -5177,7 +5176,7 @@ end
 LS_Shapes.h = {} --h stands "help"
 LS_Shapes.h.DLOG_UPDATE = MOHO.MSG_BASE
 
-function LS_Shapes.h:new() --MARK:-NEW(H)
+function LS_Shapes.h:new() -- SEC: NEW(H)
 	local d = LM.GUI.SimpleDialog(LS_Shapes:UILabel() .. "'s " .. MOHO.Localize("/LS/Shapes/HelpTitle=Quick Help"), LS_Shapes.h) --string.format(MOHO.Localize("/LS/Shapes/HelpTitle=Quick Guide (up to: %s)"), "v0.4.0")
 	local l = d:GetLayout()
 	local width = 1080
@@ -5350,7 +5349,7 @@ function LS_Shapes.h:UpdateWidgets()
 	end
 end
 
-function LS_Shapes.h:HandleMessage(what) --MARK: HM(H)
+function LS_Shapes.h:HandleMessage(what) -- SEC. HM(H)
 	self.what = what or MOHO.MSG_BASE
 	self.iSel = false
 	self.t2:SetValue("") --💡ℹ⚠💥🧪❓📝🎉
@@ -5558,7 +5557,7 @@ function LS_Shapes:Run(moho)
 end
 
 -- **************************************************
--- Recurring functions --MARK:-FUNCS
+-- Recurring functions -- SEC: FUNCS
 -- **************************************************
 
 function LS_Shapes:Log(...) --([char:action]/[char:message]/[char:print], [bool:keep], [userdata:moho] <unordered>) void
@@ -5879,9 +5878,9 @@ function MOHO:GetConstants(prefix, value) --(char, int)
 	return #matches > 0, #matches, matches
 end -- Use: ok, count, list = MOHO:GetConstants("LS_CT") for _, name in ipairs(list) do print(name, MOHO[name]) end
 
------------------
--- MARK: COLOR --
------------------
+----------------
+-- SEC. COLOR --
+----------------
 
 function LM.ColorOps:Ls_SetRgb(col, newCol, ignoreAlpha) --(rgb_color|tbl, rgb_color|tbl, bool) rgb_color|tbl (just in case a return is needed?)
 	col = col or LM.rgb_color:new_local()
@@ -6093,9 +6092,9 @@ function LS_Shapes:convertHSB(col) --(rgb_color) rgb_color -- From Mike Kelley's
 	return hsbcolor
 end
 
---------------
--- MARK: OS --
---------------
+-------------
+-- SEC. OS --
+-------------
 
 function LS_Shapes:SuitPath(path) --(char) char
 	return (package.config:sub(1, 1) == "\\" and path:gsub("/", "\\")) or path:gsub("\\", "/")
@@ -6193,9 +6192,9 @@ function LS_Shapes:Lapse(wait) -- (float) bool, float
 	return false, wait - delta
 end
 
--------------------
--- MARK: OBJECTS --
--------------------
+------------------
+-- SEC. OBJECTS --
+------------------
 
 function LS_Shapes:ChannelByID(moho, layer, id, subID, debug) --(moho, MohoLayer, int, int, bool) chan, chanInfo -- 20250725: For some reason, it must be run before assigning `mesh` variable or it'll be messed up!
 	subID, debug = subID or -1, debug or false
@@ -6683,9 +6682,9 @@ function LS_Shapes:IsSwatchLayer(moho, layer) --(MohoDoc, MohoLayer), bool
 	return (layer and layer:LayerType() == MOHO.LT_VECTOR and moho:LayerAsVector(layer):Mesh():CountShapes() > 1) and not layer:IsRenderOnly()
 end
 
---------------
--- MARK: UI --
---------------
+-------------
+-- SEC. UI --
+-------------
 
 function LS_Shapes:BuildLabel(t, sep) --(tbl|char, char) char
 	sep = sep or " "
@@ -6710,9 +6709,9 @@ function LS_Shapes:BuildStyleChoiceMenu(menu, doc, baseMsg, dummyMsg, exclude) -
 	end
 end
 
---------------------
--- MARK: MATH/STR --
---------------------
+-------------------
+-- SEC. MATH/STR --
+-------------------
 
 function MOHO.bitpos(x) --(int) int
 	return math.max(0, math.floor(math.log(x, 2)) + 1) --math.ceil(x / 2) --math.ceil(x / 2) or 1
