@@ -4,7 +4,7 @@
 
 ScriptName = "LS_Shapes"
 ScriptBirth = "20220918-0248"
-ScriptBuild = "20261114-2142"
+ScriptBuild = "20261116-0035"
 ScriptVersion = "0.4.3"
 ScriptStage = "BETA"
 ScriptTarget = "Moho® 14.5+ Pro"
@@ -156,7 +156,7 @@ LS_Shapes.pathInfo = debug.getinfo(1, 'S')
 LS_Shapes.filepath = (LS_Shapes.pathInfo.source:sub(2, -#LS_Shapes.pathInfo.source:match("[^/\\]*.lua$") - 1)):gsub("\\", "/"):gsub("/$", "") -- E.g.: C:/Users/Rai/Projects/Moho Pro/Scripts/Menu/- Lost Scripts
 LS_Shapes.filename = (LS_Shapes.pathInfo.source):match("^.*[/\\](.*).lua$") or "" -- E.g.: ls_shapes
 LS_Shapes.basePath = (LS_Shapes.filepath:gsub("[/\\]+$", "")):match("^(.*)" .. ("[/\\][^/\\]+"):rep(2) .. "$") or LS_Shapes.filepath --(LS_Shapes.filepath:match("^(.*)" .. ("/[^/]+"):rep(2) .. "$")) -- E.g.: C:/Users/Rai/Projects/Moho Pro/Scripts
-LS_Shapes.resources = "ScriptResources/" .. LS_Shapes.filename .. "/"
+LS_Shapes.resources = "ScriptResources/" .. LS_Shapes.filename .. "/" --> ScriptResources/ls_my_script/ls_my_image
 LS_Shapes.resourcesAlt = "ScriptResources/../../Support/Scripts/"
 LS_Shapes.log = nil
 LS_Shapes.logPath = LS_Shapes.basePath .. "/" .. LS_Shapes.resources .. "LOG.txt"
@@ -213,89 +213,90 @@ LS_ShapesDialog.MODE					= MOHO.MSG_BASE + 0; LS_ShapesDialog.F.MODE = MOHO.MSGF
 LS_ShapesDialog.MODE_ALT				= MOHO.MSG_BASE + 1; LS_ShapesDialog.F.MODE_ALT = MOHO.MSGF_NOTUNDO
 LS_ShapesDialog.NAME					= MOHO.MSG_BASE + 2
 LS_ShapesDialog.VIS						= MOHO.MSG_BASE + 3
+LS_ShapesDialog.VIS_ALT					= MOHO.MSG_BASE + 4
 
-LS_ShapesDialog.RAISE					= MOHO.MSG_BASE + 4
-LS_ShapesDialog.RAISE_ALT				= MOHO.MSG_BASE + 5
-LS_ShapesDialog.LOWER					= MOHO.MSG_BASE + 6
-LS_ShapesDialog.LOWER_ALT				= MOHO.MSG_BASE + 7
-LS_ShapesDialog.ANIMORDER				= MOHO.MSG_BASE + 8
-LS_ShapesDialog.ANIMORDER_ALT			= MOHO.MSG_BASE + 9
+LS_ShapesDialog.RAISE					= MOHO.MSG_BASE + 5
+LS_ShapesDialog.RAISE_ALT				= MOHO.MSG_BASE + 6
+LS_ShapesDialog.LOWER					= MOHO.MSG_BASE + 7
+LS_ShapesDialog.LOWER_ALT				= MOHO.MSG_BASE + 8
+LS_ShapesDialog.ANIMORDER				= MOHO.MSG_BASE + 9
+LS_ShapesDialog.ANIMORDER_ALT			= MOHO.MSG_BASE + 10
 
-LS_ShapesDialog.SELECTALL				= MOHO.MSG_BASE + 10; LS_ShapesDialog.F.SELECTALL = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.SELECTALL_ALT			= MOHO.MSG_BASE + 11; LS_ShapesDialog.F.SELECTALL_ALT = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.SELECTMATCHING			= MOHO.MSG_BASE + 12; LS_ShapesDialog.F.SELECTMATCHING = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.SELECTMATCHING_ALT		= MOHO.MSG_BASE + 13; LS_ShapesDialog.F.SELECTMATCHING_ALT = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.SELECTPTBASED			= MOHO.MSG_BASE + 14; LS_ShapesDialog.F.SELECTPTBASED = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.SELECTPTBASED_ALT		= MOHO.MSG_BASE + 15; LS_ShapesDialog.F.SELECTPTBASED_ALT = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.CHECKERSEL				= MOHO.MSG_BASE + 16; LS_ShapesDialog.F.CHECKERSEL = MOHO.MSGF_NOTUNDO + MOHO.MSGF_PASS
+LS_ShapesDialog.SELECTALL				= MOHO.MSG_BASE + 11; LS_ShapesDialog.F.SELECTALL = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.SELECTALL_ALT			= MOHO.MSG_BASE + 12; LS_ShapesDialog.F.SELECTALL_ALT = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.SELECTMATCHING			= MOHO.MSG_BASE + 13; LS_ShapesDialog.F.SELECTMATCHING = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.SELECTMATCHING_ALT		= MOHO.MSG_BASE + 14; LS_ShapesDialog.F.SELECTMATCHING_ALT = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.SELECTPTBASED			= MOHO.MSG_BASE + 15; LS_ShapesDialog.F.SELECTPTBASED = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.SELECTPTBASED_ALT		= MOHO.MSG_BASE + 16; LS_ShapesDialog.F.SELECTPTBASED_ALT = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.CHECKERSEL				= MOHO.MSG_BASE + 17; LS_ShapesDialog.F.CHECKERSEL = MOHO.MSGF_NOTUNDO + MOHO.MSGF_PASS
 
-LS_ShapesDialog.MERGE					= MOHO.MSG_BASE + 17
-LS_ShapesDialog.DELETE					= MOHO.MSG_BASE + 18
-LS_ShapesDialog.DELETE_ALT				= MOHO.MSG_BASE + 19
-LS_ShapesDialog.COPY					= MOHO.MSG_BASE + 20; LS_ShapesDialog.F.COPY = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.COPY_ALT				= MOHO.MSG_BASE + 21; LS_ShapesDialog.F.COPY_ALT = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.PASTE					= MOHO.MSG_BASE + 22
-LS_ShapesDialog.PASTE_ALT				= MOHO.MSG_BASE + 23; LS_ShapesDialog.F.PASTE_ALT = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.RESET					= MOHO.MSG_BASE + 24; LS_ShapesDialog.F.RESET = MOHO.MSGF_PASS
-LS_ShapesDialog.RESET_ALT				= MOHO.MSG_BASE + 25; LS_ShapesDialog.F.RESET_ALT = MOHO.MSGF_PASS
+LS_ShapesDialog.MERGE					= MOHO.MSG_BASE + 18
+LS_ShapesDialog.DELETE					= MOHO.MSG_BASE + 19
+LS_ShapesDialog.DELETE_ALT				= MOHO.MSG_BASE + 20
+LS_ShapesDialog.COPY					= MOHO.MSG_BASE + 21; LS_ShapesDialog.F.COPY = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.COPY_ALT				= MOHO.MSG_BASE + 22; LS_ShapesDialog.F.COPY_ALT = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.PASTE					= MOHO.MSG_BASE + 23
+LS_ShapesDialog.PASTE_ALT				= MOHO.MSG_BASE + 24; LS_ShapesDialog.F.PASTE_ALT = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.RESET					= MOHO.MSG_BASE + 25; LS_ShapesDialog.F.RESET = MOHO.MSGF_PASS
+LS_ShapesDialog.RESET_ALT				= MOHO.MSG_BASE + 26; LS_ShapesDialog.F.RESET_ALT = MOHO.MSGF_PASS
 
-LS_ShapesDialog.COMBO_NORMAL			= MOHO.MSG_BASE + 26
-LS_ShapesDialog.COMBO_NORMAL_ALT		= MOHO.MSG_BASE + 27
-LS_ShapesDialog.COMBO_ADD				= MOHO.MSG_BASE + 28
-LS_ShapesDialog.COMBO_ADD_ALT			= MOHO.MSG_BASE + 29
-LS_ShapesDialog.COMBO_SUBTRACT			= MOHO.MSG_BASE + 30
-LS_ShapesDialog.COMBO_SUBTRACT_ALT		= MOHO.MSG_BASE + 31
-LS_ShapesDialog.COMBO_CLIP				= MOHO.MSG_BASE + 32
-LS_ShapesDialog.COMBO_CLIP_ALT			= MOHO.MSG_BASE + 33
-LS_ShapesDialog.COMBO_INTERSECT			= MOHO.MSG_BASE + 34
-LS_ShapesDialog.COMBO_INTERSECT_ALT		= MOHO.MSG_BASE + 35
-LS_ShapesDialog.COMBO_BLEND_BUT			= MOHO.MSG_BASE + 36
-LS_ShapesDialog.COMBO_BLEND_BUT_ALT		= MOHO.MSG_BASE + 37
-LS_ShapesDialog.COMBO_BLEND				= MOHO.MSG_BASE + 38
-LS_ShapesDialog.BASE_SHAPE				= MOHO.MSG_BASE + 39; LS_ShapesDialog.F.BASE_SHAPE = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.BASE_SHAPE_ALT			= MOHO.MSG_BASE + 40; LS_ShapesDialog.F.BASE_SHAPE_ALT = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.TOP_SHAPE				= MOHO.MSG_BASE + 41; LS_ShapesDialog.F.TOP_SHAPE = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.TOP_SHAPE_ALT			= MOHO.MSG_BASE + 42; LS_ShapesDialog.F.TOP_SHAPE_ALT = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.COMBO_NORMAL			= MOHO.MSG_BASE + 27
+LS_ShapesDialog.COMBO_NORMAL_ALT		= MOHO.MSG_BASE + 28
+LS_ShapesDialog.COMBO_ADD				= MOHO.MSG_BASE + 29
+LS_ShapesDialog.COMBO_ADD_ALT			= MOHO.MSG_BASE + 30
+LS_ShapesDialog.COMBO_SUBTRACT			= MOHO.MSG_BASE + 31
+LS_ShapesDialog.COMBO_SUBTRACT_ALT		= MOHO.MSG_BASE + 32
+LS_ShapesDialog.COMBO_CLIP				= MOHO.MSG_BASE + 33
+LS_ShapesDialog.COMBO_CLIP_ALT			= MOHO.MSG_BASE + 34
+LS_ShapesDialog.COMBO_INTERSECT			= MOHO.MSG_BASE + 35
+LS_ShapesDialog.COMBO_INTERSECT_ALT		= MOHO.MSG_BASE + 36
+LS_ShapesDialog.COMBO_BLEND_BUT			= MOHO.MSG_BASE + 37
+LS_ShapesDialog.COMBO_BLEND_BUT_ALT		= MOHO.MSG_BASE + 38
+LS_ShapesDialog.COMBO_BLEND				= MOHO.MSG_BASE + 39
+LS_ShapesDialog.BASE_SHAPE				= MOHO.MSG_BASE + 40; LS_ShapesDialog.F.BASE_SHAPE = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.BASE_SHAPE_ALT			= MOHO.MSG_BASE + 41; LS_ShapesDialog.F.BASE_SHAPE_ALT = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.TOP_SHAPE				= MOHO.MSG_BASE + 42; LS_ShapesDialog.F.TOP_SHAPE = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.TOP_SHAPE_ALT			= MOHO.MSG_BASE + 43; LS_ShapesDialog.F.TOP_SHAPE_ALT = MOHO.MSGF_NOTUNDO
 
-LS_ShapesDialog.FILL					= MOHO.MSG_BASE + 43
-LS_ShapesDialog.FILL_ALT				= MOHO.MSG_BASE + 44
-LS_ShapesDialog.FILLCOLOR				= MOHO.MSG_BASE + 45; LS_ShapesDialog.F.FILLCOLOR = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.FILLCOLOR_BEGIN			= MOHO.MSG_BASE + 46; LS_ShapesDialog.F.FILLCOLOR_BEGIN = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.FILLCOLOR_END			= MOHO.MSG_BASE + 47; LS_ShapesDialog.F.FILLCOLOR_END = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.FILLCOLOROVER			= MOHO.MSG_BASE + 48
-LS_ShapesDialog.LINE					= MOHO.MSG_BASE + 49
-LS_ShapesDialog.LINE_ALT				= MOHO.MSG_BASE + 50
-LS_ShapesDialog.LINECOLOR				= MOHO.MSG_BASE + 51; LS_ShapesDialog.F.LINECOLOR = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.LINECOLOR_BEGIN			= MOHO.MSG_BASE + 52; LS_ShapesDialog.F.LINECOLOR_BEGIN = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.LINECOLOR_END			= MOHO.MSG_BASE + 53; LS_ShapesDialog.F.LINECOLOR_END = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.LINECOLOROVER			= MOHO.MSG_BASE + 54
-LS_ShapesDialog.LINEWIDTH				= MOHO.MSG_BASE + 55
-LS_ShapesDialog.LINEWIDTHOVER			= MOHO.MSG_BASE + 56
-LS_ShapesDialog.ROUNDCAPS				= MOHO.MSG_BASE + 57; LS_ShapesDialog.F.ROUNDCAPS = MOHO.MSGF_PASS
-LS_ShapesDialog.BRUSH					= MOHO.MSG_BASE + 58
-LS_ShapesDialog.COLORSWAP				= MOHO.MSG_BASE + 59; LS_ShapesDialog.F.COLORSWAP = MOHO.MSGF_PASS
-LS_ShapesDialog.STYLESWAP				= MOHO.MSG_BASE + 60
+LS_ShapesDialog.FILL					= MOHO.MSG_BASE + 44
+LS_ShapesDialog.FILL_ALT				= MOHO.MSG_BASE + 45
+LS_ShapesDialog.FILLCOLOR				= MOHO.MSG_BASE + 46; LS_ShapesDialog.F.FILLCOLOR = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.FILLCOLOR_BEGIN			= MOHO.MSG_BASE + 47; LS_ShapesDialog.F.FILLCOLOR_BEGIN = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.FILLCOLOR_END			= MOHO.MSG_BASE + 48; LS_ShapesDialog.F.FILLCOLOR_END = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.FILLCOLOROVER			= MOHO.MSG_BASE + 49
+LS_ShapesDialog.LINE					= MOHO.MSG_BASE + 50
+LS_ShapesDialog.LINE_ALT				= MOHO.MSG_BASE + 51
+LS_ShapesDialog.LINECOLOR				= MOHO.MSG_BASE + 52; LS_ShapesDialog.F.LINECOLOR = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.LINECOLOR_BEGIN			= MOHO.MSG_BASE + 53; LS_ShapesDialog.F.LINECOLOR_BEGIN = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.LINECOLOR_END			= MOHO.MSG_BASE + 54; LS_ShapesDialog.F.LINECOLOR_END = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.LINECOLOROVER			= MOHO.MSG_BASE + 55
+LS_ShapesDialog.LINEWIDTH				= MOHO.MSG_BASE + 56
+LS_ShapesDialog.LINEWIDTHOVER			= MOHO.MSG_BASE + 57
+LS_ShapesDialog.ROUNDCAPS				= MOHO.MSG_BASE + 58; LS_ShapesDialog.F.ROUNDCAPS = MOHO.MSGF_PASS
+LS_ShapesDialog.BRUSH					= MOHO.MSG_BASE + 59
+LS_ShapesDialog.COLORSWAP				= MOHO.MSG_BASE + 60; LS_ShapesDialog.F.COLORSWAP = MOHO.MSGF_PASS
+LS_ShapesDialog.STYLESWAP				= MOHO.MSG_BASE + 61
 
-LS_ShapesDialog.FILLED					= MOHO.MSG_BASE	+ 61
-LS_ShapesDialog.FILLED_ALT				= MOHO.MSG_BASE + 62
-LS_ShapesDialog.OUTLINED				= MOHO.MSG_BASE + 63
-LS_ShapesDialog.OUTLINED_ALT			= MOHO.MSG_BASE + 64
-LS_ShapesDialog.FILLEDOUTLINED			= MOHO.MSG_BASE + 65
-LS_ShapesDialog.FILLEDOUTLINED_ALT		= MOHO.MSG_BASE + 66
+LS_ShapesDialog.FILLED					= MOHO.MSG_BASE	+ 62
+LS_ShapesDialog.FILLED_ALT				= MOHO.MSG_BASE + 63
+LS_ShapesDialog.OUTLINED				= MOHO.MSG_BASE + 64
+LS_ShapesDialog.OUTLINED_ALT			= MOHO.MSG_BASE + 65
+LS_ShapesDialog.FILLEDOUTLINED			= MOHO.MSG_BASE + 66
+LS_ShapesDialog.FILLEDOUTLINED_ALT		= MOHO.MSG_BASE + 67
 
-LS_ShapesDialog.HSV						= MOHO.MSG_BASE + 67; LS_ShapesDialog.F.HSV = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.MULTI1					= MOHO.MSG_BASE + 68
-LS_ShapesDialog.MULTI2					= MOHO.MSG_BASE + 69
-LS_ShapesDialog.MULTI3					= MOHO.MSG_BASE + 70
-LS_ShapesDialog.MULTI4					= MOHO.MSG_BASE + 71
-LS_ShapesDialog.APPLY					= MOHO.MSG_BASE + 72; LS_ShapesDialog.F.APPLY = {[3] = MOHO.MSGF_MULTIUNDO, [4] = MOHO.MSGF_MULTIUNDO}
-LS_ShapesDialog.APPLY_ALT				= MOHO.MSG_BASE + 73; LS_ShapesDialog.F.APPLY_ALT = {[3] = MOHO.MSGF_MULTIUNDO, [4] = MOHO.MSGF_MULTIUNDO}
-LS_ShapesDialog.SWATCHSLIDER			= MOHO.MSG_BASE + 74; LS_ShapesDialog.F.SWATCHSLIDER = MOHO.MSGF_NOTUNDO + MOHO.MSGF_PASS
-LS_ShapesDialog.INFO					= MOHO.MSG_BASE + 75; LS_ShapesDialog.F.INFO = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.HSV						= MOHO.MSG_BASE + 68; LS_ShapesDialog.F.HSV = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.MULTI1					= MOHO.MSG_BASE + 69
+LS_ShapesDialog.MULTI2					= MOHO.MSG_BASE + 70
+LS_ShapesDialog.MULTI3					= MOHO.MSG_BASE + 71
+LS_ShapesDialog.MULTI4					= MOHO.MSG_BASE + 72
+LS_ShapesDialog.APPLY					= MOHO.MSG_BASE + 73; LS_ShapesDialog.F.APPLY = {[3] = MOHO.MSGF_MULTIUNDO, [4] = MOHO.MSGF_MULTIUNDO}
+LS_ShapesDialog.APPLY_ALT				= MOHO.MSG_BASE + 74; LS_ShapesDialog.F.APPLY_ALT = {[3] = MOHO.MSGF_MULTIUNDO, [4] = MOHO.MSGF_MULTIUNDO}
+LS_ShapesDialog.SWATCHSLIDER			= MOHO.MSG_BASE + 75; LS_ShapesDialog.F.SWATCHSLIDER = MOHO.MSGF_NOTUNDO + MOHO.MSGF_PASS
+LS_ShapesDialog.INFO					= MOHO.MSG_BASE + 76; LS_ShapesDialog.F.INFO = MOHO.MSGF_NOTUNDO
 
-LS_ShapesDialog.DUMMY					= MOHO.MSG_BASE + 71
-LS_ShapesDialog.CHANGE					= MOHO.MSG_BASE + 72; LS_ShapesDialog.F.CHANGE = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.NONE					= MOHO.MSG_BASE + 73; LS_ShapesDialog.F.CHANGE = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.DUMMY					= MOHO.MSG_BASE + 72
+LS_ShapesDialog.CHANGE					= MOHO.MSG_BASE + 73; LS_ShapesDialog.F.CHANGE = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.NONE					= MOHO.MSG_BASE + 74; LS_ShapesDialog.F.CHANGE = MOHO.MSGF_NOTUNDO
 
 LS_ShapesDialog.MAINMENU				= MOHO.MSG_BASE +  300; LS_ShapesDialog.F.MAINMENU = {[6] = MOHO.MSGF_REOPEN, [7] = MOHO.MSGF_REOPEN, [8] = MOHO.MSGF_REOPEN, [9] = MOHO.MSGF_REOPEN}
 LS_ShapesDialog.MULTIMENU				= MOHO.MSG_BASE +  400
@@ -360,6 +361,7 @@ function LS_ShapesDialog:new(moho) --print("LS_ShapesDialog:new(" .. tostring(mo
 	d.skipAll = false
 	d.shapeTable, d.styleTable, d.groups = {}, {}, {old = {}}
 	d.itemSel = 0
+	d.itemVis = -1 --> -1: unevaluated, 0: all hidden, 1: all visible, 2: mixed
 	--d.shapes = d.shapes and LM.Clamp(d.shapes + 2, 10, 40) or 20
 	d.groupUI = nil
 	d.vHeight = d.v and math.floor((d.v:Height() / (LS_Shapes.largePalette and 1 or 2))) - 214 or (LS_Shapes.largePalette and 648 or 324) --d.vHeight = d.vHeight and d.vHeight - 132 or 726
@@ -416,7 +418,8 @@ function LS_ShapesDialog:new(moho) --print("LS_ShapesDialog:new(" .. tostring(mo
 			--d.itemPreview:SetToolTip(MOHO.Localize("/Windows/Style/SHAPE=SHAPE"):lower():gsub("^%l", string.upper))
 			l:AddChild(d.itemPreview)
 
-			d.itemVisCheck = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_visibility_" .. (math.random() < 0.5 and 0 or math.random(1, 5)), MOHO.Localize("/LS/Shapes/ShapeVisibility=Shape Visibility (Hide/Unhide)"), true, self.VIS, false)
+			d.itemVisCheck = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_visibility_1", "", true, self.VIS, false) --"ls_visibility_" .. (math.random() < 0.5 and 0 or math.random(1, 5))
+			d.itemVisCheck:SetAlternateMessage(self.VIS_ALT)
 			d.itemName = LM.GUI.TextControl(mainW - d.itemVisCheck:Width() - 3, "Sel. Item Name", self.NAME, -1) --20240207-2030: wat? -1 instead of LM.GUI.FIELD_TEXT seems to make the enter key work??
 			d.itemName:SetValue("")
 			l:AddChild(d.itemName, LM.GUI.ALIGN_FILL, 0)
@@ -446,7 +449,7 @@ function LS_ShapesDialog:new(moho) --print("LS_ShapesDialog:new(" .. tostring(mo
 				l:AddPadding(2)
 				d.animOrder = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_shape_order_anim" .. (d.large and "_lg" or ""), "", true, self.ANIMORDER, true)
 				d.animOrder:SetAlternateMessage(self.ANIMORDER_ALT)
-				d.animOrder:SetToolTip(MOHO.Localize("/LS/Shapes/AnimatedShapeOrder=Animated Shape Order (<alt> Reset)"))
+				d.animOrder:SetToolTip(MOHO.Localize("/LS/Shapes/AnimatedShapeOrder=Animated Shape Order" .. " (<alt> " .. MOHO.Localize("/Windows/Style/Reset=Reset") .. ")"))
 				d.animOrder.prop = {v = 11, pro = true, tooltip = false} table.insert(d.w, d.animOrder)
 				l:AddChild(d.animOrder, LM.GUI.ALIGN_FILL, 0)
 				l:AddPadding(2)
@@ -918,12 +921,13 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 	local msg = self.msg ~= nil and self.msg or MOHO.MSG_BASE
 	self.p.m = self.p and moho or nil
 	self.tempShape = moho:NewShapeProperties() or MOHO.MohoGlobals.NewShapeProperties
+	self.itemVis = -1
 
 	local itemCount = self.itemList and self.itemList:CountItems() or 1
 	local itemsSel = self.itemList and math.floor(self.itemList:NumSelectedItems() + (self.itemList:IsItemSelected(0) == true and -1 or 0))
 	local itemSel = self.itemList and math.floor(self.itemList:SelItem()) - 1 or -1
 	local itemLabel = ""
-	local itemsForBusy = 64 -- Minimum items to gray-out the list while busy 
+	local itemsForBusy = 64 -- Minimum items to gray-out the list while busy
 
 	local style = doc and moho:CurrentEditStyle()
 	local styleName = doc and style and style:Name() or "" -- 20250730-2130: Had to also check doc existence here & below to avoid (I think new in v14.3) crashes
@@ -1465,7 +1469,6 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 		end
 
 		self.itemPreview:Enable(true)
-		self.itemVisCheck:SetValue(not shape.fHidden)
 		if LS_Shapes.advanced then
 			self.fillCheck:SetValue(shape.fHasFill)
 			self.fillCheck:Enable(shape.fFillAllowed)
@@ -1527,7 +1530,6 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 			self.mergeBut:Enable(false)
 		end
 
-		self.itemVisCheck:SetValue(true)
 		self.itemPreview:Enable(false)
 		if LS_Shapes.advanced then
 			self.fillCheck:SetValue(true)
@@ -1606,7 +1608,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 	end
 
 	LS_Shapes:Log("1.4") --LS_Shapes:LogTime(1.4) --[Start of item update block]--
-	if LS_Shapes.mode < 2 then -- Shape Modes... -- SEC. CURSTATE
+	if LS_Shapes.mode < 2 then -- Shape Modes (CURSTATE?) -- SEC. Sh. Modes
 		---[[Performance Overhaul 
 		self.skipBlock = true --local t1a = os.clock() -- Skip unnecessay HandleMessage parts during the whole refresh
 		local currentCount, desiredCount = itemCount, shapeCount + 1 -- +1 for index 0 being always reserved to <None>
@@ -1697,8 +1699,16 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 					self.itemList:SetSelItem(self.itemList:GetItem(shapeCount - i + 1), false, add) -- NOTE (20231008-0037): Changing redraw (2nd ar.) to false in a try to improve performace... (TBD) 
 					add = true
 				end
+				local isHidden = shape.fHidden
+				if self.itemVis == -1 then
+					self.itemVis = isHidden and 0 or 1
+				elseif (isHidden and self.itemVis == 1) or (not isHidden and self.itemVis == 0) then
+					self.itemVis = 2
+				end
 			end
 		end
+		self.itemVis = self.itemVis == -1 and 0 or self.itemVis -- No selected items fallback/normalizer
+
 		if shapeID and shapeID >= 0 then
 			self.itemName:Enable(true)
 			self.itemName:SetValue(mesh:Shape(shapeID):Name())
@@ -1712,12 +1722,15 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 				self.itemList:ScrollItemIntoView(0, true) -- It doesn't seem to scroll to item 0
 			end
 		end
+
 		self.itemVisCheck:Enable(self.itemList:SelItem() > 0)
-		self.itemVisCheck:SetToolTip(MOHO.Localize("/LS/Shapes/ShapeVisibility=Shape Visibility (Hide/Unhide)"))
+		self.itemVisCheck:SetValue(false)
+		self.itemVisCheck:SetToolTip(MOHO.Localize("/LS/Shapes/ShapeVisibility=Shape Visibility") .. " (<alt> " .. MOHO.Localize("/LS/Invert=Invert") .. ")")
+		self.itemVisCheck:ReplaceImage(LS_Shapes.resources .. "ls_visibility_" .. (self.itemList:SelItem() > 0 and self.itemVis or 1))
 		self.deleteBut:Enable(shapesSel > 0)
 		self.skipBlock = false
 		LS_Shapes:Log("1.4.1") --LS_Shapes:LogTime("1.4.1")
-	elseif LS_Shapes.mode == 2 then -- STYLE Mode
+	elseif LS_Shapes.mode == 2 then -- STYLE Mode -- SEC. St. Mode
 		---[[Performance Overhaul 
 		self.skipBlock = true --local t1a = os.clock() -- Skip unnecessay HandleMessage parts during the whole refresh
 		local currentCount, desiredCount = itemCount, styleCount + 1 -- +1 for index 0 being always reserved to <None>
@@ -1835,11 +1848,13 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 		end
 		self.skipBlock = false
 		self.itemName:Enable(self.itemList:SelItem() > 0)
-		self.itemVisCheck:Enable(false)
-		self.itemVisCheck:SetValue(false)
+		self.itemVisCheck:Enable(self.itemList:SelItem() > 0)
+		self.itemVisCheck:SetValue(styleName ~= "")
+		self.itemVisCheck:SetToolTip(MOHO.Localize("/LS/Shapes/StyleEditIndicator=Style Edit Indicator"))
+		self.itemVisCheck:ReplaceImage(LS_Shapes.resources .. (styleName == "" and "ls_style" or "ls_style_edit"), true)
 		self.deleteBut:Enable(stylesSel > 0)
 		LS_Shapes:Log("1.4.2") --LS_Shapes:LogTime("1.4.2")
-	elseif LS_Shapes.mode == 3 then -- GROUP Mode
+	elseif LS_Shapes.mode == 3 then -- GROUP Mode -- SEC. Gr. Mode
 		LS_Shapes:ProcessGroups(mesh, lDrawingUUID)
 
 		---[[Performance Overhaul 
@@ -1915,8 +1930,15 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 						self.itemList:SetSelItem(self.itemList:GetItem(i + 1), last, add)
 						add = true
 					end
+					local isHidden = group.ls_fHidden
+					if self.itemVis == -1 then
+						self.itemVis = isHidden and 0 or 1
+					elseif (isHidden and self.itemVis == 1) or (not isHidden and self.itemVis == 0) then
+						self.itemVis = 2
+					end
 				end
 			end
+			self.itemVis = self.itemVis == -1 and 0 or self.itemVis -- No selected items fallback/normalizer
 		else
 			self.itemList:SetSelItem(self.itemList:GetItem(0), true, false)
 		end
@@ -1924,7 +1946,6 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 		if self.groupUI and itemID >= 0 then
 			self.itemName:Enable(true)
 			self.itemName:SetValue(self.groupUI:Name())
-			self.itemVisCheck:SetValue(not self.groupUI.ls_fHidden)
 			self.itemList:ScrollItemIntoView(groupCount - mesh:GroupID(self.groupUI), true)
 		elseif not self.groupUI and (itemID < 1 or groupSelCount < 1) then
 			self.itemName:Enable(false)
@@ -1935,9 +1956,12 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 				self.itemList:ScrollItemIntoView(0, true) -- It doesn't seem to scroll to item 0
 			end
 		end
-		self.itemVisCheck:Enable(self.itemList:SelItem() > 0)
+
 		self.itemName:Enable(self.itemList:SelItem() > 0)
-		self.itemVisCheck:SetToolTip(MOHO.Localize("/LS/Shapes/GroupVisibility=Group Visibility (Hide/Unhide)"))
+		self.itemVisCheck:Enable(self.itemList:SelItem() > 0)
+		self.itemVisCheck:SetValue(false)
+		self.itemVisCheck:SetToolTip(MOHO.Localize("/LS/Shapes/GroupVisibility=Group Visibility") .. " (<alt> " .. MOHO.Localize("/LS/Invert=Invert") .. ")")
+		self.itemVisCheck:ReplaceImage(LS_Shapes.resources .. "ls_visibility_" .. (self.itemList:SelItem() > 0 and self.itemVis or 1))
 		self.deleteBut:Enable(groupSelCount > 0)
 		self.skipBlock = false
 		LS_Shapes:Log("1.4.3") --LS_Shapes:LogTime("1.4.3")
@@ -2042,7 +2066,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 				end
 			end
 		end
-		--LS_Shapes.multiMode -> 0: Fill, 1: Stroke, 2: FX, 3: Recolor --SEC. M. MENU
+		--LS_Shapes.multiMode -> 0: Fill, 1: Stroke, 2: FX, 3: Recolor -- SEC. M. MENU
 		--LS_Shapes.multiMode = (LS_Shapes.multiMode > 1 and shape and shape:HasPositionDependentStyles()) and 0 or LS_Shapes.multiMode
 		self.multiMenuPopup:Enable(LS_Shapes.mode < 3)
 		self.multiMenu:SetEnabled(self.MULTIMENU + 2, shapeHandles) -- FX
@@ -3380,31 +3404,47 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 			end
 		end
 		moho:UpdateUI()
-	elseif (msg == self.VIS) then
+	elseif (msg == self.VIS or msg == self.VIS_ALT) then
+		local vis = self.itemVis ~= 1
 		if (mesh ~= nil) then
 			if (LS_Shapes.mode < 2) then -- SHAPE Modes
 				if (shape ~= nil) then
 					for i = 0, shapeCount - 1 do
 						local shape = mesh:Shape(i)
-						if (shape.fSelected) then
-							shape.fHidden = not self.itemVisCheck:Value()
+						if shape.fSelected then
+							if msg == self.VIS then
+								shape.fHidden = not vis
+							else
+								shape.fHidden = not shape.fHidden
+							end
 						end
 					end
+				end
+			elseif LS_Shapes.mode == 2 then -- STYLE Mode
+				if (style ~= nil and styleName ~= "") then
+					LS_Shapes.mode = LS_Shapes:StyleLeaver(moho, mesh, 2)
+					self.itemList:SetSelItem(self.itemList:GetItem(0), false)
+				else
+					LM.Beep() -- I dont't think there was a way to enter edit style mode...
 				end
 			elseif (LS_Shapes.mode == 3) then -- GROUP Mode
 				if (group or self.groupUI) then
 					for i = 0, groupCount - 1 do
 						local g = mesh:Group(i)
 						if (g.ls_fSelected) then
-							g.ls_fHidden = not self.itemVisCheck:Value()
+							g.ls_fHidden = not vis
 						end
 						if (g.ls_fSelected or g:Name() == self.groupUI:Name()) then -- 2nd condition is necessary to can hide duplicates from top to bottom!
 							for j = 0, g:CountPoints() - 1 do
 								local pt = g:Point(j)
-								if g.ls_fHidden == true then
-									pt.fHidden = true
+								if msg == self.VIS then
+									if g.ls_fHidden == true then
+										pt.fHidden = true
+									else
+										pt.fHidden = false
+									end
 								else
-									pt.fHidden = false
+									pt.fHidden = not pt.fHidden
 								end
 							end
 						end
@@ -3412,6 +3452,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 				end
 			end
 		end
+		self.itemVisCheck:SetValue(false) -- Make the button not to act as a checkbox in this case 
 		MOHO.Redraw()
 		self:Update()
 	elseif (msg == self.RAISE or msg == self.RAISE_ALT) then
@@ -4547,7 +4588,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 				mesh:AppendPoint(v * 1.0001, 0)
 
 				local penul, last = mesh:Point(mesh:CountPoints() - 2), mesh:Point(mesh:CountPoints() - 1)
-				--penul.fHidden, last.fHidden = true, true -- I kinda like can se the points as visual indication...
+				--penul.fHidden, last.fHidden = true, true -- I kinda like can see the points as visual indication...
 				penul.fSelected, last.fSelected = true, true
 				penul.fWidth:SetValue(0, 0); last.fWidth:SetValue(0, 0)
 			end
