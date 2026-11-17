@@ -48,8 +48,8 @@ function LS_Shapes:LoadPrefs(prefs) --print("LS_Shapes:LoadPrefs(" .. tostring(p
 	self.creationMode = prefs:GetInt("LM_CreateShape.creationMode", 2)
 	self.pointBasedSel = prefs:GetBool("LS_Shapes.pointBasedSel", false)
 	self.pointBasedSel3 = prefs:GetBool("LS_Shapes.pointBasedSel3", true)
-	self.ignoreNonRegular = prefs:GetBool("LS_Shapes.ignoreNonRegular", true)
 	self.syncWithStyle = prefs:GetBool("LS_Shapes.syncWithStyle", true)
+	self.ignoreNonRegular = prefs:GetBool("LS_Shapes.ignoreNonRegular", true)
 	self.openOnStartup = prefs:GetBool("LS_Shapes.openOnStartup", false)
 	self.shouldOpen = prefs:GetBool("LS_Shapes.shouldOpen", true)
 	self.showInTools = prefs:GetBool("LS_Shapes.showInTools", true)
@@ -59,6 +59,7 @@ function LS_Shapes:LoadPrefs(prefs) --print("LS_Shapes:LoadPrefs(" .. tostring(p
 	self.advanced = prefs:GetBool("LS_Shapes.advanced", true)
 	self.largeButtons = prefs:GetInt("LS_Shapes.largeButtons", 0)
 	self.largePalette = prefs:GetBool("LS_Shapes.largePalette", false)
+	self.showPreview = prefs:GetBool("LS_Shapes.showPreview", false)
 	self.showInfobar = prefs:GetBool("LS_Shapes.showInfobar", true)
 	self.swatch = prefs:GetInt("LS_Shapes.swatch", -1)
 	self.swatchDoc = prefs:GetInt("LS_Shapes.swatchDoc", 1)
@@ -87,8 +88,8 @@ function LS_Shapes:SavePrefs(prefs) --print("LS_Shapes:SavePrefs(" .. tostring(p
 	prefs:SetInt("LM_CreateShape.creationMode", self.creationMode)
 	prefs:SetBool("LS_Shapes.pointBasedSel", self.pointBasedSel)
 	prefs:SetBool("LS_Shapes.pointBasedSel3", self.pointBasedSel3)
-	prefs:SetBool("LS_Shapes.ignoreNonRegular", self.ignoreNonRegular)
 	prefs:SetBool("LS_Shapes.syncWithStyle", self.syncWithStyle)
+	prefs:SetBool("LS_Shapes.ignoreNonRegular", self.ignoreNonRegular)
 	prefs:SetBool("LS_Shapes.openOnStartup", self.openOnStartup)
 	prefs:SetBool("LS_Shapes.shouldOpen", true)
 	prefs:SetBool("LS_Shapes.showInTools", self.showInTools)
@@ -98,6 +99,7 @@ function LS_Shapes:SavePrefs(prefs) --print("LS_Shapes:SavePrefs(" .. tostring(p
 	prefs:SetBool("LS_Shapes.advanced", self.advanced)
 	prefs:SetInt("LS_Shapes.largeButtons", self.largeButtons)
 	prefs:SetBool("LS_Shapes.largePalette", self.largePalette)
+	prefs:SetBool("LS_Shapes.showPreview", self.showPreview)
 	prefs:SetBool("LS_Shapes.showInfobar", self.showInfobar)
 	prefs:SetInt("LS_Shapes.swatch", self.swatch)
 	prefs:SetInt("LS_Shapes.swatchDoc", self.swatchDoc)
@@ -118,8 +120,8 @@ function LS_Shapes:ResetPrefs()
 	LM_CreateShape.creationMode = 2
 	LS_Shapes.pointBasedSel = false
 	LS_Shapes.pointBasedSel3 = true
-	LS_Shapes.ignoreNonRegular = true
 	LS_Shapes.syncWithStyle = true
+	LS_Shapes.ignoreNonRegular = true
 	LS_Shapes.openOnStartup = false
 	LS_Shapes.showInTools = true
 	LS_Shapes.beginnerMode = true
@@ -128,6 +130,7 @@ function LS_Shapes:ResetPrefs()
 	LS_Shapes.advanced = true
 	LS_Shapes.largeButtons = 0 -- -1: Off, 0: Auto, 1: On
 	LS_Shapes.largePalette = false -- 0: Max, 1: Full, 2: Half, 3: Third?
+	LS_Shapes.showPreview = false
 	LS_Shapes.showInfobar = true
 	LS_Shapes.swatch = -1
 	LS_Shapes.swatchDoc = 1
@@ -410,17 +413,19 @@ function LS_ShapesDialog:new(moho) --print("LS_ShapesDialog:new(" .. tostring(mo
 			l:AddPadding(3)
 		l:Pop() --V
 		l:PushH(LM.GUI.ALIGN_LEFT, 0)
-			--d.itemNameLabel = LM.GUI.DynamicText("    ", 18)
-			--d.itemNameLabel:SetValue(" 🏷") -- Set labels text this way for full control over width.
-			--d.itemNameLabel:SetToolTip(MOHO.Localize("/Windows/Style/Name=Name")) -- .. " (Tab key to confirm)"
-			--l:AddChild(d.itemNameLabel, LM.GUI.ALIGN_CENTER)
-			d.itemPreview = MOHO.MeshPreview(butW + butL + padH * 2, d.large and 24 or butW + butL + padH * 2)
-			--d.itemPreview:SetToolTip(MOHO.Localize("/Windows/Style/SHAPE=SHAPE"):lower():gsub("^%l", string.upper))
-			l:AddChild(d.itemPreview)
+			if LS_Shapes.showPreview then
+				d.itemPreview = MOHO.MeshPreview(butW + butL + padH * 2, d.large and 24 or butW + butL + padH * 2)
+				l:AddChild(d.itemPreview)
+			else
+				d.itemNameLabel = LM.GUI.DynamicText("    ", (butW + butL + padH * 2) - 1)
+				d.itemNameLabel:SetValue("  🏷") -- Set labels text this way for full control over width.
+				d.itemNameLabel:SetToolTip(MOHO.Localize("/Windows/Style/Name=Name")) -- .. " (Tab key to confirm)"
+				l:AddChild(d.itemNameLabel, LM.GUI.ALIGN_CENTER)
+			end
 
 			d.itemVisCheck = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_visibility_1", "", true, self.VIS, false) --"ls_visibility_" .. (math.random() < 0.5 and 0 or math.random(1, 5))
 			d.itemVisCheck:SetAlternateMessage(self.VIS_ALT)
-			d.itemName = LM.GUI.TextControl(mainW - d.itemVisCheck:Width() - 3, "Sel. Item Name", self.NAME, -1) --20240207-2030: wat? -1 instead of LM.GUI.FIELD_TEXT seems to make the enter key work??
+			d.itemName = LM.GUI.TextControl(mainW - d.itemVisCheck:Width() - (LS_Shapes.showPreview and 3 or 2), "Sel. Item Name", self.NAME, -1) --20240207-2030: wat? -1 instead of LM.GUI.FIELD_TEXT seems to make the enter key work??
 			d.itemName:SetValue("")
 			l:AddChild(d.itemName, LM.GUI.ALIGN_FILL, 0)
 			l:AddChild(d.itemVisCheck, LM.GUI.ALIGN_FILL, 0)
@@ -1009,7 +1014,6 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 
 	if self.menu1:CountItems() < 1 then -- Build/Rebuild Main Menu
 		self.menu1:AddItem(MOHO.Localize("/LS/Shapes/SyncWithStyleWindow=Sync With Style Window"), 0, self.MAINMENU)
-		--self.menu1:AddItem(MOHO.Localize("/LS/Shapes/ShowActualShapePreview=Show Actual Shape Preview"), 0, self.MAINMENU + 1) -- TODO?
 		self.menu1:AddItem(MOHO.Localize("/LS/Shapes/IgnoreNonRegularVectorLayers=Ignore Non-Regular Vectors"), 0, self.MAINMENU + 1)
 		--self.menu1:AddItem(MOHO.Localize("/LS/Shapes/AsleepWhileUsingDrawingTools=Asleep While Using Drawing Tools"), 0, self.MAINMENU + 2) -- & Click To Awake? -- TBC
 		self.menu1:AddItem("", 0, 0)
@@ -1021,26 +1025,27 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 		self.menu1:AddItem(MOHO.Localize("/LS/Shapes/AdvancedMode=Advanced" .. (LS_Shapes.beginnerMode and " (" .. MOHO.Localize("/LS/Shapes/CreationControls=Creation Controls") .. ")" or "")), 0, self.MAINMENU + 6) self.menu1:SetEnabled(self.MAINMENU + 6, true)
 		self.menu1:AddItem(MOHO.Localize("/LS/Shapes/UseLargeButtons=Use Large Buttons") .. (LS_Shapes.largeButtons == 0 and " [Auto]" or ""), 0, self.MAINMENU + 7)
 		self.menu1:AddItem(MOHO.Localize("/LS/Shapes/UseLargePalette=Use Large Palette (%d Items)"):match("[^%(]+"), 0, self.MAINMENU + 8) --MOHO.Localize("/Dialogs/ExportSettings/HalfDimensions=Use Large Palette (%dx%d)"):match("[^%(]+")
-		self.menu1:AddItem(MOHO.Localize("/Windows/LayerComps/ShowComp=Show") .. " " .. "Infobar", 0, self.MAINMENU + 9)
+		self.menu1:AddItem(MOHO.Localize("/LS/Shapes/ShowThumbnailPreview=Show Thumbnail Preview"), 0, self.MAINMENU + 9)
+		self.menu1:AddItem(MOHO.Localize("/Windows/LayerComps/ShowComp=Show") .. " " .. "Infobar", 0, self.MAINMENU + 10)
 		self.menu1:AddItem("", 0, 0)
-		self.menu1:AddItem(MOHO.Localize("/LS/Shapes/RestoreDefaults=Restore Defaults") .. " [?]", 0, self.MAINMENU + 10)
+		self.menu1:AddItem(MOHO.Localize("/LS/Shapes/RestoreDefaults=Restore Defaults") .. " [?]", 0, self.MAINMENU + 11)
 		self.menu1:AddItem("", 0, 0)
 		if (LS_Shapes:FileExists(self.resPath .. '\\HELP.png') == true) or (LS_Shapes:FileExists(self.resPath .. '\\@HELPME.url') == true) or LS_Shapes.repo then
-			table.insert (self.menu1.ls.items, self.MAINMENU + 11)
+			table.insert (self.menu1.ls.items, self.MAINMENU + 12)
 			self.menu1:AddItem(MOHO.Localize("/Menus/Help/Help=Help") .. "..." .. ((not LS_Shapes.helpViewed and LS_Shapes.beginnerMode) and "    👈  " .. MOHO.Localize("/LS/Shapes/GetStartedHere=GET STARTED HERE!") or ""), 0, self.menu1.ls.items[#self.menu1.ls.items])
 		end
 		if (LS_Shapes:FileExists(self.resPath .. '\\@VISITME.url') == true) or (LS_Shapes.webpage and LS_Shapes.webpage ~= "") then
-			table.insert (self.menu1.ls.items, self.MAINMENU + 12)
+			table.insert (self.menu1.ls.items, self.MAINMENU + 13)
 			self.menu1:AddItem(MOHO.Localize("/LS/Shapes/VisitWebpage=Visit Webpage..."), 0, self.menu1.ls.items[#self.menu1.ls.items])
 		end
 		if (LS_Shapes:FileExists(self.resPath .. '\\@UPDATEME.url') == true) or (LS_Shapes.repoLatest and LS_Shapes.repoLatest ~= "") then
-			table.insert (self.menu1.ls.items, self.MAINMENU + 13)
+			table.insert (self.menu1.ls.items, self.MAINMENU + 14)
 			self.menu1:AddItem(MOHO.Localize("/Menus/Help/CheckForUpdates=Check For Updates..."), 0, self.menu1.ls.items[#self.menu1.ls.items])
 		end
 		if (#self.menu1.ls.items > 1) then
 			self.menu1:AddItem("", 0, 0)
 		end
-		self.menu1:AddItem(MOHO.Localize("/Menus/Application/About=About") .. " " .. LS_Shapes:UILabel() .. "...", 0, self.MAINMENU + 14)
+		self.menu1:AddItem(MOHO.Localize("/Menus/Application/About=About") .. " " .. LS_Shapes:UILabel() .. "...", 0, self.MAINMENU + 15)
 		--self.menu1:AddItem("...", 0, self.MAINMENU + 14) -- Last (Testground!)
 	end
 
@@ -1055,7 +1060,8 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 		self.menu1:SetChecked(self.MAINMENU + 6, LS_Shapes.advanced)
 		self.menu1:SetChecked(self.MAINMENU + 7, LS_Shapes.largeButtons == 0 and self.large or LS_Shapes.largeButtons == 1)
 		self.menu1:SetChecked(self.MAINMENU + 8, LS_Shapes.largePalette)
-		self.menu1:SetChecked(self.MAINMENU + 9, LS_Shapes.showInfobar)
+		self.menu1:SetChecked(self.MAINMENU + 9, LS_Shapes.showPreview)
+		self.menu1:SetChecked(self.MAINMENU + 10, LS_Shapes.showInfobar)
 		--helper:delete() return
 	--end
 	--]]
@@ -1223,7 +1229,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 		self.copyBut:Enable(true)
 		self.pasteBut:Enable((self.copiedStyle and true or false) or (self.copiedColor and true or false))
 		self.resetBut:Enable(true)
-		if (self.layerUUID and self.layerUUID ~= layerUUID) then
+		if (LS_Shapes.showPreview and self.layerUUID and self.layerUUID ~= layerUUID) then
 			self:UpdateItem(moho) -- Clear itemPreview
 		end
 
@@ -1468,7 +1474,10 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 			--end
 		end
 
-		self.itemPreview:Enable(true)
+		if LS_Shapes.showPreview then
+			self.itemPreview:Enable(true)
+		end
+
 		if LS_Shapes.advanced then
 			self.fillCheck:SetValue(shape.fHasFill)
 			self.fillCheck:Enable(shape.fFillAllowed)
@@ -1503,7 +1512,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 		self.info[2] = shapeLUID > -1 and self.info.id .. shapeLUID or self.info.id .. "?"
 		self.info[3] = shapeCount > 0 and self.info.n .. shapesSel .. "/" .. shapeCount or shapeCount
 		--[[202401160210: Moved bellow in order to allow updates upon deselecting and more...
-		if not self.shape or self.shape ~= shape then
+		if LS_Shapes.showPreview and not self.shape or self.shape ~= shape then
 			self:UpdateItem(moho, shape, false) --20240103-0448: Had to avoid draw fills due to a last minute weird behavior upon undoing after modifyig shapes! (TODO & TBO!)
 			--self:UpdateBrush(moho, shape) -- It seems LM_MeshPreview widget doesn't display brushes. Oh, well...
 		end
@@ -1530,7 +1539,10 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 			self.mergeBut:Enable(false)
 		end
 
-		self.itemPreview:Enable(false)
+		if LS_Shapes.showPreview then
+			self.itemPreview:Enable(false)
+		end
+
 		if LS_Shapes.advanced then
 			self.fillCheck:SetValue(true)
 			self.fillCheck:Enable(false)
@@ -1598,8 +1610,11 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 		if self.infobar then
 			self.infobar:SetValue("")
 		end
-		--self.itemNameLabel:SetToolTip(MOHO.Localize("/Windows/Style/Name=Name") .. " (" .. self.infoText .. ")")
-		self.itemPreview:SetToolTip(self.infoText)
+		if LS_Shapes.showPreview then
+			self.itemPreview:SetToolTip(self.infoText)
+		else
+			self.itemNameLabel:SetToolTip(MOHO.Localize("/Windows/Style/Name=Name") .. " (" .. self.infoText .. ")")
+		end
 	end
 
 	if self.skipBlock == true then --if self.skipBlock == true and toolName:find("SelectPoints") then -- 20231007-1730: Perform ONLY widget updates above when called from HandlMessage/UpdateUI in order to avoid entering into endless loop!
@@ -1684,9 +1699,11 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 			shapeTable[-1] = math.floor(bbMin.x*10+.5)/10 .. math.floor(bbMin.y*10+.5)/10 .. math.floor(bbMax.x*10+.5)/10 .. math.floor(bbMax.y*10+.5)/10 .. fc.r .. fc.g .. fc.b .. fc.a .. lc.r .. lc.g .. lc.b .. lc.a .. lw .. hf .. ho .. hp .. eo.x .. eo.y .. er ..es .. shape.fInheritedStyleName:Buffer() .. shape.fInheritedStyleName2:Buffer() .. tostring(shape.fHidden)
 			--print(tostring(self.shapeTable[-1])) --print(tostring(shapeTable[-1]))
 			if (self.layerUUID and self.layerUUID ~= layerUUID) or (self.shape and self.shape ~= shape) or (self.shapeTable[-1] and self.shapeTable[-1] ~= shapeTable[-1]) or (shape and not self.shape) or (LS_Shapes.mode ~= self.mode) then
-				--print(math.floor(bbMin.x*10+.5)/10 .. ", " .. math.floor(bbMin.y*10+.5)/10 .. ", " .. math.floor(bbMax.x*10+.5)/10 .. ", " .. math.floor(bbMax.y*10+.5)/10 .. " Selected Shape Preview Update!")
-				self:UpdateItem(moho, shape, true) --20240103-0448: Had to avoid draw fills due to a last minute weird behavior upon undoing after modifyig shapes! (TBO: ENABLED AGAIN)
-				--self:UpdateBrush(moho, shape) -- It seems LM_MeshPreview widget doesn't display brushes. Oh, well...
+				if LS_Shapes.showPreview then
+					--print(math.floor(bbMin.x*10+.5)/10 .. ", " .. math.floor(bbMin.y*10+.5)/10 .. ", " .. math.floor(bbMax.x*10+.5)/10 .. ", " .. math.floor(bbMax.y*10+.5)/10 .. " Selected Shape Preview Update!")
+					self:UpdateItem(moho, shape, true) --20240103-0448: Had to avoid draw fills due to a last minute weird behavior upon undoing after modifyig shapes! (TBO: ENABLED AGAIN)
+					--self:UpdateBrush(moho, shape) -- It seems LM_MeshPreview widget doesn't display brushes. Oh, well...
+				end
 			end
 		end
 
@@ -1801,9 +1818,11 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 			styleTable[-1] = fc.r .. fc.g .. fc.b .. fc.a .. lc.r .. lc.g .. lc.b .. lc.a .. lw .. df .. dl .. dw .. bn
 		end
 		if (self.layerUUID and self.layerUUID ~= layerUUID) or (self.styleSel and self.styleSel ~= styleSel) or (self.style and self.style ~= style) or (self.styleTable[-1] and self.styleTable[-1] ~= styleTable[-1]) or (style and not self.style) or (LS_Shapes.mode ~= self.mode) then --print("Style Preview Update!")
-			--self.tempShape.fMyStyle = style
-			self:UpdateItem(moho, styleName ~= "" and style or styleSel, true) --20240103-0448: Had to avoid draw fills due to a last minute weird behavior upon undoing after modifyig shapes! (TBO: ENABLED AGAIN)
-			--self:UpdateBrush(moho, shape) -- It seems LM_MeshPreview widget doesn't display brushes. Oh, well...
+			if LS_Shapes.showPreview then
+				--self.tempShape.fMyStyle = style
+				self:UpdateItem(moho, styleName ~= "" and style or styleSel, true) --20240103-0448: Had to avoid draw fills due to a last minute weird behavior upon undoing after modifyig shapes! (TBO: ENABLED AGAIN)
+				--self:UpdateBrush(moho, shape) -- It seems LM_MeshPreview widget doesn't display brushes. Oh, well...
+			end
 		end
 
 		self.skipBlock = true -- Start of item selection block
@@ -1916,7 +1935,9 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 			mesh.ls_fGroups[-1] = ptCount .. ptList
 		end
 		if (self.layerUUID and self.layerUUID ~= layerUUID) or (self.group and self.group ~= group) or (mesh.ls_fGroups.old[-1] and mesh.ls_fGroups.old[-1] ~= mesh.ls_fGroups[-1]) or (group and not self.group) or (LS_Shapes.mode ~= self.mode) then --print("Group Preview Update!")
-			self:UpdateItem(moho, group, false) --20240103-0448: Had to avoid draw fills due to a last minute weird behavior upon undoing after modifyig shapes! (TBO: ENABLED AGAIN)
+			if LS_Shapes.showPreview then
+				self:UpdateItem(moho, group, false) --20240103-0448: Had to avoid draw fills due to a last minute weird behavior upon undoing after modifyig shapes! (TBO: ENABLED AGAIN)
+			end
 		end
 
 		self.skipBlock = true -- Start of item selection block
@@ -2227,7 +2248,6 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 	LS_Shapes:Log("1.6") --LS_Shapes:LogTime(1.6)
 	if (LS_Shapes.beginnerMode ~= self.beginnerMode) or self.isNewRun then -- Avoid unnecesary tooltip updates
 		self.menu1Popup:SetToolTip(LS_Shapes.beginnerMode and MOHO.Localize("/Dialogs/LayerSettings/General=General") or "")
-		--self.itemNameLabel:SetToolTip(MOHO.Localize("/Windows/Style/Name=Name"))
 		self.combineBlend:SetToolTip(LS_Shapes.beginnerMode and MOHO.Localize("/Scripts/Tool/SelectShape/Blend=Blend:"):gsub("[^%w]$", "") .. " (" .. MOHO.Localize("/Dialogs/NudgeDlog/Amount=Amount") ..")" or "") -- Remove any non-alphanumeric ending character
 		self.baseBut:SetToolTip(LS_Shapes.beginnerMode and MOHO.Localize("/Scripts/Tool/SelectShape/SelectBottomShape=Select Bottom Shape") .. " (<alt> " .. MOHO.Localize("/Scripts/Tool/SelectShape/SelectAll=Select All") .. ")" or "")
 		self.topBut:SetToolTip(LS_Shapes.beginnerMode and MOHO.Localize("/Scripts/Tool/SelectShape/SelectTopShape=Select Top Shape") .. " (<alt> " .. MOHO.Localize("/Scripts/Tool/SelectShape/SelectAll=Select All") .. ")" or "")
@@ -2790,7 +2810,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 	self.change = self.CHANGE + self.itemList:SelItem() + 1
 
 	-- First of all, process everything that can be accessed even without an open doc
-	if (msg >= self.MAINMENU and msg <= self.MAINMENU + 13 + 1) then -- The + 1 is for "Testground"
+	if (msg >= self.MAINMENU and msg <= self.MAINMENU + 14 + 1) then -- The + 1 is for "Testground"
 		if (msg == self.MAINMENU) then -- Link To Style Window
 			LS_Shapes.syncWithStyle = not LS_Shapes.syncWithStyle
 		elseif (msg == self.MAINMENU + 1) then -- Ignore Non-Regular Vector Layers
@@ -2842,17 +2862,19 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 			else
 				-- Exit without changes
 			end
-		elseif (msg >= self.MAINMENU + 6 and msg <= self.MAINMENU + 9) then -- Try to encompass here options which require auto-reopening
+		elseif (msg >= self.MAINMENU + 6 and msg <= self.MAINMENU + 10) then -- Try to encompass here options which require auto-reopening
 			if (msg == self.MAINMENU + 6) and doc ~= nil then -- Advanced (Creation Controls)
 				LS_Shapes.advanced = not LS_Shapes.advanced
-				--self.menu1:SetChecked(msg, LS_Shapes.advanced) -- Not necessary in this case, but another possibility of update entries' checkmarks...
+				--self.menu1:SetChecked(msg, LS_Shapes.advanced) -- Not necessary in this case, but another possibility of update entries' checkmarks?
 			elseif (msg == self.MAINMENU + 7) and doc ~= nil then -- Use Large Buttons
 				local cycle = {[-1] = 0, [0] = 1, [1] = -1}
 				LS_Shapes.largeButtons = cycle[LS_Shapes.largeButtons] or 0
 				self.menu1:RemoveAllItems()
 			elseif (msg == self.MAINMENU + 8) and doc ~= nil then -- Use Large Palette
 				LS_Shapes.largePalette = not LS_Shapes.largePalette
-			elseif (msg == self.MAINMENU + 9) and doc ~= nil then -- Show Infobar
+			elseif (msg == self.MAINMENU + 9) and doc ~= nil then -- Show Thumbnail Preview
+				LS_Shapes.showPreview = not LS_Shapes.showPreview
+			elseif (msg == self.MAINMENU + 10) and doc ~= nil then -- Show Infobar
 				LS_Shapes.showInfobar = not LS_Shapes.showInfobar
 			end
 			if (doc ~= nil) then
@@ -2864,16 +2886,16 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 			end
 			helper:delete()
 			return
-		elseif (msg == self.MAINMENU + 10) then -- Restore Defaults [?]
+		elseif (msg == self.MAINMENU + 11) then -- Restore Defaults [?]
 			local alert = LM.GUI.Alert(LM.GUI.ALERT_QUESTION,
 			LS_Shapes:UILabel() .. ": " .. MOHO.Localize("/Dialogs/Preferences/ToolPrefs/RestoreDefaults=Restore Factory Defaults") .. "?",
 			MOHO.Localize(doc ~= nil and "/LS/Shapes/TheWindowWillReopen=The window will reopen itself if necessary." or "/LS/Shapes/TheWindowWillClose=The window will close if necessary."), nil,
 			MOHO.Localize("/Dialogs/ProjectSettings/RestoreDefaults=Restore Defaults"):gmatch("%w+")(), MOHO.Localize("/Strings/Cancel=Cancel")) --Restore: 0, Cancel: 1
 			if alert == 0 then
 				LS_Shapes:ResetPrefs()
-				if LS_Shapes.advanced ~= self.menu1:IsChecked(self.MAINMENU + 5) or LS_Shapes.largeButtons ~= 0 or LS_Shapes.largePalette ~= self.menu1:IsChecked(self.MAINMENU + 6) or LS_Shapes.showInfobar ~= self.menu1:IsChecked(self.MAINMENU + 8) then -- Only Reopen dialog if necessary.
+				if LS_Shapes.advanced ~= self.menu1:IsChecked(self.MAINMENU + 5) or LS_Shapes.largeButtons ~= 0 or LS_Shapes.largePalette ~= self.menu1:IsChecked(self.MAINMENU + 6) or LS_Shapes.showPreview ~= self.menu1:IsChecked(self.MAINMENU + 9) or LS_Shapes.showInfobar ~= self.menu1:IsChecked(self.MAINMENU + 10) then -- Only Reopen dialog if necessary
 					self.dummyList:SetSelItem(self.dummyList:GetItem(0), false)
-					if (LS_Shapes.dlog) and doc ~= nil then -- It may be better not try to reopen without an open document, otherwise the lack of view (among other things) will make it open weirdly.
+					if (LS_Shapes.dlog) and doc ~= nil then -- It may be better not try to reopen without an open document, otherwise the lack of view (among other things) will make it open weirdly
 						LS_Shapes.dlog = nil
 						LS_Shapes.shouldReopen = true
 					end
@@ -2884,7 +2906,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 				helper:delete()
 				return
 			end
-		elseif (msg == self.MAINMENU + 11) then -- Help...
+		elseif (msg == self.MAINMENU + 12) then -- Help...
 			LS_Shapes.showHelp = not LS_Shapes.isHelpVisible and true or false
 			if (LS_Shapes.showHelp and (not LS_Shapes.isHelpVisible)) then
 				if not LS_Shapes.helpViewed then
@@ -2915,7 +2937,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 					LM.Beep()
 				end
 			end
-		elseif (msg == self.MAINMENU + 12) then -- Visit Webpage...
+		elseif (msg == self.MAINMENU + 13) then -- Visit Webpage...
 			if (LS_Shapes:FileExists(self.resPath .. '\\@VISITME.url') == true) then
 				LS_Shapes:Open(self.resPath .. '\\@VISITME.url')
 			elseif LS_Shapes.webpage then
@@ -2923,7 +2945,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 			else
 				LM.Beep()
 			end
-		elseif (msg == self.MAINMENU + 13) then -- Check For Updates...
+		elseif (msg == self.MAINMENU + 14) then -- Check For Updates...
 			if LS_Shapes.repoLatest then
 				os.execute('start "" ' .. LS_Shapes.repoLatest .. ("#YOURS IS v" .. LS_Shapes.version):replace(" ", "-")) --os.execute('start "" "https://mohoscripts.com/script/"' .. (info.source):match("^.*[/\\](.*).lua$"))
 			elseif (LS_Shapes:FileExists(self.resPath .. '\\@UPDATEME.url') == true) then
@@ -2931,7 +2953,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 			else
 				LM.Beep()
 			end
-		elseif (msg == self.MAINMENU + 14) then -- About...
+		elseif (msg == self.MAINMENU + 15) then -- About...
 			local years = LS_Shapes.birth:sub(1,4) .. (tonumber(LS_Shapes.build:sub(1, 4)) > tonumber(LS_Shapes.birth:sub(1, 4)) and "-" .. LS_Shapes.build:sub(1,4) or "")
 			local block1a = string.format("%s %s (Build %s) for %s\n", LS_Shapes:UILabel(), LS_Shapes.version, LS_Shapes.build, LS_Shapes.target:replace(" ", " "))
 			local block1b = string.format("%s %s %s %s", "Copyright ©", years, LS_Shapes:Creator(), "(Lost Scripts™)")
@@ -2949,7 +2971,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 				local minWidth = "\n" .. string.rep(" ", 170)
 				local alert = LM.GUI.Alert(LM.GUI.ALERT_INFO, "Licence & Warranty", fileContent .. minWidth, nil, MOHO.Localize("/Menus/File/CloseRender=Close"))
 			end
-		elseif (msg == self.MAINMENU + 15) then -- Last (Testground!)
+		elseif (msg == self.MAINMENU + 16) then -- Last (Testground!)
 			--print("...")
 		end
 
