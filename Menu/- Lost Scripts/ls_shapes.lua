@@ -294,9 +294,9 @@ LS_ShapesDialog.APPLY_ALT				= MOHO.MSG_BASE + 74; LS_ShapesDialog.F.APPLY_ALT =
 LS_ShapesDialog.SWATCHSLIDER			= MOHO.MSG_BASE + 75; LS_ShapesDialog.F.SWATCHSLIDER = MOHO.MSGF_NOTUNDO + MOHO.MSGF_PASS
 LS_ShapesDialog.INFO					= MOHO.MSG_BASE + 76; LS_ShapesDialog.F.INFO = MOHO.MSGF_NOTUNDO
 
-LS_ShapesDialog.DUMMY					= MOHO.MSG_BASE + 72
-LS_ShapesDialog.CHANGE					= MOHO.MSG_BASE + 73; LS_ShapesDialog.F.CHANGE = MOHO.MSGF_NOTUNDO
-LS_ShapesDialog.NONE					= MOHO.MSG_BASE + 74; LS_ShapesDialog.F.CHANGE = MOHO.MSGF_NOTUNDO
+LS_ShapesDialog.DUMMY					= MOHO.MSG_BASE + 77
+LS_ShapesDialog.CHANGE					= MOHO.MSG_BASE + 78; LS_ShapesDialog.F.CHANGE = MOHO.MSGF_NOTUNDO -- ⚠ Always double-check the uniqueness of this one!
+LS_ShapesDialog.NONE					= MOHO.MSG_BASE + 79; LS_ShapesDialog.F.CHANGE = MOHO.MSGF_NOTUNDO
 
 LS_ShapesDialog.MAINMENU				= MOHO.MSG_BASE +  300; LS_ShapesDialog.F.MAINMENU = {[6] = MOHO.MSGF_REOPEN, [7] = MOHO.MSGF_REOPEN, [8] = MOHO.MSGF_REOPEN, [9] = MOHO.MSGF_REOPEN}
 LS_ShapesDialog.MULTIMENU				= MOHO.MSG_BASE +  400
