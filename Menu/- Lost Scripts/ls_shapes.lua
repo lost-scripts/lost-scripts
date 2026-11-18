@@ -4,7 +4,7 @@
 
 ScriptName = "LS_Shapes"
 ScriptBirth = "20220918-0248"
-ScriptBuild = "20261116-0035"
+ScriptBuild = "20261118-0420"
 ScriptVersion = "0.4.3"
 ScriptStage = "BETA"
 ScriptTarget = "Moho® 14.5+ Pro"
@@ -364,7 +364,7 @@ function LS_ShapesDialog:new(moho) --print("LS_ShapesDialog:new(" .. tostring(mo
 	d.skipAll = false
 	d.shapeTable, d.styleTable, d.groups = {}, {}, {old = {}}
 	d.itemSel = 0
-	d.itemVis = -1 --> -1: unevaluated, 0: all hidden, 1: all visible, 2: mixed
+	d.itemState = -1 --> -1: unevaluated, 0: all active, 1: all inactive, 2: mixed, 3: 
 	--d.shapes = d.shapes and LM.Clamp(d.shapes + 2, 10, 40) or 20
 	d.groupUI = nil
 	d.vHeight = d.v and math.floor((d.v:Height() / (LS_Shapes.largePalette and 1 or 2))) - 214 or (LS_Shapes.largePalette and 648 or 324) --d.vHeight = d.vHeight and d.vHeight - 132 or 726
@@ -423,7 +423,7 @@ function LS_ShapesDialog:new(moho) --print("LS_ShapesDialog:new(" .. tostring(mo
 				l:AddChild(d.itemNameLabel, LM.GUI.ALIGN_CENTER)
 			end
 
-			d.itemVisCheck = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_visibility_1", "", true, self.VIS, false) --"ls_visibility_" .. (math.random() < 0.5 and 0 or math.random(1, 5))
+			d.itemVisCheck = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_item_vis_1", "", true, self.VIS, false) --"ls_item_vis_" .. (math.random() < 0.5 and 0 or math.random(1, 5))
 			d.itemVisCheck:SetAlternateMessage(self.VIS_ALT)
 			d.itemName = LM.GUI.TextControl(mainW - d.itemVisCheck:Width() - (LS_Shapes.showPreview and 3 or 2), "Sel. Item Name", self.NAME, -1) --20240207-2030: wat? -1 instead of LM.GUI.FIELD_TEXT seems to make the enter key work??
 			d.itemName:SetValue("")
@@ -915,6 +915,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 	local pro = MOHO.IsMohoPro()
 	local doc = moho.document --local doc = (LS_Shapes.defDoc and LS_Shapes.defDoc ~= moho.document) and LS_Shapes.defDoc or moho.document --print("UP: " .. (doc and doc:Name()) or "No Doc") --20240102-1638: Attempt to patch the new opening document mess! --20240103-1809: Back to normality after fixing the cause? (TBO!)
 	local docName = doc and doc:Name() or nil
+	local docLayers = doc and doc:CountLayers() or -1
 	local docH = doc and doc:Height() or 240
 	local frame = moho.frame
 	local toolName = (doc ~= nil and doc:Name() ~= "-") and moho:CurrentTool() or "" --20231223-2350: Extra-checking is for avoiding crashes upon auto-opening
@@ -926,7 +927,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 	local msg = self.msg ~= nil and self.msg or MOHO.MSG_BASE
 	self.p.m = self.p and moho or nil
 	self.tempShape = moho:NewShapeProperties() or MOHO.MohoGlobals.NewShapeProperties
-	self.itemVis = -1
+	self.itemState = -1
 
 	local itemCount = self.itemList and self.itemList:CountItems() or 1
 	local itemsSel = self.itemList and math.floor(self.itemList:NumSelectedItems() + (self.itemList:IsItemSelected(0) == true and -1 or 0))
@@ -936,19 +937,20 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 
 	local style = doc and moho:CurrentEditStyle()
 	local styleName = doc and style and style:Name() or "" -- 20250730-2130: Had to also check doc existence here & below to avoid (I think new in v14.3) crashes
+	local styleIsEdit = styleName ~= ""
 	local styleID = -1 --print(styleName .. " (" .. tostring(style) .. "): ", tostring(style.fFillCol.value.r), ", ", tostring(style.fFillCol.value.g), ", ", tostring(style.fFillCol.value.b))
 	local styleUUID = style and style.fUUID:Buffer() or "" --doc:StyleByID(i) print(iStyle.fUUID:Buffer())
 	local styleCount = doc and math.floor(doc:CountStyles()) or 0
 	local styleSelID = LS_Shapes.mode == 2 and math.floor(self.itemList:SelItem()) - 1 or -1
 	local styleSel = doc and doc:StyleByID(styleSelID) or style
 	local styleSelUUID = LS_Shapes.mode == 2 and styleSel and styleSel.fUUID:Buffer() or ""
-	local stylesSel = styleName and styleName ~= "" and 1 or LS_Shapes:CountSelectedStyles(doc) --self.itemList and (math.floor(self.itemList:NumSelectedItems() + (self.itemList:IsItemSelected(0) == true and -1 or 0))) or 0
+	local stylesSel = styleName and styleIsEdit and 1 or LS_Shapes:CountSelectedStyles(doc) --self.itemList and (math.floor(self.itemList:NumSelectedItems() + (self.itemList:IsItemSelected(0) == true and -1 or 0))) or 0
 
-	local style1, style2 = (styleName == "" and self.tempShape) and self.tempShape.fInheritedStyle or nil, (styleName == "" and self.tempShape) and self.tempShape.fInheritedStyle2 or nil
+	local style1, style2 = (not styleIsEdit and self.tempShape) and self.tempShape.fInheritedStyle or nil, (not styleIsEdit and self.tempShape) and self.tempShape.fInheritedStyle2 or nil
 	local style1Name, style2Name = style1Name and self.tempShape.fInheritedStyle:Name() or "", style2Name and self.tempShape.fInheritedStyle2:Name() or ""
 	local style1UUID, style2UUID = style1 and style1.fUUID:Buffer() or nil, style2 and style2.fUUID:Buffer() or nil
 	local style1ID, style2ID = LS_Shapes:StyleID(doc, style1), LS_Shapes:StyleID(doc, style2)
-	local styleUUIDToShow = styleName ~= "" and styleUUID or (styleSelID > - 1 and styleSelUUID or styleUUID)
+	local styleUUIDToShow = styleIsEdit and styleUUID or (styleSelID > - 1 and styleSelUUID or styleUUID)
 	local styleTable = {}
 	local brush = doc and style and tostring(style.fBrushName:Buffer():gsub("%.[^.]+$", "")) or ""
 	LS_Shapes:Log("START", moho) --LS_Shapes:LogTime(true)
@@ -973,7 +975,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 				styleID = math.floor(i)
 			end
 		end
-		if styleName == "" then
+		if not styleIsEdit then
 			self.info[1] = (doc and moho:DrawingMesh()) and "" or "v" .. LS_Shapes.version .. " " .. LS_Shapes.stage .. (LS_Shapes.debugMode and " · 🐞" or "") .. " · " .. MOHO.Localize("/LS/Shapes/NotAVector=No vector...")
 			self.info[2] = (doc and moho:DrawingMesh()) and self.info.n .. math.floor(moho:CountShapes()) or nil
 			self.info[3] = nil; self.info[4] = nil -- NOTE: Ensure next index/es of a potentially nil one is also nil to prevent concat errors!
@@ -1077,7 +1079,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 				local swatchCount = 0
 				local owner = doc:Path():find(moho:UserAppDir() .. "/Scripts/ScriptResources/ls_shapes/Swatches/") and " (🏭)" or (doc:Path():find(moho:UserAppDir() .. "/Swatches/") and " (👤)") or ""
 				self.swatches[i] = {}
-				for j = doc:CountLayers() - 1, 0, -1 do
+				for j = docLayers - 1, 0, -1 do
 					local layer, mesh = doc:Layer(j), nil
 					local slider, slider_2 = layer:HasAction("SLIDER") and layer:ActionDuration("SLIDER") == 1 or nil, layer:HasAction("SLIDER 2") and layer:ActionDuration("SLIDER 2") == 1 or nil
 					local tags = string.lower(layer:UserTags())
@@ -1085,7 +1087,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 					local kind = (layer:LayerType() == MOHO.LT_VECTOR and not layer:IsRenderOnly()) and "swatch" or "other"
 					local samples = 0
 	
-					if j == doc:CountLayers() - 1 then
+					if j == docLayers - 1 then
 						table.insert(self.swatches[i], {label = string.upper(doc:Name()), shortcut = 0, msg = 0, id = i, kind = "chunk", suffix = owner, enable = false}) --"🗃 "
 					end
 					if (layer:LayerType() == MOHO.LT_VECTOR) and not layer:IsRenderOnly() then
@@ -1252,17 +1254,17 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 			self.fillCheck:Enable(false)
 			self.fillCheck:SetValue(true)
 			self.fillCol:Enable(true)
-			self.fillColOverride:Enable(LS_Shapes.mode == 2 and style and styleName ~= "")
+			self.fillColOverride:Enable(LS_Shapes.mode == 2 and style and styleIsEdit)
 			self.fillColOverride:SetValue(style and style.fDefineFillCol)
 
 			self.lineCheck:Enable(false)
 			self.lineCheck:SetValue(true)
 			self.lineCol:Enable(true)
-			self.lineColOverride:Enable(LS_Shapes.mode == 2 and style and styleName ~= "")
+			self.lineColOverride:Enable(LS_Shapes.mode == 2 and style and styleIsEdit)
 			self.lineColOverride:SetValue(style and style.fDefineLineCol)
 
 			self.lineWidth:Enable(true)
-			self.lineWidthOverride:Enable(LS_Shapes.mode == 2 and style and styleName ~= "")
+			self.lineWidthOverride:Enable(LS_Shapes.mode == 2 and style and styleIsEdit)
 			self.lineWidthOverride:SetValue(style and style.fDefineLineWidth)
 			self.capsBut:Enable(true)
 			for i, but in ipairs(self.createButtons) do but:Enable(false) end
@@ -1277,11 +1279,11 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 			self.applyBut:Enable(false)
 
 			self.style1Menu:SetChecked(style1 and self.SELECTSTYLE1 + 1 + style1ID or self.SELECTSTYLE1, true)
-			self.style1MenuPopup:Enable(styleName == "")
+			self.style1MenuPopup:Enable(not styleIsEdit)
 			self.style1MenuPopup:Redraw()
-			self.swapBut:Enable(styleName == "" and style1UUID ~= style2UUID)
+			self.swapBut:Enable(not styleIsEdit and style1UUID ~= style2UUID)
 			self.style2Menu:SetChecked(style2 and self.SELECTSTYLE2 + 1 + style2ID or self.SELECTSTYLE2, true)
-			self.style2MenuPopup:Enable(styleName == "")
+			self.style2MenuPopup:Enable(not styleIsEdit)
 			self.style2MenuPopup:Redraw()
 		end
 		if (LS_Shapes.showInfobar and self.infobar) then
@@ -1364,8 +1366,8 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 	---[[20231006-1745: Before selecting items in list much bellow, do here the "Point-Based Selection" thing if active (so then you can rely on shape/shapeID/etc. kind of values)
 	if LS_Shapes.mode < 2 then
 		if LS_Shapes.pointBasedSel == true and not (lDrawing:IsCurver() or lDrawing:IsWarpLayer()) then
-			if not (toolName:find("SelectShape") or toolName:find("Freehand") or toolName:find("Brush") or toolName:find("Eraser")) then
-				if styleName == "" and mesh ~= nil and pointsSel > 1 then -- Avoid Point-Based Selection select any shape if a style is being edited to allow normal Style workflow
+			if not (toolName:find("SelectShape") or toolName:find("Freehand") or toolName:find("Eraser") or toolName:find("Brush")) then
+				if not styleIsEdit and mesh ~= nil and pointsSel > 1 then -- Avoid Point-Based Selection select any shape if a style is being edited to allow normal Style workflow
 					for i = 0, mesh:CountShapes() - 1 do
 						local shape = mesh:Shape(i)
 						if shape:AllPointsSelected() == true then
@@ -1389,7 +1391,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 			self.capsBut:Enable(false)
 		end
 		if LS_Shapes.pointBasedSel3 == true then
-			if styleName == "" and mesh ~= nil and pointsSel > 0 then -- Avoid Point-Based Selection select any group if a style is being edited to allow normal Style workflow
+			if not styleIsEdit and mesh ~= nil and pointsSel > 0 then -- Avoid Point-Based Selection select any group if a style is being edited to allow normal Style workflow
 				for i = 0, mesh:CountGroups() - 1 do
 					local group = mesh:Group(i)
 					group.ls_fSelected = true
@@ -1547,15 +1549,15 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 			self.fillCheck:SetValue(true)
 			self.fillCheck:Enable(false)
 			self.fillCol:Enable(LS_Shapes.mode < 3)
-			self.fillColOverride:Enable(styleName ~= "" or (style1 and style1.fDefineFillCol or style2 and style2.fDefineFillCol))
+			self.fillColOverride:Enable(styleIsEdit or (style1 and style1.fDefineFillCol or style2 and style2.fDefineFillCol))
 			self.fillColOverride:SetValue(style and style.fDefineFillCol)
 			self.lineCheck:SetValue(true)
 			self.lineCheck:Enable(false)
 			self.lineCol:Enable(LS_Shapes.mode < 3)
-			self.lineColOverride:Enable(styleName ~= "" or (style1 and style1.fDefineLineCol or style2 and style2.fDefineLineCol))
+			self.lineColOverride:Enable(styleIsEdit or (style1 and style1.fDefineLineCol or style2 and style2.fDefineLineCol))
 			self.lineColOverride:SetValue(style and style.fDefineLineCol)
 			self.lineWidth:Enable(LS_Shapes.mode < 3)
-			self.lineWidthOverride:Enable(styleName ~= "" or (style1 and style1.fDefineLineWidth or style2 and style2.fDefineLineWidth))
+			self.lineWidthOverride:Enable(styleIsEdit or (style1 and style1.fDefineLineWidth or style2 and style2.fDefineLineWidth))
 			self.lineWidthOverride:SetValue(style and style.fDefineLineWidth)
 			self.brushMenuPopup:Enable(LS_Shapes.mode < 3)
 			self.style1Menu:SetChecked(style1 and self.SELECTSTYLE1 + 1 + style1ID or self.SELECTSTYLE1, true) self.style1MenuPopup:Redraw()
@@ -1717,14 +1719,14 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 					add = true
 				end
 				local isHidden = shape.fHidden
-				if self.itemVis == -1 then
-					self.itemVis = isHidden and 0 or 1
-				elseif (isHidden and self.itemVis == 1) or (not isHidden and self.itemVis == 0) then
-					self.itemVis = 2
+				if self.itemState == -1 then
+					self.itemState = isHidden and 0 or 1
+				elseif (isHidden and self.itemState == 1) or (not isHidden and self.itemState == 0) then
+					self.itemState = 2
 				end
 			end
 		end
-		self.itemVis = self.itemVis == -1 and 0 or self.itemVis -- No selected items fallback/normalizer
+		self.itemState = self.itemState == -1 and 0 or self.itemState -- No selected items fallback/normalizer (so it's not -1)
 
 		if shapeID and shapeID >= 0 then
 			self.itemName:Enable(true)
@@ -1743,7 +1745,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 		self.itemVisCheck:Enable(self.itemList:SelItem() > 0)
 		self.itemVisCheck:SetValue(false)
 		self.itemVisCheck:SetToolTip(MOHO.Localize("/LS/Shapes/ShapeVisibility=Shape Visibility") .. " (<alt> " .. MOHO.Localize("/LS/Invert=Invert") .. ")")
-		self.itemVisCheck:ReplaceImage(LS_Shapes.resources .. "ls_visibility_" .. (self.itemList:SelItem() > 0 and self.itemVis or 1))
+		self.itemVisCheck:ReplaceImage(LS_Shapes.resources .. "ls_item_vis_" .. (self.itemList:SelItem() > 0 and self.itemState or 1))
 		self.deleteBut:Enable(shapesSel > 0)
 		self.skipBlock = false
 		LS_Shapes:Log("1.4.1") --LS_Shapes:LogTime("1.4.1")
@@ -1774,22 +1776,28 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 		for i = 1, styleCount do
 			local style = doc:StyleByID(i - 1)
 			local styleName = style:Name()
-			local styleDefLine = (style.fDefineLineWidth and style.fBrushName:Buffer() ~= "" and "; ") or style.fDefineLineWidth and "· " or style.fBrushName:Buffer() ~= "" and ", " or "  " --local defWidth = style.fDefineLineWidth and "· " or "  "
+			local styleDefLine = (style.fDefineLineWidth and style.fBrushName:Buffer() ~= "" and "; ") or style.fDefineLineWidth and "· " or style.fBrushName:Buffer() ~= "" and ", " or "  " --local styleDefWidth = style.fDefineLineWidth and "· " or "  "
 			local styleDefFillLine = (style.fDefineFillCol and style.fDefineLineCol and "◉‍ ")  or (style.fDefineFillCol and "◍‍ ") or (style.fDefineLineCol and "◎‍ ") or "○‍ " --○◌⊘⨂
 
 			if doc and style then
-				for j = 0, doc:CountLayers() - 1 do
-					local jLayer = doc:Layer(j)
-					style.ls_isUsed = false
-					if doc:IsStyleUsed(style, jLayer) then
-						style.ls_isUsed = true
+				style.ls_isUsed = false
+				for j = 0, docLayers - 1 do
+					if doc:IsStyleUsed(style, doc:Layer(j)) then
+						style.ls_isUsed = true -- Mark the style if it's used anywhere (*)
 						break
+					end
+				end
+				if style.fSelected and self.itemState ~= 2 then -- Update the global state ONLY IF we haven't found a mix yet
+					if self.itemState == -1 then
+						self.itemState = style.ls_isUsed and 1 or 0 -- No discrepancy found: all used OR all not used (⚪/🚫)
+					elseif self.itemState ~= (style.ls_isUsed and 1 or 0) then
+						self.itemState = 2 -- Discrepancy found: some used AND some not used (❓)
 					end
 				end
 			end
 			itemLabel = styleDefFillLine .. styleDefLine .. styleName .. (style.ls_isUsed and " *" or "")
 
-			if listIndex < currentCount then -- Update existing item or add a new one (use < instead of <= because when listIndex == currentCount that slot doesn't exist yet and trying to update it would lead to out-of-range errors, so we must add it instead)
+			if listIndex < currentCount then -- ♻ Update existing item or add a new one using `<` (`<=` leads to out-of-range errors when `listIndex == currentCount` since that slot doesn't exist yet!)
 				if self.itemList:GetItem(listIndex) ~= itemLabel then
 					self.itemList:SetItemLabel(listIndex, itemLabel)
 				end
@@ -1800,6 +1808,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 			--lDrawing.ls_fStyles[listIndex] = itemLabel -- Save a duplicate in layer for potential future comparison?
 			listIndex = listIndex + 1 -- Increment independently of index
 		end
+		self.itemState = styleIsEdit and 3 or (self.itemState == -1 and 0 or self.itemState)
 
 		-- 3) Restore item selection
 		if self.itemList:SelItem() ~= styleID then
@@ -1820,14 +1829,14 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 		if (self.layerUUID and self.layerUUID ~= layerUUID) or (self.styleSel and self.styleSel ~= styleSel) or (self.style and self.style ~= style) or (self.styleTable[-1] and self.styleTable[-1] ~= styleTable[-1]) or (style and not self.style) or (LS_Shapes.mode ~= self.mode) then --print("Style Preview Update!")
 			if LS_Shapes.showPreview then
 				--self.tempShape.fMyStyle = style
-				self:UpdateItem(moho, styleName ~= "" and style or styleSel, true) --20240103-0448: Had to avoid draw fills due to a last minute weird behavior upon undoing after modifyig shapes! (TBO: ENABLED AGAIN)
+				self:UpdateItem(moho, styleIsEdit and style or styleSel, true) --20240103-0448: Had to avoid draw fills due to a last minute weird behavior upon undoing after modifyig shapes! (TBO: ENABLED AGAIN)
 				--self:UpdateBrush(moho, shape) -- It seems LM_MeshPreview widget doesn't display brushes. Oh, well...
 			end
 		end
 
 		self.skipBlock = true -- Start of item selection block
 		local add = false
-		if (style and styleName ~= "") then
+		if (style and styleIsEdit) then
 			for i = 0, styleCount - 1 do --for i = 1, self.itemList:CountItems() - 1 do
 				local iStyle = doc:StyleByID(i)
 				if (iStyle and iStyle.fUUID:Buffer() == styleUUID) then
@@ -1868,9 +1877,9 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 		self.skipBlock = false
 		self.itemName:Enable(self.itemList:SelItem() > 0)
 		self.itemVisCheck:Enable(self.itemList:SelItem() > 0)
-		self.itemVisCheck:SetValue(styleName ~= "")
+		self.itemVisCheck:SetValue(styleIsEdit)
 		self.itemVisCheck:SetToolTip(MOHO.Localize("/LS/Shapes/StyleEditIndicator=Style Edit Indicator"))
-		self.itemVisCheck:ReplaceImage(LS_Shapes.resources .. (styleName == "" and "ls_style" or "ls_style_edit"), true)
+		self.itemVisCheck:ReplaceImage(LS_Shapes.resources .. "ls_item_state_" .. self.itemState, true)
 		self.deleteBut:Enable(stylesSel > 0)
 		LS_Shapes:Log("1.4.2") --LS_Shapes:LogTime("1.4.2")
 	elseif LS_Shapes.mode == 3 then -- GROUP Mode -- SEC. Gr. Mode
@@ -1952,14 +1961,14 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 						add = true
 					end
 					local isHidden = group.ls_fHidden
-					if self.itemVis == -1 then
-						self.itemVis = isHidden and 0 or 1
-					elseif (isHidden and self.itemVis == 1) or (not isHidden and self.itemVis == 0) then
-						self.itemVis = 2
+					if self.itemState == -1 then
+						self.itemState = isHidden and 0 or 1
+					elseif (isHidden and self.itemState == 1) or (not isHidden and self.itemState == 0) then
+						self.itemState = 2
 					end
 				end
 			end
-			self.itemVis = self.itemVis == -1 and 0 or self.itemVis -- No selected items fallback/normalizer
+			self.itemState = self.itemState == -1 and 0 or self.itemState -- No selected items fallback/normalizer (so it's not -1)
 		else
 			self.itemList:SetSelItem(self.itemList:GetItem(0), true, false)
 		end
@@ -1982,7 +1991,7 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 		self.itemVisCheck:Enable(self.itemList:SelItem() > 0)
 		self.itemVisCheck:SetValue(false)
 		self.itemVisCheck:SetToolTip(MOHO.Localize("/LS/Shapes/GroupVisibility=Group Visibility") .. " (<alt> " .. MOHO.Localize("/LS/Invert=Invert") .. ")")
-		self.itemVisCheck:ReplaceImage(LS_Shapes.resources .. "ls_visibility_" .. (self.itemList:SelItem() > 0 and self.itemVis or 1))
+		self.itemVisCheck:ReplaceImage(LS_Shapes.resources .. "ls_item_vis_" .. (self.itemList:SelItem() > 0 and self.itemState or 1))
 		self.deleteBut:Enable(groupSelCount > 0)
 		self.skipBlock = false
 		LS_Shapes:Log("1.4.3") --LS_Shapes:LogTime("1.4.3")
@@ -2029,11 +2038,11 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 		self.brushBut:SetToolTip(MOHO.Localize("/Dialogs/BrushPicker/Brush=Brush") .. ": " .. (brush ~= "" and brush or MOHO.Localize("/Dialogs/BrushPicker/None=None") .. (LS_Shapes.beginnerMode and " (" .. MOHO.Localize("/LS/Shapes/PickBelow=Pick Below") .. ")" or "")))
 		self.brushMenuPopup:SetCursor(LS_Shapes.beginnerMode and LM.GUI.Cursor(LS_Shapes.resources .. "ls_shape_brush_cursortip", 0, 0) or nil)
 		self.swatchMenuPopup:Enable(LS_Shapes.mode < 3)
-		self.style1MenuPopup:Enable(styleName == "" and LS_Shapes.mode ~= 3) self.style1MenuPopup:Redraw()
+		self.style1MenuPopup:Enable(not styleIsEdit and LS_Shapes.mode ~= 3) self.style1MenuPopup:Redraw()
 		self.style1MenuPopup:SetToolTip(MOHO.Localize("/Windows/Style/Style1=Style 1") .. (style1Name ~= "" and ": " .. style1Name or "") .. (LS_Shapes.beginnerMode and " (" .. MOHO.Localize("/LS/Shapes/AppliesAbove=Applies Above") .. ")" or ""))
 		self.style1MenuPopup:SetCursor(LS_Shapes.beginnerMode and LM.GUI.Cursor(LS_Shapes.resources .. "ls_shape_style_1_cursortip", 0, 0) or nil)
-		self.swapBut:Enable(LS_Shapes.mode < 3 and styleName == "" and style1UUID ~= style2UUID)
-		self.style2MenuPopup:Enable(styleName == "" and LS_Shapes.mode ~= 3) self.style2MenuPopup:Redraw()
+		self.swapBut:Enable(LS_Shapes.mode < 3 and not styleIsEdit and style1UUID ~= style2UUID)
+		self.style2MenuPopup:Enable(not styleIsEdit and LS_Shapes.mode ~= 3) self.style2MenuPopup:Redraw()
 		self.style2MenuPopup:SetToolTip(MOHO.Localize("/Windows/Style/Style2=Style 2") .. (style2Name ~= "" and ": " .. style2Name or "") .. (LS_Shapes.beginnerMode and " (" .. MOHO.Localize("/LS/Shapes/AppliesBellow=Applies Bellow") .. ")" or ""))
 		self.style2MenuPopup:SetCursor(LS_Shapes.beginnerMode and LM.GUI.Cursor(LS_Shapes.resources .. "ls_shape_style_2_cursortip", 0, 0) or nil)
 		self.swatchMenuPopup:SetToolTip(MOHO.Localize("/Windows/Style/Swatches=Swatches") .. ": " .. self.swatchMenu:FirstCheckedLabel():gsub("^%s+", ""))
@@ -2792,13 +2801,14 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 
 	local style = doc and moho:CurrentEditStyle()
 	local styleName = doc and style and style:Name() or "" -- 20250730-2130: Had to also check doc existence here & below to avoid (I think new in v14.3) crashes
+	local styleIsEdit = styleName ~= ""
 	local styleID = -1
 	local styleCount = doc and math.floor(doc:CountStyles()) or 0
 	local styleSelID = LS_Shapes.mode == 2 and math.floor(self.itemList:SelItem()) - 1 or -1
 	local styleSel = doc and doc:StyleByID(styleSelID) or style
 	local stylesSel = math.floor(self.itemList:NumSelectedItems() + (self.itemList:IsItemSelected(0) == true and -1 or 0))
 
-	local style1, style2 = (styleName == "" and self.tempShape) and self.tempShape.fInheritedStyle or nil, (styleName == "" and self.tempShape) and self.tempShape.fInheritedStyle2 or nil
+	local style1, style2 = (not styleIsEdit and self.tempShape) and self.tempShape.fInheritedStyle or nil, (not styleIsEdit and self.tempShape) and self.tempShape.fInheritedStyle2 or nil
 	local style1Name, style2Name = style1 and self.tempShape.fInheritedStyle:Name() or "", style2 and self.tempShape.fInheritedStyle2:Name() or ""
 	local style1UUID, style2UUID = style1 and style1.fUUID:Buffer() or nil, style2 and style2.fUUID:Buffer() or nil
 	local style1ID, style2ID = LS_Shapes:StyleID(doc, style1), LS_Shapes:StyleID(doc, style2)
@@ -3196,7 +3206,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 		end
 		if LS_Shapes.mode < 2 then -- SHAPE Modes
 			if self.skipBlock == true then -- Try to avoid unwanted call to Update/UpdateWidgets bellow upon selecting, no matter how, a list item!
-				if LS_Shapes.pointBasedSel and not (toolName:find("SelectShape" or toolName:find("Freehand" or toolName:find("Brush") or toolName:find("Eraser")))) then --if (LS_Shapes.pointBasedSel and toolName:find("SelectPoints")) then
+				if LS_Shapes.pointBasedSel and not (toolName:find("SelectShape" or toolName:find("Freehand" or toolName:find("Eraser") or toolName:find("Brush")))) then --if (LS_Shapes.pointBasedSel and toolName:find("SelectPoints")) then
 					if shapesSel == 0 then
 						self.count = 0
 					end
@@ -3227,7 +3237,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 					end
 				end
 				---[=[Experimental Point-Based Selection Mode...
-				if LS_Shapes.pointBasedSel and not (toolName:find("SelectShape" or toolName:find("Freehand" or toolName:find("Brush") or toolName:find("Eraser")))) then
+				if LS_Shapes.pointBasedSel and not (toolName:find("SelectShape" or toolName:find("Freehand" or toolName:find("Eraser") or toolName:find("Brush")))) then
 					for i = 0, mesh:CountShapes() - 1 do
 						local shape = mesh:Shape(i)
 						if shape.fSelected == true then -- Select selected shape's points
@@ -3396,7 +3406,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 						LS_Shapes:MakeShapeNameUnique(mesh, i) --20250823-0125: Why would this line be commented out? Anyway, un-commented for now...
 					end
 				end
-			elseif (style ~= nil and styleName ~= "") then -- Current Style (TAKE CARE NOT TO NAME DEFAULT NAMELESS STYLE!)
+			elseif (style ~= nil and styleIsEdit) then -- Current Style (TAKE CARE NOT TO NAME DEFAULT NAMELESS STYLE!)
 				style:SetName(self.itemName:Value()) --doc:RenameStyle(styleName, self.itemName:Value(), nil) -- Doesn't seem to do anything...
 				--[[
 				style.fName:Set(self.itemName:Value())
@@ -3407,7 +3417,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 					end
 				end
 				--]]
-			elseif (style ~= nil and styleName == "") then -- Selected Style/s
+			elseif (style ~= nil and not styleIsEdit) then -- Selected Style/s
 				for i = 0, doc:CountStyles() - 1 do
 					local iStyle = doc:StyleByID(i)
 					if (iStyle.fSelected) then
@@ -3427,7 +3437,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 		end
 		moho:UpdateUI()
 	elseif (msg == self.VIS or msg == self.VIS_ALT) then
-		local vis = self.itemVis ~= 1
+		local vis = self.itemState ~= 1
 		if (mesh ~= nil) then
 			if (LS_Shapes.mode < 2) then -- SHAPE Modes
 				if (shape ~= nil) then
@@ -3443,7 +3453,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 					end
 				end
 			elseif LS_Shapes.mode == 2 then -- STYLE Mode
-				if (style ~= nil and styleName ~= "") then
+				if (style ~= nil and styleIsEdit) then
 					LS_Shapes.mode = LS_Shapes:StyleLeaver(moho, mesh, 2)
 					self.itemList:SetSelItem(self.itemList:GetItem(0), false)
 				else
@@ -3575,7 +3585,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 			end
 			MOHO.Redraw()
 		elseif LS_Shapes.mode == 2 then -- If STYLE Mode
-			if style and styleName ~= "" then
+			if style and styleIsEdit then
 				LS_Shapes.mode = LS_Shapes:StyleLeaver(moho, mesh, 2)
 			end
 			if (msg == self.SELECTALL and styleCount == stylesSel) then
@@ -3640,7 +3650,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 				end	--print(i, ", ", tostring(iShape.fSelected), ", ", count)
 			end
 		elseif LS_Shapes.mode == 2 then --STYLE Mode
-			local style = (style and styleName ~= "") and style or styleSel
+			local style = (style and styleIsEdit) and style or styleSel
 			local styleUUID = style.fUUID:Buffer()
 			for i = 0, styleCount - 1 do
 				local iStyle = doc:StyleByID(i)
@@ -3659,7 +3669,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 				end --print(i, ", ", tostring(iStyle.fSelected), ", ", count)
 			end
 			--[[20240109-0420: Previous, less functional, code...
-			local style = (style and styleName ~= "") and style or styleSel --print(style:Name())
+			local style = (style and styleIsEdit) and style or styleSel --print(style:Name())
 			local styleUUID = style.fUUID:Buffer()
 			for i = 0, styleCount - 1 do
 				local iStyle = doc:StyleByID(i)
@@ -3803,6 +3813,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 		end
 		if (doc ~= nil and pointsSel > 1) then
 			MOHO.Redraw()
+			self.itemList:Redraw()
 		end
 	elseif (msg == self.CHECKERSEL) then
 		MOHO.MohoGlobals.SelectedShapeCheckerboard = not (MOHO.MohoGlobals.SelectedShapeCheckerboard)
@@ -3810,9 +3821,8 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 			self:Update()
 		else
 			MOHO.Redraw()
-			moho:UpdateUI() --20250720-0250: It randomly chrashes Moho if no open document, thus enclosed here despite Style window sync won't be perfect...
+			moho:UpdateUI() --20250720-0250: It randomly crashes Moho if no open document, thus enclosed here despite Style window won't sync instantly
 		end
-		--moho:UpdateUI()
 	elseif (msg == self.MERGE) then
 		LM_SelectShape:MergeShapes(moho, moho.view)
 		MOHO.Redraw()
@@ -3921,7 +3931,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 				if msg == self.COPY then
 					self.copiedShape = moho:NewShapeProperties()
 					self.copiedStyle = moho:NewShapeProperties().fMyStyle
-					if styleName ~= "" then -- 20240601-2010: The following code will only half work, e.g. possible effects will be discarded, though better than nothing according to note bellow... The question is, where CurrentEditStyle data is stored when using Style Window's Copy button? 🤔
+					if styleIsEdit then -- 20240601-2010: The following code will only half work, e.g. possible effects will be discarded, though better than nothing according to note bellow... The question is, where CurrentEditStyle data is stored when using Style Window's Copy button? 🤔
 						self.copiedShape:MakePlain()
 						self.copiedShape.fMyStyle.fFillCol = moho:CurrentEditStyle().fFillCol
 						self.copiedShape.fMyStyle.fLineCol = moho:CurrentEditStyle().fLineCol
@@ -4337,8 +4347,8 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 			self._lastHue = nil
 		end
 		self.coloredTable = {}
-	elseif (msg == self.FILLCOLOROVER) then --styleName ~= "" or (style1 and style1.fDefineLineWidth or style2 and style2.fDefineLineWidth)
-		if (style ~= nil and (style1 and style1.fDefineFillCol) or (style2 and style2.fDefineFillCol) or (styleName ~= "")) then
+	elseif (msg == self.FILLCOLOROVER) then --styleIsEdit or (style1 and style1.fDefineLineWidth or style2 and style2.fDefineLineWidth)
+		if (style ~= nil and (style1 and style1.fDefineFillCol) or (style2 and style2.fDefineFillCol) or (styleIsEdit)) then
 			style.fDefineFillCol = not style.fDefineFillCol
 		end
 		if (mesh ~= nil and shape ~= nil) then
@@ -4460,7 +4470,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 		end
 		self.coloredTable = {}
 	elseif (msg == self.LINECOLOROVER) then
-		if (style ~= nil and (style1 and style1.fDefineLineCol) or (style2 and style2.fDefineLineCol) or (styleName ~= "")) then
+		if (style ~= nil and (style1 and style1.fDefineLineCol) or (style2 and style2.fDefineLineCol) or (styleIsEdit)) then
 			style.fDefineLineCol = not style.fDefineLineCol
 		end
 		if (mesh ~= nil and shape ~= nil) then
@@ -4493,7 +4503,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 		end
 		moho:UpdateUI()
 	elseif (msg == self.LINEWIDTHOVER) then
-		if (style ~= nil and (style1 and style1.fDefineLineWidth) or (style2 and style2.fDefineLineWidth) or (styleName ~= "")) then
+		if (style ~= nil and (style1 and style1.fDefineLineWidth) or (style2 and style2.fDefineLineWidth) or (styleIsEdit)) then
 			style.fDefineLineWidth = not style.fDefineLineWidth
 		end
 		if (mesh ~= nil and shape ~= nil) then
@@ -4662,7 +4672,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 						newStyle.fDefineFillCol = true
 						newStyle.fDefineLineCol = true
 					end
-					if style and styleName ~= "" then
+					if style and styleIsEdit then
 						LS_Shapes.mode = LS_Shapes:StyleLeaver(moho, mesh, 2)
 					end
 					LS_Shapes:StyleSelector(doc, doc:CountStyles() - 1)
