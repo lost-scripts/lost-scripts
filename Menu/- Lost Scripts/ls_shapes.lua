@@ -4,7 +4,7 @@
 
 ScriptName = "LS_Shapes"
 ScriptBirth = "20220918-0248"
-ScriptBuild = "20261123-0450"
+ScriptBuild = "20261123-1606"
 ScriptVersion = "0.4.3"
 ScriptStage = "BETA"
 ScriptTarget = "Moho® 14.5+ Pro"
@@ -947,9 +947,9 @@ function LS_ShapesDialog:Update() --print("LS_ShapesDialog:Update(" .. tostring(
 	local styleID = -1 --print(styleName .. " (" .. tostring(style) .. "): ", tostring(style.fFillCol.value.r), ", ", tostring(style.fFillCol.value.g), ", ", tostring(style.fFillCol.value.b))
 	local styleUUID = style and style.fUUID:Buffer() or "" --doc:StyleByID(i) print(iStyle.fUUID:Buffer())
 	local styleCount = doc and math.floor(doc:CountStyles()) or 0
-	local styleSel = doc and doc:StyleByID(styleSelID) or style
 	local styleSelCount = styleName and styleIsEdit and 1 or LS_Shapes:CountSelectedStyles(doc) --self.itemList and (math.floor(self.itemList:NumSelectedItems() + (self.itemList:IsItemSelected(0) == true and -1 or 0))) or 0
 	local styleSelID = LS_Shapes.mode == 2 and math.floor(self.itemList:SelItem()) - 1 or -1
+	local styleSel = doc and doc:StyleByID(styleSelID) or style
 	local styleSelUUID = LS_Shapes.mode == 2 and styleSel and styleSel.fUUID:Buffer() or ""
 
 	local style1, style2 = (not styleIsEdit and self.tempShape) and self.tempShape.fInheritedStyle or nil, (not styleIsEdit and self.tempShape) and self.tempShape.fInheritedStyle2 or nil
@@ -4757,7 +4757,7 @@ function LS_ShapesDialog:HandleMessage(msg) --print("LS_ShapesDialog:HandleMessa
 					self.info[1], self.info.upd, self.info.cop, self.info.pip = string.format(MOHO.Localize("/LS/Shapes/StackedShapeCreated=Stacked shape created! (%d)"), stackCount), false, false, true
 					self.infobar:SetValue(table.concat(self.info, self.info.sep or " · "):gsub("^" .. self.info.sep .. " *", ""))
 					self.infoBut:SetValue(true)
-				end --string.format(MOHO.Localize("/LS/Shapes/HelpTitle=Quick Guide (up to: %s)"), "v0.4.0")
+				end
 			end
 		elseif (doc ~= nil and LS_Shapes.mode == 2) then -- Style Creation
 			if m % 2 < 2 then -- 0: No Alt
@@ -5386,7 +5386,7 @@ LS_Shapes.h = {} --h stands "help"
 LS_Shapes.h.DLOG_UPDATE = MOHO.MSG_BASE
 
 function LS_Shapes.h:new() -- SEC: NEW(H)
-	local d = LM.GUI.SimpleDialog(LS_Shapes:UILabel() .. "'s " .. MOHO.Localize("/LS/Shapes/HelpTitle=Quick Help"), LS_Shapes.h) --string.format(MOHO.Localize("/LS/Shapes/HelpTitle=Quick Guide (up to: %s)"), "v0.4.0")
+	local d = LM.GUI.SimpleDialog(LS_Shapes:UILabel() .. "'s " .. MOHO.Localize("/LS/Shapes/Help/Title=Quick Help"), LS_Shapes.h) --string.format(MOHO.Localize("/LS/Shapes/Help/Title=Quick Guide (up to: %s)"), "v0.4.0")
 	local l = d:GetLayout()
 	local width = 1080
 	d.w = {} -- widgets
@@ -5431,9 +5431,6 @@ function LS_Shapes.h:new() -- SEC: NEW(H)
 			l:AddChild(d.i1_9, LM.GUI.ALIGN_CENTER,  0) d.w[ 9] = d.i1_9
 			d.i1_10 = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info", "1.10", true, self.DLOG_UPDATE + 10, true)
 			l:AddChild(d.i1_10, LM.GUI.ALIGN_CENTER, 0) d.w[10] = d.i1_10
-
-			l:AddPadding(0) l:AddChild(LM.GUI.Divider(false), LM.GUI.ALIGN_FILL, -2)
-
 			d.i1_11 = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info", "1.11", true, self.DLOG_UPDATE + 11, true)
 			l:AddChild(d.i1_11, LM.GUI.ALIGN_CENTER, 0) d.w[11] = d.i1_11
 
@@ -5441,46 +5438,51 @@ function LS_Shapes.h:new() -- SEC: NEW(H)
 
 			d.i1_12 = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info", "1.12", true, self.DLOG_UPDATE + 12, true)
 			l:AddChild(d.i1_12, LM.GUI.ALIGN_CENTER, 0) d.w[12] = d.i1_12
+
+			l:AddPadding(0) l:AddChild(LM.GUI.Divider(false), LM.GUI.ALIGN_FILL, -2)
+
 			d.i1_13 = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info", "1.13", true, self.DLOG_UPDATE + 13, true)
 			l:AddChild(d.i1_13, LM.GUI.ALIGN_CENTER, 0) d.w[13] = d.i1_13
 			d.i1_14 = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info", "1.14", true, self.DLOG_UPDATE + 14, true)
 			l:AddChild(d.i1_14, LM.GUI.ALIGN_CENTER, 0) d.w[14] = d.i1_14
-
-			l:AddPadding(0) l:AddChild(LM.GUI.Divider(false), LM.GUI.ALIGN_FILL, -2)
-
 			d.i1_15 = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info", "1.15", true, self.DLOG_UPDATE + 15, true)
 			l:AddChild(d.i1_15, LM.GUI.ALIGN_CENTER, 0) d.w[15] = d.i1_15
 
-			l:AddPadding(148)
+			l:AddPadding(0) l:AddChild(LM.GUI.Divider(false), LM.GUI.ALIGN_FILL, -2)
 
-			d.i2_1  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "2.1", true, self.DLOG_UPDATE + 16, true)
-			l:AddChild(d.i2_1, LM.GUI.ALIGN_CENTER,  0) d.w[16] = d.i2_1
-			d.i2_2  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "2.2", true, self.DLOG_UPDATE + 17, true)
-			l:AddChild(d.i2_2, LM.GUI.ALIGN_CENTER,  0) d.w[17] = d.i2_2
-			d.i2_3  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "2.3", true, self.DLOG_UPDATE + 18, true)
-			l:AddChild(d.i2_3, LM.GUI.ALIGN_CENTER,  0) d.w[18] = d.i2_3
-			d.i2_4  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "2.4", true, self.DLOG_UPDATE + 19, true)
-			l:AddChild(d.i2_4, LM.GUI.ALIGN_CENTER,  0) d.w[19] = d.i2_4
+			d.i1_16 = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info", "1.16", true, self.DLOG_UPDATE + 16, true)
+			l:AddChild(d.i1_16, LM.GUI.ALIGN_CENTER, 0) d.w[16] = d.i1_16
+
+			l:AddPadding(128)
+
+			d.i2_1  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "2.1", true, self.DLOG_UPDATE + 17, true)
+			l:AddChild(d.i2_1, LM.GUI.ALIGN_CENTER,  0) d.w[17] = d.i2_1
+			d.i2_2  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "2.2", true, self.DLOG_UPDATE + 18, true)
+			l:AddChild(d.i2_2, LM.GUI.ALIGN_CENTER,  0) d.w[18] = d.i2_2
+			d.i2_3  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "2.3", true, self.DLOG_UPDATE + 19, true)
+			l:AddChild(d.i2_3, LM.GUI.ALIGN_CENTER,  0) d.w[19] = d.i2_3
+			d.i2_4  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "2.4", true, self.DLOG_UPDATE + 20, true)
+			l:AddChild(d.i2_4, LM.GUI.ALIGN_CENTER,  0) d.w[20] = d.i2_4
 
 			l:AddPadding(0) l:AddChild(LM.GUI.Divider(false), LM.GUI.ALIGN_FILL, -2)
 
 			l:AddPadding(LS_Shapes.Round(d.i1_1:Height() * 3 / 2))
-			d.i2_6  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "2.6", true, self.DLOG_UPDATE + 20, true)
-			l:AddChild(d.i2_6, LM.GUI.ALIGN_CENTER,  0) d.w[20] = d.i2_6
+			d.i2_5  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "2.5", true, self.DLOG_UPDATE + 21, true)
+			l:AddChild(d.i2_5, LM.GUI.ALIGN_CENTER,  0) d.w[21] = d.i2_5
 			l:AddPadding(LS_Shapes.Round(d.i1_1:Height() * 3 / 2))
 
 			l:AddPadding(0) l:AddChild(LM.GUI.Divider(false), LM.GUI.ALIGN_FILL, -2)
 
 			l:AddPadding(LS_Shapes.Round(d.i1_1:Height() * 2 / 2))
-			d.i2_7  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "2.7", true, self.DLOG_UPDATE + 21, true)
-			l:AddChild(d.i2_7, LM.GUI.ALIGN_CENTER,  0) d.w[21] = d.i2_7
+			d.i2_6  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "2.6", true, self.DLOG_UPDATE + 22, true)
+			l:AddChild(d.i2_6, LM.GUI.ALIGN_CENTER,  0) d.w[22] = d.i2_6
 			l:AddPadding(LS_Shapes.Round(d.i1_1:Height() * 2 / 2))
 
 			l:AddPadding(0) l:AddChild(LM.GUI.Divider(false), LM.GUI.ALIGN_FILL, -2)
 
 			l:AddPadding(d.i1_1:Height() * 3 / 2)
-			d.i2_11 = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "2.8", true, self.DLOG_UPDATE + 22, true)
-			l:AddChild(d.i2_11, LM.GUI.ALIGN_CENTER, 0) d.w[22] = d.i2_11
+			d.i2_7 = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "2.7", true, self.DLOG_UPDATE + 23, true)
+			l:AddChild(d.i2_7, LM.GUI.ALIGN_CENTER, 0) d.w[23] = d.i2_7
 			l:AddPadding(-1)
 		l:Pop()
 
@@ -5492,29 +5494,29 @@ function LS_Shapes.h:new() -- SEC: NEW(H)
 
 		l:PushV(LM.GUI.ALIGN_FILL, 2)
 			l:AddPadding(530)
-			d.i3_1  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "3.1", true, self.DLOG_UPDATE + 23, true)
-			l:AddChild(d.i3_1, LM.GUI.ALIGN_CENTER, 12) d.w[23] = d.i3_1
+			d.i3_1  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "3.1", true, self.DLOG_UPDATE + 24, true)
+			l:AddChild(d.i3_1, LM.GUI.ALIGN_CENTER, 12) d.w[24] = d.i3_1
 
 			l:AddPadding(0) l:AddChild(LM.GUI.Divider(false), LM.GUI.ALIGN_FILL, -2)
 
-			d.i3_2  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "3.2", true, self.DLOG_UPDATE + 24, true)
-			l:AddChild(d.i3_2, LM.GUI.ALIGN_CENTER,  0) d.w[24] = d.i3_2
+			d.i3_2  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "3.2", true, self.DLOG_UPDATE + 25, true)
+			l:AddChild(d.i3_2, LM.GUI.ALIGN_CENTER,  0) d.w[25] = d.i3_2
 			l:AddPadding(178)
 
-			d.i3_3  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "3.3", true, self.DLOG_UPDATE + 25, true)
-			l:AddChild(d.i3_3, LM.GUI.ALIGN_CENTER,  0) d.w[25] = d.i3_3
+			d.i3_3  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "3.3", true, self.DLOG_UPDATE + 26, true)
+			l:AddChild(d.i3_3, LM.GUI.ALIGN_CENTER,  0) d.w[26] = d.i3_3
 			l:AddPadding(88)
 
 			l:AddPadding(0) l:AddChild(LM.GUI.Divider(false), LM.GUI.ALIGN_FILL, -2)
 
-			d.i3_4  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "3.4", true, self.DLOG_UPDATE + 26, true)
-			l:AddChild(d.i3_4, LM.GUI.ALIGN_CENTER,  0) d.w[26] = d.i3_4
-			d.i3_5  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "3.5", true, self.DLOG_UPDATE + 27, true)
-			l:AddChild(d.i3_5, LM.GUI.ALIGN_CENTER,  0) d.w[27] = d.i3_5
-			d.i3_6  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "3.6", true, self.DLOG_UPDATE + 28, true)
-			l:AddChild(d.i3_6, LM.GUI.ALIGN_CENTER,  0) d.w[28] = d.i3_6
-			d.i3_7  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "3.7", true, self.DLOG_UPDATE + 29, true)
-			l:AddChild(d.i3_7, LM.GUI.ALIGN_CENTER,  0) d.w[29] = d.i3_7
+			d.i3_4  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "3.4", true, self.DLOG_UPDATE + 27, true)
+			l:AddChild(d.i3_4, LM.GUI.ALIGN_CENTER,  0) d.w[27] = d.i3_4
+			d.i3_5  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "3.5", true, self.DLOG_UPDATE + 28, true)
+			l:AddChild(d.i3_5, LM.GUI.ALIGN_CENTER,  0) d.w[28] = d.i3_5
+			d.i3_6  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "3.6", true, self.DLOG_UPDATE + 29, true)
+			l:AddChild(d.i3_6, LM.GUI.ALIGN_CENTER,  0) d.w[29] = d.i3_6
+			d.i3_7  = LM.GUI.ImageButton(LS_Shapes.resources .. "ls_info",  "3.7", true, self.DLOG_UPDATE + 30, true)
+			l:AddChild(d.i3_7, LM.GUI.ALIGN_CENTER,  0) d.w[30] = d.i3_7
 		l:Pop()
 	l:Pop()
 
@@ -5525,11 +5527,11 @@ function LS_Shapes.h:new() -- SEC: NEW(H)
 	width = (d.i1_1:Width() * 2) + d.helpImgBut:Width() + 4
 	l:PushH(LM.GUI.ALIGN_FILL)
 		d.t1i = LM.GUI.DynamicText("ℹ ", 0)
-		d.t1i:SetToolTip("Help according to: " .. "v0.4.2")
+		d.t1i:SetToolTip("Help according to: " .. "v0.4.3")
 		d.t1i:SetCursor(LM.GUI.Cursor(LS_Shapes.resources .. "ls_cursor_help", 0, 0))
 		l:AddChild(d.t1i, LM.GUI.ALIGN_LEFT, 0)
 		l:AddPadding(-17)
-		d.t1 = LM.GUI.DynamicText("ℹ " .. MOHO.Localize("/LS/Shapes/HelpInfo=Info"), width)
+		d.t1 = LM.GUI.DynamicText("ℹ " .. MOHO.Localize("/LS/Shapes/Help/Info=Info"), width)
 		l:AddChild(d.t1, LM.GUI.ALIGN_LEFT, 0) --18
 	l:Pop()
 
@@ -5538,7 +5540,7 @@ function LS_Shapes.h:new() -- SEC: NEW(H)
 	l:PushH(LM.GUI.ALIGN_FILL)
 		d.close = LM.GUI.ShortButton(MOHO.Localize("/Menus/File/Close=Close"), LM.GUI.MSG_CANCEL)
 		l:AddPadding(-7)
-		d.t2 = LM.GUI.DynamicText("💡 " .. MOHO.Localize("/LS/Shapes/HelpTip=Tip"), width + 4 - d.close:Width())
+		d.t2 = LM.GUI.DynamicText("💡 " .. MOHO.Localize("/LS/Shapes/Help/Tip=Tip"), width + 4 - d.close:Width())
 		l:AddChild(d.t2, LM.GUI.ALIGN_BOTTOM, 0)
 		l:AddPadding(0)
 		l:AddChild(d.close, LM.GUI.ALIGN_BOTTOM, 0)
@@ -5553,8 +5555,8 @@ function LS_Shapes.h:UpdateWidgets()
 	self.what = self.what ~= nil and self.what or MOHO.MSG_BASE
 
 	if not self.iSel then
-		self.t1:SetValue(MOHO.Localize("/LS/Shapes/HelpInfo=Click info buttons for the adjacent element's description. Most widgets have a tooltip anyway (especially if Main Menu's \"Beginner's Mode\" is checked). Press <Esc / Enter / Button> to close."))
-		self.t2:SetValue("💡 " .. MOHO.Localize("/LS/Shapes/HelpTip=The logic behind \"Modes\" is similar to Moho's Style window: SHAPE (shape selected), STYLE (editing style) and DEFAULT otherwise; but switchable at will (holding <alt> for GROUP mode)."))
+		self.t1:SetValue(MOHO.Localize("/LS/Shapes/Help/InfoText=Click info buttons for the adjacent element's description. Most widgets have a tooltip anyway (especially if Main Menu's \"Beginner's Mode\" is checked). Press <Esc / Enter / Button> to close."))
+		self.t2:SetValue("💡 " .. MOHO.Localize("/LS/Shapes/Help/TipText=The logic behind \"Modes\" is similar to Moho's Style window: SHAPE (shape selected), STYLE (editing style) and DEFAULT otherwise; but switchable at will (holding <alt> for GROUP mode)."))
 	end
 end
 
@@ -5573,83 +5575,85 @@ function LS_Shapes.h:HandleMessage(what) -- SEC. HM(H)
 	if (what == self.DLOG_UPDATE) then
 		--self:UpdateWidgets()
 	elseif (what == self.DLOG_UPDATE +  1) then	-- 1. Main Menu
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help1_1=1.1 - It ensures that Moho's Style window always matches the status of \"Shapes Window\" (at a small item click response time cost)."))
-		self.t2:SetValue("💡 " .. MOHO.Localize("/LS/Shapes/Tip1_1=Keep this checked if you often work with both windows open to avoid confusion over current selection."))
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/1_1=1.1 - It ensures that Moho's Style window always matches the status of \"Shapes Window\" (at a small item click response time cost)."))
+		self.t2:SetValue("💡 " .. MOHO.Localize("/LS/Shapes/Help/Tip1_1=Keep this checked if you often work with both windows open to avoid confusion over current selection."))
 	elseif (what == self.DLOG_UPDATE +  2) then
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help1_2=1.2 - Shapes in vector layers like \"Mesh Warps\" won't be listed (Curver and Auto-triangulated layers are always ignored anyway)."))
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/1_2=1.2 - Shapes in vector layers like \"Mesh Warps\" won't be listed (Curver and Auto-triangulated layers are always ignored anyway)."))
 	elseif (what == self.DLOG_UPDATE +  3) then
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help1_3=1.3 - If active, the window will appear upon opening the first document (intended to work in partnership with option below)."))
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/1_3=1.3 - If active, the window will appear upon opening the first document (intended to work in partnership with option below)."))
 	elseif (what == self.DLOG_UPDATE +  4) then
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help1_4=1.4 - Toggles button visibility in the \"Tools\" palette (hiding saves space there, but henceforth will require opening via \"Scripts » - Lost Scripts » Shapes Window\")."))
-		self.t2:SetValue("💡 " .. MOHO.Localize("/LS/Shapes/Tip1_4=If visible, not only you can open/close it with a click but also via a custom keyboard shortcut (e.g., by setting <Shift + S> to it from \"Edit » Edit Keyboard Shortcuts...\")."))
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/1_4=1.4 - Toggles button visibility in the \"Tools\" palette (hiding saves space there, but henceforth will require opening via \"Scripts » - Lost Scripts » Shapes Window\")."))
+		self.t2:SetValue("💡 " .. MOHO.Localize("/LS/Shapes/Help/Tip1_4=If visible, not only you can open/close it with a click but also via a custom keyboard shortcut (e.g., by setting <Shift + S> to it from \"Edit » Edit Keyboard Shortcuts...\")."))
 	elseif (what == self.DLOG_UPDATE +  5) then
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help1_5=1.5 - Toggles certain tooltips designed for new users that may interfere with experienced workflows..."))
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/1_5=1.5 - Toggles certain tooltips designed for new users that may interfere with experienced workflows..."))
 	elseif (what == self.DLOG_UPDATE +  6) then
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help1_6=1.6 - Opens the \"Debug Mode\" dialog. If ENABLED, a log file is generated potentially containing valuable data for identifying and fixing script-related crashes."))
-		self.t2:SetValue("💡 " .. MOHO.Localize("/LS/Shapes/Tip1_6=Access the log file via dialog's \"Open Log\" button or directly at: \"CCF/Scripts/ScriptResources/ls_shapes/LOG.txt\". Please only send the last incomplete log cycle, if one exists."))
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/1_6=1.6 - Opens the \"Debug Mode\" dialog. If ENABLED, a log file is generated potentially containing valuable data for identifying and fixing script-related crashes."))
+		self.t2:SetValue("💡 " .. MOHO.Localize("/LS/Shapes/Help/Tip1_6=Access the log file via dialog's \"Open Log\" button or directly at: \"CCF/Scripts/ScriptResources/ls_shapes/LOG.txt\". Please only send the last incomplete log cycle, if one exists."))
 	--------
 	elseif (what == self.DLOG_UPDATE +  7) then
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help1_7=1.7 - Hide or show widgets related to shape/style/group creation, either because you don't need them or to save vertical space."))
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/1_7=1.7 - Hide or show widgets related to shape/style/group creation, either because you don't need them or to save vertical space."))
 	elseif (what == self.DLOG_UPDATE +  8) then
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help1_8=1.8 - Increases button area for better clicking and interaction (with the advantage of slightly expanding the Swatches and shape preview too)."))
-		self.t2:SetValue("💡 " .. MOHO.Localize("/LS/Shapes/Tip1_1=This entry cycles between ON (checked), OFF (unchecked), and [Auto] (default) for automatic scaling based on display settings."))
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/1_8=1.8 - Increases button area for better clicking and interaction (with the advantage of slightly expanding the Swatches and shape preview too)."))
+		self.t2:SetValue("💡 " .. MOHO.Localize("/LS/Shapes/Help/Tip1_8=This entry cycles between ON (checked), OFF (unchecked), and [Auto] (default) for automatic scaling based on display settings."))
 	elseif (what == self.DLOG_UPDATE +  9) then
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help1_9=1.9 - Make the window as taller as possible (accordingly to current viewport height)."))
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/1_9=1.9 - Make the window as taller as possible (accordingly to current viewport height)."))
 	elseif (what == self.DLOG_UPDATE + 10) then
-		self.t1:SetValue(MOHO.Localize("/LS/Shapes/Help1_10=1.10 - Provides some info about selected item/s, but uncheck it should you want to save some vertical space."))
-	--------
+		self.t1:SetValue(MOHO.Localize("/LS/Shapes/Help/1_10=1.10 - Whether or not to show the selected item little preview (disabled by default to help to determine if it has something to do with the rare UI freezing issue)."))
 	elseif (what == self.DLOG_UPDATE + 11) then
-		self.t1:SetValue(MOHO.Localize("/LS/Shapes/Help1_11=1.11 - Restores the script to its factory settings."))
+		self.t1:SetValue(MOHO.Localize("/LS/Shapes/Help/1_11=1.11 - Provides some info about selected item/s, but uncheck it should you want to save some vertical space."))
 	--------
 	elseif (what == self.DLOG_UPDATE + 12) then
-		self.t1:SetValue(MOHO.Localize("/LS/Shapes/Help1_12=1.12 - Yep, it opens this help dialog :D"))
+		self.t1:SetValue(MOHO.Localize("/LS/Shapes/Help/1_12=1.12 - Restores the script to its factory settings."))
+	--------
 	elseif (what == self.DLOG_UPDATE + 13) then
-		self.t1:SetValue(MOHO.Localize("/LS/Shapes/Help1_13=1.13 - Visit the script's webpage at \"www.lost-scripts.github.io\" for more details, info, or just to discuss."))
+		self.t1:SetValue(MOHO.Localize("/LS/Shapes/Help/1_13=1.13 - Yep, it opens this help dialog :D"))
 	elseif (what == self.DLOG_UPDATE + 14) then
-		self.t1:SetValue(MOHO.Localize("/LS/Shapes/Help1_14=1.14 - It takes you to the page with the latest release of the script so you can compare versions."))
-		self.t2:SetValue("💡 " .. MOHO.Localize("/LS/Shapes/Tip1_14=Yours should appear at the end of the URL for ease comparison."))
-	--------
+		self.t1:SetValue(MOHO.Localize("/LS/Shapes/Help/1_14=1.14 - Visit the script's webpage at \"www.lost-scripts.github.io\" for more details, info, or just to discuss."))
 	elseif (what == self.DLOG_UPDATE + 15) then
-		self.t1:SetValue(MOHO.Localize("/LS/Shapes/Help1_15=1.15 - Opens a dialog from where you can check information such as copyright/license, credits, version..."))
-
-	elseif (what == self.DLOG_UPDATE + 16) then	-- 2. Tweak Menu
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help2_1=2.1 - Controls act on fill color/opacity (auto-activates upon clicking on a fill with the Select Shape tool)."))
-	elseif (what == self.DLOG_UPDATE + 17) then
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help2_2=2.2 - Controls act on stroke color/opacity (auto-activates upon clicking near a stroke with the Select Shape tool)."))
-	elseif (what == self.DLOG_UPDATE + 18) then
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help2_3=2.3 - Controls act on Shape FX handles \"preciselly\" (auto-activates upon clicking on a shape FX handle with the Select Shape tool)."))
-	elseif (what == self.DLOG_UPDATE + 19) then
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help2_4=2.4 - Allows recoloring selected shapes' fill/stroke (as per OPTIONS below) using RGBα or the more intuitive HSB (Hue/Saturation/Brightness). Hold <alt> on \"Apply\" to randomize coloring! 🎲"))
-		self.t2:SetValue("💡 " .. MOHO.Localize("/LS/Shapes/Tip2_4=Under single-layer selection, recoloring affects selected shapes or all of them if no shape is selected. Under multi-layer selection, recoloring applies to all shapes on all selected layers."))
+		self.t1:SetValue(MOHO.Localize("/LS/Shapes/Help/1_15=1.15 - It takes you to the page with the latest release of the script so you can compare versions."))
+		self.t2:SetValue("💡 " .. MOHO.Localize("/LS/Shapes/Help/Tip1_15=Yours should appear at the end of the URL for ease comparison."))
 	--------
+	elseif (what == self.DLOG_UPDATE + 16) then
+		self.t1:SetValue(MOHO.Localize("/LS/Shapes/Help/1_16=1.16 - Opens a dialog from where you can check information such as copyright/license, credits, version..."))
+
+	elseif (what == self.DLOG_UPDATE + 17) then	-- 2. Tweak Menu
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/2_1=2.1 - Controls act on fill color/opacity (auto-activates upon clicking on a fill with the Select Shape tool)."))
+	elseif (what == self.DLOG_UPDATE + 18) then
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/2_2=2.2 - Controls act on stroke color/opacity (auto-activates upon clicking near a stroke with the Select Shape tool)."))
+	elseif (what == self.DLOG_UPDATE + 19) then
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/2_3=2.3 - Controls act on Shape FX handles \"preciselly\" (auto-activates upon clicking on a shape FX handle with the Select Shape tool)."))
 	elseif (what == self.DLOG_UPDATE + 20) then
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help2_6=2.6 - Color related actions..."))
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/2_4=2.4 - Allows recoloring selected shapes' fill/stroke (as per OPTIONS below) using RGBα or the more intuitive HSB (Hue/Saturation/Brightness). Hold <alt> on \"Apply\" to randomize coloring! 🎲"))
+		self.t2:SetValue("💡 " .. MOHO.Localize("/LS/Shapes/Help/Tip2_4=Under single-layer selection, recoloring affects selected shapes or all of them if no shape is selected. Under multi-layer selection, recoloring applies to all shapes on all selected layers."))
 	--------
 	elseif (what == self.DLOG_UPDATE + 21) then
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help2_7=2.7 - Color related utilities..."))
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/2_5=2.5 - Color related actions..."))
 	--------
 	elseif (what == self.DLOG_UPDATE + 22) then
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help2_8=2.8 - Color related options... E.g., whether recoloring should just affect fills, strokes, both, alpha..."))
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/2_6=2.6 - Color related utilities..."))
+	--------
+	elseif (what == self.DLOG_UPDATE + 23) then
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/2_7=2.7 - Color related options... E.g., whether recoloring should just affect fills, strokes, both, alpha..."))
 
-	elseif (what == self.DLOG_UPDATE + 23) then	-- 3. Swatch Menu
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help3_1=3.1 - Hides Swatch, which can help saving quite vertical space..."))
+	elseif (what == self.DLOG_UPDATE + 24) then	-- 3. Swatch Menu
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/3_1=3.1 - Hides Swatch, which can help saving quite vertical space..."))
 	--------
-	elseif (what == self.DLOG_UPDATE + 24) then
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help3_2=3.2 - Factory Swatches list."))
-		self.t2:SetValue("⚠ " .. MOHO.Localize("/LS/Shapes/Tip3_2_=It's not recommended to modify these ones as they may be overwritten upon reinstalling or updating the script."))
-		if self.i3_2:Value() == true then LM.Beep() end
 	elseif (what == self.DLOG_UPDATE + 25) then
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help3_3=3.3 - Custom Swatches list. Their place is your Custom Content Folder's \"Swatches\" directory and they are the ones you can create or modify at your convenience."))
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/3_2=3.2 - Factory Swatches list."))
+		self.t2:SetValue("⚠ " .. MOHO.Localize("/LS/Shapes/Help/Tip3_2_=It's not recommended to modify these ones as they may be overwritten upon reinstalling or updating the script."))
+		if self.i3_2:Value() == true then LM.Beep() end
 	elseif (what == self.DLOG_UPDATE + 26) then
-	--------
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help3_4=3.4 - Opens your Custom Swatches folder."))
-		self.t2:SetValue("💡 " .. MOHO.Localize("/LS/Shapes/Tip3_4=You can copy there any Factory Swatches from the script's ScriptResources directory as a starting point for your own ones."))
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/3_3=3.3 - Custom Swatches list. Their place is your Custom Content Folder's \"Swatches\" directory and they are the ones you can create or modify at your convenience."))
 	elseif (what == self.DLOG_UPDATE + 27) then
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help3_5=3.5 - Currently unavailable..."))
+	--------
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/3_4=3.4 - Opens your Custom Swatches folder."))
+		self.t2:SetValue("💡 " .. MOHO.Localize("/LS/Shapes/Help/Tip3_4=You can copy there any Factory Swatches from the script's ScriptResources directory as a starting point for your own ones."))
 	elseif (what == self.DLOG_UPDATE + 28) then
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help3_6=3.6 - Opens current Custom Swatch to modify or create new ones. They are simple Moho® projects which can contain anythig, including a pose called \"SLIDER\" for user interaction!"))
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/3_5=3.5 - Currently unavailable..."))
 	elseif (what == self.DLOG_UPDATE + 29) then
-		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help3_7=3.7 - Allows you to reload Swatches thus changes are available immediately after adding/modifying any of them."))
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/3_6=3.6 - Opens current Custom Swatch to modify or create new ones. They are simple Moho® projects which can contain anythig, including a pose called \"SLIDER\" for user interaction!"))
+	elseif (what == self.DLOG_UPDATE + 30) then
+		self.t1:SetValue(MOHO.Localize(  "/LS/Shapes/Help/3_7=3.7 - Allows you to reload Swatches thus changes are available immediately after adding/modifying any of them."))
 	elseif (what == LM.GUI.MSG_CANCEL or what == LM.GUI.MSG_OK) then
 		--MOHO.ScriptInterface:Click()
 		return
