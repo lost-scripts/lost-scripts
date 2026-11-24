@@ -31,7 +31,7 @@ declare -A BUILD_ASSIST=( ["ENABLE"]=true # Auto-assist different tasks (ENABLE 
 )
 
 # 🔒 CONFIGURATION CONSTANTS (Uncustomizable/Runtime variables for path resolutions, patterns, etc. )
-declare -Ar INFO=( [NAME]="Lost Builder®" [VERSION]="1.9.73" [CREATOR]="Rai López" [DESC]="Lost Scripts™ Project's Builder and Development Helper" [RUNTIME]=$(date +"%Y%m%d-%H%M"))
+declare -Ar INFO=( [NAME]="Lost Builder®" [VERSION]="1.9.74" [CREATOR]="Rai López" [DESC]="Lost Scripts™ Project's Builder and Development Helper" [RUNTIME]=$(date +"%Y%m%d-%H%M"))
 declare -r  MONODIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" # The anchor: The Monorepo root directory itself
 declare -r  FILENAME=$(basename "${BASH_SOURCE[0]}")
 declare --  CANCELLED=false; 
@@ -122,8 +122,8 @@ cd "$MONODIR" || exit 1 # Place the terminal at the root of the project
 # 💬 INTENT SELECTION: PUBLISH/SHELL/CANCEL?
 echo -ne "--- ？ Publish to ${T_i}${BUILD_FORGE[BASE]}/${BUILD_FORGE[USER]}/$BUILD_CORE…${T_N} when applicable? (${T_S}Y${T_N}es/${T_S}N${T_N}o/${T_S}S${T_N}hell/${T_S}C${T_N}ancel): "; read -n 1 confirm; SECONDS=0
 case "$confirm" in
-	y|Y) PUBLISH=true; echo -e "\n--- 🎯 ${T_B}GOAL:${T_N} Build & ${T_S}Publish${T_N} ${T_d}(💡 'Ctrl+C' aborts at any time)${T_N}"; sleep 0.5 ;;
-	n|N) PUBLISH=false; echo -e "\n--- 🎯 ${T_B}GOAL:${T_N} Build & ${T_S}Kept Local${T_N} ${T_d}(💡 'Ctrl+C' aborts at any time)${T_N}"; sleep 0.5 ;;
+	y|Y) BUILD_PUBLISH=true; echo -e "\n--- 🎯 ${T_B}GOAL:${T_N} Build & ${T_S}Publish${T_N} ${T_d}(💡 'Ctrl+C' aborts at any time)${T_N}"; sleep 0.5 ;;
+	n|N) BUILD_PUBLISH=false; echo -e "\n--- 🎯 ${T_B}GOAL:${T_N} Build & ${T_S}Kept Local${T_N} ${T_d}(💡 'Ctrl+C' aborts at any time)${T_N}"; sleep 0.5 ;;
 	s|S) echo -e "\n--- 💻 Entering Shell... ${T_d}(💡 Type 'exit' to return)${T_N}"; bash --login -i; exec bash "$0" ;;
 	*)   echo -e "\n--- 🛑 CANCELLED ${T_d}(Or invalid input/click detected)${T_N}: Exiting..."; sleep 1.5; exit 0 ;;
 esac
