@@ -32,7 +32,7 @@ declare -A BUILD_ASSIST=( ["ENABLE"]=true # Auto-assist different tasks (ENABLE 
 )
 
 # 🔒 CONFIGURATION CONSTANTS (Uncustomizable/Runtime variables for path resolutions, patterns, etc. )
-declare -Ar INFO=( [NAME]="Lost Builder®" [VERSION]="1.9.76" [CREATOR]="Rai López" [DESC]="Lost Scripts™ Project's Builder and Development Helper" [RUNTIME]=$(date +"%Y%m%d-%H%M"))
+declare -Ar INFO=( [NAME]="Lost Builder®" [VERSION]="1.9.77" [CREATOR]="Rai López" [DESC]="Lost Scripts™ Project's Builder and Development Helper" [RUNTIME]=$(date +"%Y%m%d-%H%M"))
 declare -r  MONODIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" # The anchor: The Monorepo root directory itself
 declare -r  FILENAME=$(basename "${BASH_SOURCE[0]}")
 declare --  CANCELLED=false; 
@@ -682,21 +682,31 @@ if [ -s "$MD_CATADATA" ]; then # Start reordering and processing collected data
 	while IFS="|" read -r id name ver bld dsc tar url stg pic; do # Process Substitution technique `< <(...)` keeps the loop running in the main process and MD_CATALOG survives!
 		[[ -z "$id" ]] || [[ "$id" == " " ]] && continue # Extra security for empty lines...
 		PACK_LNK="${URL_BASE}/${id}/"
+		
+		# Context-Aware Dual Redirection Trick (Conditional on BUILD_WEBPATH, and just in case the catalog was added to the web at some point)
+		CAT_TITLE="Go to the ${name} repository..."
+		ALT_ATTR=""; ALT_ATTR_TITLE=""
+		if [[ -n "${BUILD_WEBPATH}" ]]; then
+			CAT_WEB="${URL_WEB_BASE}/${id}/"
+			ALT_ATTR="data-alt-href='${CAT_WEB}'"
+			ALT_ATTR_TITLE="data-alt-title='Go to the ${name} page...'"
+		fi
+		
 		STAGE_LABEL=""; [[ "$stg" != "STABLE" ]] && STAGE_LABEL="<strong><sub><ins>$stg</ins></sub></strong>"
 
 		# ✨ DISPLAY CUSTOMIZATION: Core vs. Others
 		if [[ "$id" == "$BUILD_CORE" ]]; then
-			DISPLAY_NAME="<a href='${PACK_LNK}'><strong><em>LS&nbsp;<sup>Core</sup></em></strong></a>"
+			DISPLAY_NAME="<a href='${PACK_LNK}' title='${CAT_TITLE}' ${ALT_ATTR_TITLE} ${ALT_ATTR}><strong><em>LS&nbsp;<sup>Core</sup></em></strong></a>"
 			DISPLAY_DESC="<strong><em><sup>${dsc}</sup></em></strong><br><sub>𝓲 </sub><em><sub title='Build: $bld'>v$ver</sub> ${STAGE_LABEL}<sub> For Moho $tar</sub></em>"
 		else
-			DISPLAY_NAME="<a href='${PACK_LNK}' style='text-decoration: none'><strong><sup>$name</sup></strong></a>"
+			DISPLAY_NAME="<a href='${PACK_LNK}' title='${CAT_TITLE}' ${ALT_ATTR_TITLE} ${ALT_ATTR} style='text-decoration: none'><strong><sup>$name</sup></strong></a>"
 			DISPLAY_DESC="<sup>$dsc</sup><br><sub>𝓲 </sub><em><sub title='Build: $bld'>v$ver</sub> ${STAGE_LABEL}<sub> For Moho $tar</sub></em>"
 		fi
 
 		# 📝 ROW GENERATION (⚠ Keep spaces-as-tabs intact upon editing!): Append directly to the variable with a clean newline
 		MD_CATALOG="${MD_CATALOG}"$'\n'"$(cat <<- EOF
 	        <tr>
-	            <td valign='middle' align='center'><a href='${PACK_LNK}'>$pic</a></td>
+	            <td valign='middle' align='center'><a href='${PACK_LNK}' title='${CAT_TITLE}' ${ALT_ATTR_TITLE} ${ALT_ATTR}>$pic</a></td>
 	            <td valign='middle' align='center'>${DISPLAY_NAME}</td>
 	            <td valign='middle'>${DISPLAY_DESC}</td>
 	            <td valign='middle' align='center'><a href='${url}' title='Download: ${id}.zip'><img src='${ICON_DL}' alt='Download'></a></td>

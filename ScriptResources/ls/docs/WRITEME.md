@@ -40,7 +40,7 @@ Provides all the necessary shared/common resources and helpers that *[Moho®](ht
 | [![m1-2i]][m1-1a] | A persistent shape palette plus helpers for better management of Moho® vectors in general and Liquid Shapes in particular. |
 
 [m1-1i]: https://img.shields.io/badge/Shapes%20Window-blue.svg
-[m1-1a]: /scripts/ls_shapes_window "Go to Shapes Window webpage..."
+[m1-1a]: /scripts/ls_shapes_window "Go to the Shapes Window webpage..."
 [m1-2i]: /scripts/ls_shapes_window/index@2x.png
 [m1-3i]: https://img.shields.io/github/v/release/lost-scripts/ls_shapes_window?color=yellow
 [m1-3a]: https://github.com/lost-scripts/ls_shapes_window "Release"
@@ -54,11 +54,11 @@ Provides all the necessary shared/common resources and helpers that *[Moho®](ht
 <table width="100%" border="2" class="cardplus">
 	<tr>
 		<th width="96" valign="top">
-			<a href="/scripts/ls_shapes_window/" title="Go to ''Shapes Window'' page..."><img src="https://img.shields.io/badge/Shapes%20Window-blue.svg" width="96" height="20"></a>
+			<a href="/scripts/ls_shapes_window/" title="Go to the ''Shapes Window'' page..."><img src="https://img.shields.io/badge/Shapes%20Window-blue.svg" width="96" height="20"></a>
 		</th>
 		<th align="right" valign="middle" nowrap>
-			<a href="https://moho.lostmarble.com/" title="Go to Moho website"><img height="20px" src="https://img.shields.io/badge/For-Moho_Pro_14.3+-orange" alt="Moho version"></a>
-			<a href="https://github.com/lost-scripts/ls_shapes_window/releases/latest" title="Go to download page"><img height="20px" src="https://img.shields.io/github/v/release/lost-scripts/ls_shapes_window?logo=github" alt="GitHub version"></a>
+			<a href="https://moho.lostmarble.com/" title="Go to the Moho website"><img height="20px" src="https://img.shields.io/badge/For-Moho_Pro_14.3+-orange" alt="Moho version"></a>
+			<a href="https://github.com/lost-scripts/ls_shapes_window/releases/latest" title="Go to the download page"><img height="20px" src="https://img.shields.io/github/v/release/lost-scripts/ls_shapes_window?logo=github" alt="GitHub version"></a>
 			<a href="#!" style="cursor: default;"><img height="20px" src="https://img.shields.io/github/downloads/lost-scripts/ls_shapes_window/total.svg?color=yellow" alt="GitHub downloads"></a>
 		</th>
 	</tr>
@@ -108,7 +108,7 @@ As a regular *Moho®* user, you will not normally have to interact with this set
 
 ## *Collab & Support*
 
-Suggestions and bugs can be reported in the [<i>Issues</i>](https://github.com/lost-scripts/ls/issues "Go to ''Issues'' section") section (preferably) or in the corresponding topic, if any, in [<i>Scripting</i>](https://www.lostmarble.com/forum/viewforum.php?f=12 "Go to Lost Marble Forum's ''Scripting'' section") section of the [<i>Lost Marble Forum</i>](https://www.lostmarble.com/forum "Go to the ''Lost Marble Forum''").
+Suggestions and bugs can be reported in the [<i>Issues</i>](https://github.com/lost-scripts/ls/issues "Go to the ''Issues'' section") section (preferably) or in the corresponding topic, if any, in [<i>Scripting</i>](https://www.lostmarble.com/forum/viewforum.php?f=12 "Go to Lost Marble Forum ''Scripting'' section") section of the [<i>Lost Marble Forum</i>](https://www.lostmarble.com/forum "Go to the ''Lost Marble Forum''").
 
 <br>
 

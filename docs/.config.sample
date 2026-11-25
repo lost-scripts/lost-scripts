@@ -8,6 +8,7 @@
 #declare -- BUILD_DISTDIR="docs/.dist" # E.g. "docs/.dist", '${res_path}/docs/.dist', '${TARGET_DIR}/docs/.dist'
 #declare -- BUILD_PUBLISH=false
 #declare -- BUILD_MOHOCCF="../../YourCustomContentFolder"
+#declare -- BUILD_WEBURL="https://${BUILD_FORGE[USER]}.github.io/scripts" # Or e.g."https://your-domain.com/scripts"
 #declare -- BUILD_WEBPATH=""
 #declare -- BUILD_WEBFILE="index"
 #declare -- BUILD_WEBRSCS="assets"
