@@ -13,7 +13,8 @@ declare -A BUILD_FORGE=( [BASE]="github.com" [BRAW]="raw.githubusercontent.com" 
 declare -- BUILD_DISTDIR='${TARGET_DIR}/docs/.dist' # ZIP creation requires existing dir plus zip.exe/bzip2.dll in %ProgramFiles%\Git\usr\bin. Supports (via expander): '${res_path}/...' or '${TARGET_DIR}/...'
 declare -- BUILD_PUBLISH=false # Whether the pack will be published or not (Requires that the pack has a repo and 'origin' remote)
 declare -- BUILD_MOHOCCF="../../Moho Pro"
-declare -- BUILD_WEBPATH="../.github.io/content/scripts" # Static Site Proyect content directory (Empty to disable)
+declare -- BUILD_WEBURL="https://${BUILD_FORGE[USER]}.github.io/scripts" # Public base URL for web redirection (Customizable for custom domains)
+declare -- BUILD_WEBPATH="../.github.io/content/scripts" # Static Site Project content directory (Empty to disable)
 declare -- BUILD_WEBFILE="index" # Default filename expected by the Static Site Generator (E.g., index.md)
 declare -- BUILD_WEBRSCS="assets" # Default directory for web resources
 declare -- BUILD_DEBUGME=false # Or, alternatively, just run by: 'bash -x ./BUILDER.sh'
@@ -31,7 +32,7 @@ declare -A BUILD_ASSIST=( ["ENABLE"]=true # Auto-assist different tasks (ENABLE 
 )
 
 # 🔒 CONFIGURATION CONSTANTS (Uncustomizable/Runtime variables for path resolutions, patterns, etc. )
-declare -Ar INFO=( [NAME]="Lost Builder®" [VERSION]="1.9.75" [CREATOR]="Rai López" [DESC]="Lost Scripts™ Project's Builder and Development Helper" [RUNTIME]=$(date +"%Y%m%d-%H%M"))
+declare -Ar INFO=( [NAME]="Lost Builder®" [VERSION]="1.9.76" [CREATOR]="Rai López" [DESC]="Lost Scripts™ Project's Builder and Development Helper" [RUNTIME]=$(date +"%Y%m%d-%H%M"))
 declare -r  MONODIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" # The anchor: The Monorepo root directory itself
 declare -r  FILENAME=$(basename "${BASH_SOURCE[0]}")
 declare --  CANCELLED=false; 
@@ -141,6 +142,7 @@ URL_BASE="https://${BUILD_FORGE[BASE]}/${BUILD_FORGE[USER]}"
 URL_RAW="https://${BUILD_FORGE[BRAW]}/${BUILD_FORGE[USER]}"
 URL_RAW_CORE="${URL_RAW}/${BUILD_CORE}/main/ScriptResources/${BUILD_CORE}"
 URL_RAW_MONO="https://${BUILD_FORGE[BRAW]}/${BUILD_FORGE[USER]}/${MONOREPO}/main"
+URL_WEB_BASE="${BUILD_WEBURL}"
 MD_CATALOG=""; MD_CATASTART='<!-- CATALOG_START -->'; MD_CATAEND='<!-- CATALOG_END -->'; MD_CATADATA=$(mktemp)
 MD_STARRED=""; MD_STARSTART="<!-- STARRED_START -->"; MD_STAREND="<!-- STARRED_END -->"; MD_STARDATA=""
 IGNORE=( "${BUILD_IGNOREPFX[@]}" "${BUILD_IGNORESFX[@]}" "${BUILD_IGNOREFIL[@]}" )
@@ -535,6 +537,15 @@ for script_id in $PACKS; do
 	if [[ "$v_skip" == false ]] && [[ -n "$MD_STARDATA" && ",$MD_STARDATA," == *",$script_id,"* ]]; then
 		ST_GIT="https://github.com/${BUILD_FORGE[USER]}/${script_id}"
 		
+		# Context-Aware Dual Redirection Trick (Conditional on BUILD_WEBPATH)
+		ST_TITLE="Go to the ${v_name} repository..."
+		ALT_ATTR=""; ALT_ATTR_TITLE=""
+		if [[ -n "${BUILD_WEBPATH}" ]]; then
+			ST_WEB="${URL_WEB_BASE}/${script_id}/"
+			ALT_ATTR="data-alt-href='${ST_WEB}'"
+			ALT_ATTR_TITLE="data-alt-title='Go to the ${v_name} page...'"
+		fi
+		
 		if [[ -n "$v_zip_url" ]]; then # Download shield: We use v_zip_url, which is already calculated in Customs (2.4c)
 			ST_DLS_IMG="<img src='https://img.shields.io/badge/-%20-blue?style=flat&logo=${ICON_DL_B64}' alt='Download' title='Download: ${script_id}.zip' width='96'>"
 			ST_LNK="$v_zip_url"
@@ -545,14 +556,14 @@ for script_id in $PACKS; do
 		# Starred item table (⚠ Keep spaces-as-tabs intact upon editing!): Build the table directly inside a standard string variable
 		ST_CARD=$(cat <<- EOF
 		<table width='100%' border='3' class='card'><tr>
-		    <td align='center' width='96'><a href='${ST_GIT}'>${PICTURE_TAG}</a></td>
-		    <td width='724'><div><a href='${ST_GIT}'><strong>${v_name}</strong></a><br>${v_dsc:-$v_dsc_plain}</div></td>
+		    <td align='center' width='96'><a href='${ST_GIT}' title='${ST_TITLE}' ${ALT_ATTR_TITLE} ${ALT_ATTR}>${PICTURE_TAG}</a></td>
+		    <td width='724'><div><a href='${ST_GIT}' title='${ST_TITLE}' ${ALT_ATTR_TITLE} ${ALT_ATTR}><strong>${v_name}</strong></a><br>${v_dsc:-$v_dsc_plain}</div></td>
 		    <td align='center' width='96'><a href='${ST_LNK}'>${ST_DLS_IMG}</a></td>
 		</tr></table>
 		EOF
 		)
-		ST_INDEX=$(echo "$MD_STARDATA" | tr ',' '\n' | grep -n "^${script_id}$" | cut -d: -f1) # BUSCAMOS SU ORDEN EN EL YAML (Ej: si es el primero, devuelve 1; si es el segundo, 2) Convertimos la lista "ls_shapes,ls_dummy" en filas y buscamos la línea exacta
-		if [[ -n "$ST_INDEX" ]]; then # Guardamos la tarjeta directamente en esa posición del array (ej: ST_ARR[1], ST_ARR[2])
+		ST_INDEX=$(echo "$MD_STARDATA" | tr ',' '\n' | grep -n "^${script_id}$" | cut -d: -f1) # LOOK FOR ITS ORDER IN THE YAML (E.g., if it's the 1st, it returns 1; if the second, convert list "ls_shapes,ls_dummy" into rows and look for the exact line
+		if [[ -n "$ST_INDEX" ]]; then # Store the card directly in that position of the array (e.g., ST_ARR[1], ST_ARR[2])
 			ST_ARR[$ST_INDEX]="$ST_CARD"
 		fi
 	fi
